@@ -593,71 +593,250 @@ header {
   color: rgb(var(--tu_blue_primary_rgb));
 }
 
+.scrollable_nav_bar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+
+  overflow-x: auto;
+  position: relative;
+  z-index: 10;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollable_nav_bar::-webkit-scrollbar {
+  display: none;
+}
+
+.filter_bar {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: visible;
+
+  gap: 12px;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  margin-bottom: 0;
+}
+
+.dropdown_wrapper {
+  position: static;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.filter_pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 0px 5px 0px 5px;
+  gap: 12px;
+
+  height: 42px;
+  min-width: 140px;
+  padding: 0 16px;
+
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 9999px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+/* Hover ефект */
+.filter_pill:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.filter_label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.arrow_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px; /* Фиксирана ширина */
+  height: 12px; /* Фиксирана височина */
+  position: relative;
+}
+
+.css_arrow {
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+
+  /* Нулираме марджините и ползваме чист rotate */
+  position: absolute;
+  top: 2px; /* Фина настройка за вертикално "усещане" */
+  transform: rotate(45deg);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.filter_pill .css_arrow {
+  position: relative;
+  display: inline-block;
+
+  width: 8px;
+  height: 8px;
+
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+
+  transform: rotate(45deg);
+  margin-top: -4px;
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
+  pointer-events: none;
+}
+
+.filter_pill.active {
+  border-color: var(--tu_blue_primary);
+  box-shadow: 0 0 0 3px rgba(21, 64, 115, 0.1);
+}
+
+.filter_pill.active .css_arrow {
+  border-color: var(--tu_blue_primary);
+  transform: rotate(225deg);
+  top: 5px;
+}
+
+.dropdown_content {
+  display: none;
+  position: fixed; /* Ключовата промяна */
+  z-index: 9999; /* Да е над заглавия, бутони и филтри */
+
+  min-width: 220px;
+  background-color: var(--bg-light);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0;
+
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dropdown_content.show {
+  display: block;
+  animation: slideDown 0.2s ease-out;
+}
+
+.dropdown_option {
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-light);
+  transition: background 0.2s;
+}
+
+.dropdown_option:hover {
+  background-color: #f1f5f9;
+}
+
+#neighborhoodDropdown{
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dropdown_content {
+    background-color: var(--tu_blue_primary);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  .dropdown_option {
+    color: #ffffff;
+  }
+
+  .dropdown_option:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+#priceBtn.active .css_arrow {
+  transform: translateY(-25%) rotate(225deg);
+  border-color: var(--tu_blue_primary);
+}
+
 @media (max-width: 1023px) {
-  @media (prefers-color-scheme: dark) {
-    .nav_container {
-      background-color: var(--header-bg-dark);
-      border-bottom-color: var(--border-dark);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-    }
+  .filter_bar {
+    /* ТОВА Е КЛЮЧЪТ: позволява на fixed съдържанието да излезе отвъд границите */
+    overflow-x: auto;
+    overflow-y: visible !important;
 
-    .menu_toggle span{
-        background-color: var(--bg-light);
-    }
+    /* Премахваме тези свойства, ако ги има, защото те "заключват" менюто вътре */
+    transform: none !important;
+    perspective: none !important;
+    filter: none !important;
+    contain: unset !important;
   }
 
-  @media (prefers-color-scheme: light) {
-    .nav_container {
-      background-color: var(--header-bg-light);
-      border-bottom-color: var(--border-light);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-    }
-
-    .menu_toggle span{
-        background-color: var(--tu_blue_primary);
-    }
+  .dropdown_content {
+    /* Принудително изкарваме менюто над всичко */
+    position: fixed !important;
+    z-index: 10000 !important;
   }
-
   .menu_toggle {
     display: flex;
+    z-index: 1001;
   }
 
   .nav_container {
     display: none;
-
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
     z-index: 1000;
-
     flex-direction: column;
     align-items: center;
     text-align: center;
-
     padding: 2rem 0;
+    background-color: var(--header-bg-light);
   }
 
   .nav_container.active {
     display: flex;
-    animation: slideDown 0.5s ease-out;
+    animation: slideDown 0.4s ease-out;
   }
 
+  /* Останалото си остава същото... */
   .nav_links {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 1.5rem;
     margin-bottom: 2rem;
-    width: 100%;
   }
-
-  .nav_link {
-    color: var(--text-light);
-    font-size: 1.2rem;
-    width: 100%;
-  }
-
   .sing_in_btns {
     display: flex;
     flex-direction: column;
@@ -665,11 +844,27 @@ header {
     width: 100%;
     gap: 1rem;
   }
-
   .btn_primary,
   .btn_secondary {
     width: 80%;
     max-width: 300px;
+  }
+
+  /* 6. DARK MODE КОРЕКЦИИ */
+  @media (prefers-color-scheme: dark) {
+    .nav_container {
+      background-color: var(--header-bg-dark);
+      border-bottom-color: var(--border-dark);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+
+    .menu_toggle span {
+      background-color: var(--text-dark);
+    }
+
+    .nav_link {
+      color: var(--text-dark);
+    }
   }
 }
 
@@ -835,7 +1030,6 @@ header {
   }
 
   .card_description {
-    /* dark:text-slate-400 */
     color: var(--par-dark);
   }
 
@@ -890,5 +1084,28 @@ header {
     box-shadow:
       0 4px 6px -1px rgba(0, 0, 0, 0.1),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .scrollable_nav_bar {
+    background-color: #0f172a;
+    border-bottom-color: #1e293b;
+  }
+
+  .filter_pill {
+    background-color: var(--bg-dark);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .filter_pill:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .filter_label {
+    color: #ffffff;
+  }
+
+  .filter_pill .css_arrow {
+    border-color: #cbd5e1;
   }
 }

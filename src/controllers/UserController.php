@@ -8,13 +8,13 @@ use PDO, PDOException;
 
 class UserController
 {
-    private $pdo = Database::getInstance();
-    public function getAllUsers(): array
+    public static function getAllUsers(): array
     {
+        $pdo = Database::getInstance();
         $users = [];
 
         try {
-            $stmt = $this->pdo->query("SELECT id, username, email, password, user_type FROM users");
+            $stmt = $pdo->query("SELECT id, username, email, password, user_type FROM users");
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $users[] = new User($row['id'], $row['username'], $row['email'], $row['password'], $row['user_type']);
             }
@@ -25,20 +25,19 @@ class UserController
         return $users;
     }
 
-    public function getUserById(int $id):?User
+    public function getUserById(int $id): ?User
     {
-        try{
-            $stmt=$this->pdo->prepare("SELECT id, username, email, password, user_type FROM users WHERE id=:id");
-            $stmt->execute(['id'=>$id]);
-            $row=$stmt->fetch(PDO::FETCH_ASSOC);
-            if($row){
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("SELECT id, username, email, password, user_type FROM users WHERE id=:id");
+            $stmt->execute(['id' => $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
                 return new User($row['id'], $row['username'], $row['email'], $row['password'], $row['user_type']);
-            }
-            else{
+            } else {
                 throw new PDOException("User not found");
             }
-        }
-        catch(PDOException $e){
+        } catch (PDOException $e) {
             die('Error fetching user: ' . $e->getMessage());
         }
     }

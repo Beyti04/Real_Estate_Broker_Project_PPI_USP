@@ -4,11 +4,9 @@ session_start();
 const VIEW_DIR = __DIR__ . '/../src/views/';
 
 spl_autoload_register(function ($class) {
-    // Масив, описващ връзката Namespace => Папка
     $prefixes = [
         'App\\'    => __DIR__ . '/../src/',
-        'Config\\' => __DIR__ . '/../config/',
-        'Views' => __DIR__ . '/../src/views/'
+        'Config\\' => __DIR__ . '/../config/'
     ];
 
 
@@ -40,10 +38,10 @@ $action = $_GET['action'] ?? 'homepage';
 
 switch ($action) {
     case 'homepage':
-        require VIEW_DIR . '/homepage.php';
+        require VIEW_DIR . 'homepage.php';
         break;
-    case 'buy_sell':
-        require VIEW_DIR . 'buy_sell.php';
+    case 'buy_rent':
+        require VIEW_DIR . 'buy_rent.php';
         break;
     default:
         echo "404 Not Found";

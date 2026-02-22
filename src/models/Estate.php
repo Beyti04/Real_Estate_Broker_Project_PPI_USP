@@ -3,32 +3,32 @@
 namespace App\Models;
 
 use App\Models\ExposureType;
-use App\Models\ListingType;
 
-class Estate{
+class Estate
+{
     private int $id;
-    private int $location_area;
-    private int $estate_type;
-    private ExposureType $exposure_type;
+    private int $locationArea;
+    private int $estateType;
+    private ExposureType $exposureType;
     private int $rooms;
     private string $description;
-    private ListingType $listing_type;
+    private int $listingType;
     private float $price;
-    private int $owner_id;
+    private int $ownerId;
 
-    public function __construct(int $id, int $location_area, int $estate_type, ExposureType $exposure_type, int $rooms, string $description, ListingType $listing_type, float $price, int $owner_id)
+    public function __construct(int $id, int $locationArea, int $estateType, ExposureType $exposureType, int $rooms, string $description, int $listingType, float $price, int $ownerId)
     {
         $this->id = $id;
-        $this->location_area = $location_area;
-        $this->estate_type = $estate_type;
-        $this->exposure_type = $exposure_type;
+        $this->locationArea = $locationArea;
+        $this->estateType = $estateType;
+        $this->exposureType = $exposureType;
         $this->rooms = $rooms;
         $this->description = $description;
-        $this->listing_type = $listing_type;
+        $this->listingType = $listingType;
         $this->price = $price;
-        $this->owner_id = $owner_id;
+        $this->ownerId = $ownerId;
     }
-    
+
     public function getId(): int
     {
         return $this->id;
@@ -36,17 +36,17 @@ class Estate{
 
     public function getLocationArea(): int
     {
-        return $this->location_area;
+        return $this->locationArea;
     }
 
     public function getEstateType(): int
     {
-        return $this->estate_type;
+        return $this->estateType;
     }
 
     public function getExposureType(): ExposureType
     {
-        return $this->exposure_type;
+        return $this->exposureType;
     }
 
     public function getRooms(): int
@@ -59,9 +59,9 @@ class Estate{
         return $this->description;
     }
 
-    public function getListingType(): ListingType
+    public function getListingType(): int
     {
-        return $this->listing_type;
+        return $this->listingType;
     }
 
     public function getPrice(): float
@@ -71,6 +71,6 @@ class Estate{
 
     public function getOwnerId(): int
     {
-        return $this->owner_id;
+        return $this->ownerId;
     }
 }

@@ -1,15 +1,25 @@
 <?php
 
 namespace App\Models;
-enum ListingType: string {
-    case SALE = 'sale';
-    case RENT = 'rent';
 
-    public static function getOptions(): array{
-        $options=[];
-        foreach(self::cases() as $case){
-            $options[] = $case->value;
-        }
-        return $options;
+class ListingType
+{
+    private int $id;
+    private string $typeName;
+
+    public function __construct(int $id, string $typeName)
+    {
+        $this->id = $id;
+        $this->typeName = $typeName;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getTypeName(): string
+    {
+        return $this->typeName;
     }
 }

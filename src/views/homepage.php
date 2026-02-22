@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to TU Brokers</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+
 </head>
 
 <body>
     <div class="main_wrapper">
         <header>
             <div class="logo">
-                <a class="logo_group" href="#">
+                <a class="logo_group" href="index.php?action=homepage">
                     <picture>
                         <source srcset="images/broker_logo_dark.png" media="(prefers-color-scheme: dark)">
                         <img class="icon_box" src="images/broker_logo_light.png" alt="TU Brokers Logo">
@@ -37,7 +39,7 @@
                 </button>
                 <div class="nav_container">
                     <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_sell">Buy/Rent</a>
+                        <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
                         <a class="nav_link" href="#">Sell</a>
                         <a class="nav_link" href="#">Agents</a>
                     </nav>
@@ -143,23 +145,5 @@
         </footer>
     </div>
 </body>
-<script>
-    const menuToggle = document.getElementById('menuToggle');
-    const navContainer = document.querySelector('.nav_container');
-
-    menuToggle.addEventListener('click', () => {
-        navContainer.classList.toggle('active');
-
-        menuToggle.classList.toggle('open');
-    });
-
-    const navLinks = document.querySelectorAll('.nav_link');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navContainer.classList.remove('active');
-            menuToggle.classList.remove('open');
-        });
-    });
-</script>
 
 </html>

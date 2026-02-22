@@ -8,14 +8,16 @@ class User{
     private string $username;
     private string $email;
     private string $password;
-    private int $user_type;
+    private int $userType;
 
-    public function __construct(int $id, string $username, string $email, string $password,int $user_type)
+    public function __construct(int $id, string $username, string $email, string $password,int $userType)
     {
         $this->id = $id;
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
-        $this->user_type = $user_type;
+        $this->userType = $userType;
     }
+
+    public function getId():int
 }

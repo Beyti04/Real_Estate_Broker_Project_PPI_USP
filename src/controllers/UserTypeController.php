@@ -6,14 +6,16 @@ use App\Models\UserType;
 use Config\Database;
 use PDO, PDOException;
 
-class UserTypeController{
-    private $pdo = Database::getInstance();
-    public function getAllUserTypes(): array
+class UserTypeController
+{
+    public static function getAllUserTypes(): array
     {
+        $pdo = Database::getInstance();
+
         $userTypes = [];
 
         try {
-            $stmt = $this->pdo->query("SELECT id, type_name FROM user_types");
+            $stmt = $pdo->query("SELECT id, type_name FROM user_types");
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $userTypes[] = new UserType($row['id'], $row['type_name']);
             }
@@ -24,20 +26,19 @@ class UserTypeController{
         return $userTypes;
     }
 
-    public function getUserTypeById(int $id):?UserType
+    public static function getUserTypeById(int $id): ?UserType
     {
-        try{
-            $stmt=$this->pdo->prepare("SELECT id, type_name FROM user_types WHERE id=:id");
-            $stmt->execute(['id'=>$id]);
-            $row=$stmt->fetch(PDO::FETCH_ASSOC);
-            if($row){
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("SELECT id, type_name FROM user_types WHERE id=:id");
+            $stmt->execute(['id' => $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
                 return new UserType($row['id'], $row['type_name']);
-            }
-            else{
+            } else {
                 throw new PDOException("User type not found");
             }
-        }
-        catch(PDOException $e){
+        } catch (PDOException $e) {
             die('Error fetching user type: ' . $e->getMessage());
         }
     }

@@ -8,15 +8,15 @@ use PDO, PDOException;
 
 class RegionController
 {
-    private $pdo = Database::getInstance();
-    public function getAllRegions(): array
+    public static function getAllRegions(): array
     {
+        $pdo = Database::getInstance();
         $regions = [];
 
         try {
-            $stmt = $this->pdo->query("SELECT id, name FROM regions");
+            $stmt = $pdo->query("SELECT id, region_name FROM regions");
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $regions[] = new Region($row['id'], $row['name']);
+                $regions[] = new Region($row['id'], $row['region_name']);
             }
         } catch (PDOException $e) {
             die('Error fetching regions: ' . $e->getMessage());
@@ -25,20 +25,19 @@ class RegionController
         return $regions;
     }
 
-    public function getRegionById(int $id):?Region
+    public function getRegionById(int $id): ?Region
     {
-        try{
-            $stmt=$this->pdo->prepare("SELECT id, name FROM regions WHERE id=:id");
-            $stmt->execute(['id'=>$id]);
-            $row=$stmt->fetch(PDO::FETCH_ASSOC);
-            if($row){
-                return new Region($row['id'], $row['name']);
-            }
-            else{
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("SELECT id, region_name FROM regions WHERE id=:id");
+            $stmt->execute(['id' => $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return new Region($row['id'], $row['region_name']);
+            } else {
                 throw new PDOException("Region not found");
             }
-        }
-        catch(PDOException $e){
+        } catch (PDOException $e) {
             die('Error fetching region: ' . $e->getMessage());
         }
     }
