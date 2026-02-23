@@ -6,13 +6,15 @@ class Neighborhood
 {
     private int $id;
     private int $locationId;
-    private string $neighborhoodName;
+    private string $neighborhoodNameBG;
+    private string $neighborhoodNameEN;
 
-    public function __construct(int $id, int $locationId, string $neighborhoodName)
+    public function __construct(int $id, int $locationId, string $neighborhoodNameBG, string $neighborhoodNameEN)
     {
         $this->id = $id;
-        $this->locationId=$locationId;
-        $this->neighborhoodName=$neighborhoodName;
+        $this->locationId = $locationId;
+        $this->neighborhoodNameBG = $neighborhoodNameBG;
+        $this->neighborhoodNameEN = $neighborhoodNameEN;
     }
 
     public function getId(): int
@@ -25,8 +27,13 @@ class Neighborhood
         return $this->locationId;
     }
 
-    public function getNeighborhoodName(): string
+    public function getNeighborhoodNameBG(): string
     {
-        return $this->neighborhoodName;
+        return $this->neighborhoodNameBG;
+    }
+
+    public function getNeighborhoodNameEN(): string
+    {
+        return $this->neighborhoodNameEN;
     }
 }

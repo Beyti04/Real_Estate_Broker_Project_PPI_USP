@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
-class Region{
+class Region
+{
     private int $id;
-    private string $regionName;
+    private string $regionNameBG;
+    private string $regionNameEN;
 
-    public function __construct(int $id, string $regionName)
+    public function __construct(int $id, string $regionNameBG, string $regionNameEN)
     {
         $this->id = $id;
-        $this->regionName = $regionName;
+        $this->regionNameBG = $regionNameBG;
+        $this->regionNameEN = $regionNameEN;
     }
 
     public function getId(): int
@@ -17,8 +20,13 @@ class Region{
         return $this->id;
     }
 
-    public function getRegionName(): string
+    public function getRegionNameBG(): string
     {
-        return $this->regionName;
+        return $this->regionNameBG;
+    }
+
+    public function getRegionNameEN(): string
+    {
+        return $this->regionNameEN;
     }
 }

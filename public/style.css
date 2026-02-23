@@ -10,8 +10,8 @@
   --border-light: #e2e8f0;
   --border-dark: #1e293b;
 
-  --bg-light: #ffffff;
-  --bg-dark: #0f172a;
+  --bg-light: #f8fafc;
+  --bg-dark: #1e293b;
 
   --text-light: #0f172a;
   --text-dark: #f1f5f9;
@@ -427,8 +427,8 @@ header {
   border-radius: 0.75rem;
   padding: 2rem;
 
-  background-color: #f8fafc;
-  border: 1px solid #f1f5f9;
+  background-color: white;
+  border: 1px solid var(--border-light);
 
   transition: box-shadow 0.3s ease;
 }
@@ -479,8 +479,8 @@ header {
 }
 
 .footer_container {
-  background-color: --bg-light;
-  border-top: 1px solid #e2e8f0;
+  background-color: var(--bg-light);
+  border-top: 1px solid var(--border-light);
 }
 
 .footer_grid {
@@ -629,6 +629,10 @@ header {
   scrollbar-width: none;
 
   margin-bottom: 0;
+
+  justify-content: space-evenly;
+
+  background-color: var(--header-bg-light);
 }
 
 .dropdown_wrapper {
@@ -702,8 +706,8 @@ header {
   width: 8px;
   height: 8px;
 
-  border-right: 2px solid #64748b;
-  border-bottom: 2px solid #64748b;
+  border-right: 2px solid var(--border-dark);
+  border-bottom: 2px solid var(--border-dark);
 
   transform: rotate(45deg);
   margin-top: -4px;
@@ -720,7 +724,6 @@ header {
 }
 
 .filter_pill.active .css_arrow {
-  border-color: var(--tu_blue_primary);
   transform: rotate(225deg);
   top: 5px;
 }
@@ -763,7 +766,7 @@ header {
   background-color: #f1f5f9;
 }
 
-#neighborhoodDropdown{
+#neighborhoodDropdown {
   display: none;
 }
 
@@ -788,13 +791,60 @@ header {
   border-color: var(--tu_blue_primary);
 }
 
+/* Leaflet specific fix for misplaced tiles */
+.leaflet-container {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.split_container {
+  display: flex;
+  flex-direction: row; /* Forces horizontal alignment */
+  width: 100%;
+  height: calc(100vh - 140px); /* Subtract Header + Filter bar height */
+  overflow: hidden; /* Prevents the whole page from scrolling */
+}
+
+/* Left Side: Map */
+#map-container {
+  flex: 0 0 40%; /* Map takes exactly 50% */
+  height: 100%;
+  order: 1; /* Explicitly set to first position */
+  border-right: 1px solid var(--border-light);
+  z-index: 1;
+}
+
+/* Right Side: Listings */
+.listings_side {
+  flex: 0 0 50%; /* Listings take exactly 50% */
+  height: 100%;
+  order: 2; /* Explicitly set to second position */
+  overflow-y: auto; /* IMPORTANT: Only this side scrolls */
+  background-color: var(--search-light);
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .split_container {
+    flex-direction: column;
+    height: auto;
+  }
+  #map-container,
+  .listings_side {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  #map-container {
+    height: 300px;
+  }
+}
+
 @media (max-width: 1023px) {
   .filter_bar {
-    /* ТОВА Е КЛЮЧЪТ: позволява на fixed съдържанието да излезе отвъд границите */
     overflow-x: auto;
     overflow-y: visible !important;
 
-    /* Премахваме тези свойства, ако ги има, защото те "заключват" менюто вътре */
     transform: none !important;
     perspective: none !important;
     filter: none !important;
@@ -802,7 +852,6 @@ header {
   }
 
   .dropdown_content {
-    /* Принудително изкарваме менюто над всичко */
     position: fixed !important;
     z-index: 10000 !important;
   }
@@ -850,7 +899,6 @@ header {
     max-width: 300px;
   }
 
-  /* 6. DARK MODE КОРЕКЦИИ */
   @media (prefers-color-scheme: dark) {
     .nav_container {
       background-color: var(--header-bg-dark);
@@ -865,53 +913,78 @@ header {
     .nav_link {
       color: var(--text-dark);
     }
-  }
-}
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (min-width: 768px) {
-  .hero_subtitle {
-    font-size: 1.25rem;
-  }
-  .hero_content_container {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    .filter_bar {
+      border-bottom: 1px solid var(--border-dark);
+      background-color: var(--header-bg-dark);
+    }
   }
 
-  .desktop_search_container {
-    display: flex !important;
-    align-items: center;
-    margin: 0;
-    width: 70%;
-    max-width: 20rem;
+  #map-container {
+    display: none !important; /* Completely hide the map */
   }
 
-  .container_center {
-    padding-left: 2rem;
-    padding-right: 2rem;
+  .split_container {
+    display: block; /* Change from flex to standard block */
+    height: auto; /* Let the page grow naturally */
+    overflow: visible;
   }
 
-  .section_title {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
+  .listings_side {
+    width: 100%; /* Take up full width since map is gone */
+    height: auto;
+    overflow: visible;
+    padding: 1.5rem 1rem;
   }
 
   .properties_grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr; /* Single column for phone cards */
+  }
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .footer_grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  @media (min-width: 768px) {
+    .hero_subtitle {
+      font-size: 1.25rem;
+    }
+    .hero_content_container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .desktop_search_container {
+      display: flex !important;
+      align-items: center;
+      margin: 0;
+      width: 70%;
+      max-width: 20rem;
+    }
+
+    .container_center {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .section_title {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+    }
+
+    .properties_grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .footer_grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 }
 
@@ -942,6 +1015,26 @@ header {
 
   .properties_grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .listings_side .properties_grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .split_container {
+    display: flex;
+    height: calc(100vh - 140px);
+    overflow: hidden;
+  }
+
+  #map-container {
+    flex: 0 0 40%;
+    display: block;
+  }
+
+  .listings_side {
+    flex: 0 0 50%;
+    overflow-y: auto;
   }
 }
 
@@ -1011,6 +1104,7 @@ header {
 
   .btn_secondary {
     color: var(--text-dark);
+    border-color: var(--border-light);
   }
 
   .content_section {
@@ -1092,7 +1186,7 @@ header {
   }
 
   .filter_pill {
-    background-color: var(--bg-dark);
+    background-color: var(--header-dark);
     border-color: rgba(255, 255, 255, 0.1);
   }
 
@@ -1107,5 +1201,19 @@ header {
 
   .filter_pill .css_arrow {
     border-color: #cbd5e1;
+  }
+
+  .filter_bar {
+    border-bottom: 1px solid var(--border-dark);
+    background-color: var(--header-bg-dark);
+  }
+
+  .filter_pill .css_arrow {
+    border-right: 2px solid var(--border-light);
+    border-bottom: 2px solid var(--border-light);
+  }
+
+  .listings_side {
+    background-color: var(--bg-dark);
   }
 }
