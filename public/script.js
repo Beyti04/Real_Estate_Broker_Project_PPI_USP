@@ -9,48 +9,48 @@ document.addEventListener("DOMContentLoaded", () => {
   handleDependentWithVisibility("locationDropdown", "neighborhoodDropdown");
 
   // 3. Map Initialization (Point to your ADM1 simplified file)
-  initMapHighlighting(
+  initUnifiedMap(
     "map-container",
-    "map/geoBoundaries-BGR-ADM1_simplified.geojson"
+    "map/geoBoundaries-BGR-ADM1_simplified.geojson",
+    "map/geoBoundaries-BGR-ADM2_simplified.geojson",
   );
 
   // 4. Horizontal Scroll for Filter Bar
   const filterBar = document.querySelector(".filter_bar");
   if (filterBar) {
-    filterBar.addEventListener("wheel", (e) => {
+    filterBar.addEventListener(
+      "wheel",
+      (e) => {
         if (e.deltaY !== 0) {
           e.preventDefault();
           filterBar.scrollLeft += e.deltaY;
           closeAllMenus();
         }
-      }, { passive: false }
+      },
+      { passive: false },
     );
   }
 });
 
 /**
- * CORE MAP FUNCTION
- * Handles map rendering and region highlighting
+ * UNIFIED MAP FUNCTION
+ * Handles both Regions (ADM1) and Municipalities (ADM2) highlighting
  */
-function initMapHighlighting(containerId, geoJsonPath) {
+function initUnifiedMap(containerId, adm1Path, adm2Path) {
   const mapElement = document.getElementById(containerId);
   if (!mapElement) return;
 
-  // Initialize Map
+  // 1. Initialize Map ONCE
   const map = L.map(containerId).setView([42.7339, 25.4858], 7);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
   }).addTo(map);
 
-  let geoJsonLayer;
+  let adm1Layer, adm2Layer;
 
   const styles = {
-    default: {
-      fillColor: "#154073",
-      weight: 1,
-      color: "white",
-      fillOpacity: 0.2,
-    },
+    adm1: { fillColor: "#154073", weight: 1, color: "white", fillOpacity: 0.2 },
+    adm2: { fillColor: "#154073", weight: 1, color: "white", fillOpacity: 0.1 },
     highlight: {
       fillColor: "#ff4757",
       weight: 3,
@@ -59,49 +59,74 @@ function initMapHighlighting(containerId, geoJsonPath) {
     },
   };
 
-  // Load GeoJSON Data
-  fetch(geoJsonPath)
-    .then((res) => res.json())
-    .then((data) => {
-      geoJsonLayer = L.geoJson(data, { style: styles.default }).addTo(map);
-      // Fix for flexbox rendering issues
+  // 2. Load Both Data Sets using Promise.all
+  Promise.all([
+    fetch(adm1Path).then((res) => res.json()),
+    fetch(adm2Path).then((res) => res.json()),
+  ])
+    .then(([adm1Data, adm2Data]) => {
+      // Add both layers to the map
+      adm1Layer = L.geoJson(adm1Data, { style: styles.adm1 }).addTo(map);
+      adm2Layer = L.geoJson(adm2Data, { style: styles.adm2 }).addTo(map);
+
       setTimeout(() => map.invalidateSize(), 300);
     })
-    .catch((err) => console.error("Map Data Error:", err));
+    .catch((err) => console.error("Map Loading Error:", err));
 
-  const highlightRegion = (englishName) => {
-    if (!geoJsonLayer || !englishName) return;
+  // 3. Helper function to apply style and zoom
+  const applyHighlight = (layerGroup, englishName, isADM2 = false) => {
+    if (!layerGroup) return;
+    let targetLayer = null;
 
-    geoJsonLayer.eachLayer((layer) => {
+    layerGroup.eachLayer((layer) => {
       const props = layer.feature.properties;
-      // Match against the English name from the GeoJSON properties
-      if (props.shapeName === englishName) {
+      // Match against common GeoJSON property keys
+      const match =
+        props.shapeName === englishName ||
+        props.NAME_1 === englishName ||
+        props.NAME_2 === englishName;
+
+      if (match) {
         layer.setStyle(styles.highlight);
-        map.fitBounds(layer.getBounds(), { padding: [40, 40], animate: true });
+        layer.bringToFront();
+        targetLayer = layer;
       } else {
-        layer.setStyle(styles.default);
+        layer.setStyle(isADM2 ? styles.adm2 : styles.adm1);
       }
     });
+
+    if (targetLayer) {
+      map.fitBounds(targetLayer.getBounds(), {
+        padding: [50, 50],
+        animate: true,
+      });
+    }
   };
 
-  // Listen for Selection Changes on the document level
+  // 4. Single Event Listener
   document.addEventListener("selectionChanged", (e) => {
+    const selectedValue = e.detail.value;
+    const btn = e.target.querySelector(".dropdown_toggle");
+    const englishName = btn?.getAttribute("data-selected-name");
+
+    // Reset view if "Any" is selected
+    if (selectedValue === "any") {
+      adm1Layer?.eachLayer((l) => l.setStyle(styles.adm1));
+      adm2Layer?.eachLayer((l) => l.setStyle(styles.adm2));
+      map.setView([42.7339, 25.4858], 7);
+      return;
+    }
+
     if (e.target.id === "regionDropdown") {
-      const selectedValue = e.detail.value;
-
-      if (selectedValue === "any") {
-        geoJsonLayer.eachLayer((l) => l.setStyle(styles.default));
-        map.setView([42.7339, 25.4858], 7);
-        return;
-      }
-
-      // Read English Name from the button (transferred during click)
-      const btn = e.target.querySelector(".dropdown_toggle");
-      const englishName = btn.getAttribute("data-selected-name");
-
-      if (englishName) {
-        highlightRegion(englishName);
-      }
+      // Highlight Region (ADM1)
+      applyHighlight(adm1Layer, englishName, false);
+      // Optional: Dim ADM2 layers to make Region selection clearer
+      adm2Layer?.eachLayer((l) => l.setStyle({ fillOpacity: 0, weight: 0 }));
+    } else if (e.target.id === "locationDropdown") {
+      // Highlight Municipality (ADM2)
+      // Reset ADM1 to default so we see the municipality inside it
+      adm1Layer?.eachLayer((l) => l.setStyle(styles.adm1));
+      applyHighlight(adm2Layer, englishName, true);
     }
   });
 }
@@ -160,9 +185,9 @@ function selectMenu() {
         const nameEn = option.getAttribute("data-name"); // Get English Name
 
         label.innerText = option.innerText;
-        
+
         // Save the English name to the button so the map can find it
-        btn.setAttribute("data-selected-name", nameEn || ""); 
+        btn.setAttribute("data-selected-name", nameEn || "");
 
         closeAllMenus();
 
@@ -173,7 +198,7 @@ function selectMenu() {
           new CustomEvent("selectionChanged", {
             detail: { value: val },
             bubbles: true,
-          })
+          }),
         );
       });
     });
@@ -190,7 +215,9 @@ function closeAllMenus() {
       if (!m.classList.contains("show")) m.style.display = "none";
     }, 200);
   });
-  document.querySelectorAll(".filter_pill").forEach((b) => b.classList.remove("active"));
+  document
+    .querySelectorAll(".filter_pill")
+    .forEach((b) => b.classList.remove("active"));
 }
 
 function getMenuFromWrapper(wrapperId) {
@@ -239,7 +266,7 @@ function handleDependentWithVisibility(parentId, childId) {
     childWrapper.style.display = val === "any" ? "none" : "inline-block";
   };
   parentWrapper.addEventListener("selectionChanged", (e) =>
-    checkVisibility(e.detail.value)
+    checkVisibility(e.detail.value),
   );
   checkVisibility("any");
 }

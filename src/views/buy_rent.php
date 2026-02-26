@@ -228,7 +228,7 @@
                 foreach ($neighborhoods as $neighborhood) { ?>
                     <div class="dropdown_option"
                         data-value="<?= htmlspecialchars($neighborhood->getId()) ?>"
-                        data-region="<?= htmlspecialchars($neighborhood->getLocationId()) ?>"><?= htmlspecialchars($neighborhood->getNeighborhoodName()) ?></div>
+                        data-region="<?= htmlspecialchars($neighborhood->getCityId()) ?>"><?= htmlspecialchars($neighborhood->getNeighborhoodNameBG()) ?></div>
                 <?php }; ?>
             </div>
         </div>

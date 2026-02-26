@@ -1036,27 +1036,12 @@ header {
     flex: 0 0 50%;
     overflow-y: auto;
   }
+
+  .footer_grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-
 @media (prefers-color-scheme: light) {
-  .btn_primary:hover {
-    background-color: var(--bg-light);
-    border: 1px solid var(--tu_blue_primary);
-    color: var(--tu_blue_primary);
-    transform: translateY(-1px) scale(1.02);
-    box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
-
-  .btn_secondary:hover {
-    background-color: var(--btn-hover);
-    color: var(--text-dark);
-    transform: translateY(-1px) scale(1.02);
-    box-shadow:
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1138,7 +1123,7 @@ header {
 
   .footer_container {
     background-color: var(--bg-dark);
-    border-top-color: var(--border-dark);
+    border-top-color: var(--tu_blue_primary);
   }
 
   .icon_square_primary {
@@ -1215,5 +1200,24 @@ header {
 
   .listings_side {
     background-color: var(--bg-dark);
+  }
+
+  .btn_primary:hover {
+    background-color: var(--bg-light);
+    border: 1px solid var(--tu_blue_primary);
+    color: var(--tu_blue_primary);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .btn_secondary:hover {
+    background-color: var(--btn-hover);
+    color: var(--text-dark);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 }

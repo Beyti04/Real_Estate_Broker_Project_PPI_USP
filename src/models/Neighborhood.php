@@ -5,14 +5,14 @@ namespace App\Models;
 class Neighborhood
 {
     private int $id;
-    private int $locationId;
+    private int $cityId;
     private string $neighborhoodNameBG;
     private string $neighborhoodNameEN;
 
-    public function __construct(int $id, int $locationId, string $neighborhoodNameBG, string $neighborhoodNameEN)
+    public function __construct(int $id, int $cityId, string $neighborhoodNameBG, string $neighborhoodNameEN)
     {
         $this->id = $id;
-        $this->locationId = $locationId;
+        $this->cityId = $cityId;
         $this->neighborhoodNameBG = $neighborhoodNameBG;
         $this->neighborhoodNameEN = $neighborhoodNameEN;
     }
@@ -22,9 +22,9 @@ class Neighborhood
         return $this->id;
     }
 
-    public function getLocationId(): int
+    public function getCityId(): int
     {
-        return $this->locationId;
+        return $this->cityId;
     }
 
     public function getNeighborhoodNameBG(): string
