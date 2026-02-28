@@ -1,0 +1,129 @@
+/* admin.css */
+
+.admin_layout {
+  display: flex;
+  min-height: calc(100vh - 70px); /* Височината на екрана минус горния хедър */
+  background-color: var(--search-light);
+}
+
+.admin_sidebar {
+  width: 250px;
+  background-color: white;
+  border-right: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin_nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.admin_nav_link {
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--par-light);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.admin_nav_link:hover {
+  background-color: var(--bg-light);
+  color: var(--tu_blue_primary);
+}
+
+.admin_nav_link.active {
+  background-color: rgba(var(--tu_blue_primary_rgb), 0.1);
+  color: var(--tu_blue_primary);
+}
+
+.admin_main {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+/* Стил за таблицата */
+.table_container {
+  background: white;
+  border-radius: 1rem;
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.admin_table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin_table th {
+  background-color: var(--bg-light);
+  padding: 1rem 1.5rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--par-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.admin_table td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.admin_table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin_table tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Баджове за ролите */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--border-light);
+  color: var(--par-light);
+}
+
+.badge-admin { background-color: #fee2e2; color: #b91c1c; }
+.badge-broker { background-color: #e0e7ff; color: #4338ca; }
+.badge-user { background-color: #dcfce7; color: #15803d; }
+
+/* Бутони за действия в таблицата */
+.action_btn {
+  border: none;
+  background: none;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.edit_btn { color: var(--tu_blue_primary); }
+.edit_btn:hover { background-color: rgba(var(--tu_blue_primary_rgb), 0.1); }
+
+.delete_btn { color: #ef4444; }
+.delete_btn:hover { background-color: #fee2e2; }
+
+/* Dark Mode за Админ панела (опционално) */
+@media (prefers-color-scheme: dark) {
+  .admin_layout, .table_container { background-color: var(--bg-dark); border-color: var(--border-dark); }
+  .admin_sidebar { background-color: var(--header-bg-dark); border-color: var(--border-dark); }
+  .admin_table th { background-color: var(--search-dark); border-color: var(--border-dark); }
+  .admin_table td { border-color: var(--border-dark); color: var(--text-dark); }
+  .admin_table tr:hover { background-color: rgba(255,255,255,0.02); }
+}

@@ -43,6 +43,15 @@ switch ($action) {
     case 'buy_rent':
         require VIEW_DIR . 'buy_rent.php';
         break;
+    //Admin Panel
+    case 'admin':
+        if(!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {
+            header('Location: index.php?action=homepage');
+            exit;
+        }
+        require VIEW_DIR . 'admin.php';
+        break;
+
     //Auth
     case 'login':
         require VIEW_DIR . 'login.php';
@@ -56,6 +65,11 @@ switch ($action) {
             $password = $_POST['password'] ?? '';
 
             $user = App\Controllers\AuthController::login($email, $password);
+            if($_SESSION['user_type_id'] === 1) {
+                header('Location: index.php?action=admin');
+                exit;
+            }
+
             if ($user) {
                 header('Location: index.php?action=homepage');
                 exit;
