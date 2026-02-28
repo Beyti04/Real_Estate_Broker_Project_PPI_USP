@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="bg">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация - TU Estates</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="main_wrapper">
         <div class="auth_page_wrapper">
@@ -28,7 +30,7 @@
                         <label class="auth_label">Парола</label>
                         <input type="password" class="input_field auth_input" name="password" placeholder="••••••••" required>
                     </div>
-                    
+
                     <div class="input_group">
                         <label class="auth_label">Тип акаунт</label>
                         <select class="input_field auth_input" name="user_type_id" required style="padding-left: 0.75rem;">
@@ -36,7 +38,16 @@
                             <option value="2">Брокер</option>
                         </select>
                     </div>
-                    
+
+                    <?php
+                    if (isset($_GET['error'])) {
+                        $error = htmlspecialchars(urldecode($_GET['error']));
+                        if ($error === 'registration_failed') {
+                            echo '<p style="color: red; font-size: 0.875rem; margin-top: 0.5rem;">Грешка при регистрацията. Моля, опитайте отново.</p>';
+                        }
+                    }
+                    ?>
+
                     <button type="submit" class="btn_primary" style="width: 100%; margin-top: 1.5rem;">Създай профил</button>
                 </form>
 
@@ -46,7 +57,8 @@
             </div>
         </div>
 
-        </div>
+    </div>
     <script src="script.js"></script>
 </body>
+
 </html>

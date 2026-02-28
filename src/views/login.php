@@ -25,6 +25,15 @@
                         <input type="password" class="input_field auth_input" name="password" placeholder="••••••••" required>
                     </div>
                     
+                   <?php
+                    if (isset($_GET['error'])) {
+                        $error = htmlspecialchars(urldecode($_GET['error']));
+                        if ($error === 'invalid_credentials') {
+                            echo '<p style="color: red; font-size: 0.875rem; margin-top: 0.5rem;">Невалиден имейл или парола</p>';
+                        }
+                    }
+                    ?>
+
                     <button type="submit" class="btn_primary" style="width: 100%; margin-top: 1.5rem;">Влез</button>
                 </form>
 
