@@ -44,8 +44,14 @@
                         <a class="nav_link" href="#">Agents</a>
                     </nav>
                     <div class="sing_in_btns">
-                        <a href="index.php?action=login" class="btn_primary">Sign Up</a>
-                        <a href="index.php?action=register" class="btn_secondary">Log In</a>
+                        <?php 
+                        if (isset($_SESSION['user_id'])) {
+                            echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
+                        } else {
+                            echo '<a href="index.php?action=register" class="btn_primary">Sign Up</a>';
+                            echo '<a href="index.php?action=login" class="btn_secondary">Log In</a>';
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

@@ -50,7 +50,43 @@ switch ($action) {
     case 'register':
         require VIEW_DIR . 'register.php';
         break;
-    
+    case 'login_process':
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
+
+            $user = App\Controllers\AuthController::login($email, $password);
+            if ($user) {
+                header('Location: index.php?action=homepage');
+                exit;
+            } else {
+                header('Location: index.php?action=login&error=invalid_credentials');
+                exit;
+            }
+        }
+        break;
+    case 'register_process':
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
+            $user_type_id = (int)($_POST['user_type_id'] ?? 3);
+
+            $success = App\Controllers\AuthController::register($username, $email, $password, $user_type_id);
+            if ($success) {
+                header('Location: index.php?action=login&message=registration_success');
+                exit;
+            } else {
+                header('Location: index.php?action=register&error=registration_failed');
+                exit;
+            }
+        }
+        break;
+    case 'logout':
+        App\Controllers\AuthController::logout();
+        header('Location: index.php?action=homepage');
+        exit;
+
     default:
         echo "404 Not Found";
         break;
