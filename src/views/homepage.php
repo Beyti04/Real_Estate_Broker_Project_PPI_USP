@@ -44,8 +44,8 @@
                         <a class="nav_link" href="#">Agents</a>
                     </nav>
                     <div class="sing_in_btns">
-                        <button class="btn_primary">Sign Up</button>
-                        <button class="btn_secondary">Log In</button>
+                        <a href="index.php?action=login" class="btn_primary">Sign Up</a>
+                        <a href="index.php?action=register" class="btn_secondary">Log In</a>
                     </div>
                 </div>
             </div>

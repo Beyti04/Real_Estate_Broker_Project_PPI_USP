@@ -1,0 +1,48 @@
+.auth_page_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px); /* Изваждаме височината на хедъра */
+  padding: 2rem 1rem;
+  background-color: var(--bg-light);
+}
+
+.auth_card {
+  width: 100%;
+  max-width: 440px;
+  background-color: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.auth_header {
+  margin-bottom: 2rem;
+}
+
+.input_group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.auth_label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.auth_input {
+  width: 100%;
+  padding-left: 0.75rem;
+  box-sizing: border-box;
+}
+
+/* Dark Mode поддръжка */
+@media (prefers-color-scheme: dark) {
+  .auth_page_wrapper { background-color: var(--bg-dark); }
+  .auth_card { background-color: var(--header-bg-dark); border-color: var(--border-dark); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); }
+  .auth_label { color: var(--text-dark); }
+}

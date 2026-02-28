@@ -43,6 +43,14 @@ switch ($action) {
     case 'buy_rent':
         require VIEW_DIR . 'buy_rent.php';
         break;
+    //Auth
+    case 'login':
+        require VIEW_DIR . 'login.php';
+        break;
+    case 'register':
+        require VIEW_DIR . 'register.php';
+        break;
+    
     default:
         echo "404 Not Found";
         break;
