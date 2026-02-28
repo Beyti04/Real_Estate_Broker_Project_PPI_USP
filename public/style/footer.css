@@ -1,0 +1,29 @@
+.footer_container {
+  background-color: var(--bg-light);
+  border-top: 1px solid var(--border-light);
+}
+.footer_grid { display: grid; gap: 2rem; margin-top: 2rem; grid-template-columns: repeat(1, minmax(0, 1fr)); justify-items: center; justify-content: center; }
+.flex_column_gap { display: flex; flex-direction: column; width: 50%; }
+.flex_center_row { display: flex; align-items: center; gap: 0.5rem; }
+
+.icon_square_primary { width: 2rem; height: 2rem; display: flex; object-fit: contain; padding: 0.4rem; border-radius: 0.5rem; background-color: var(--tu_blue_primary); }
+.footer_primary { font-size: 1rem; font-weight: 700; line-height: 1.25; letter-spacing: -0.025em; color: var(--text-light); }
+.footer_bio { font-size: 0.875rem; line-height: 1.625; color: var(--par-light); margin: 0px; }
+.footer_label { font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); }
+
+.contact_list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem; padding: 0px; }
+.contact_item { display: flex; gap: 0.75rem; font-size: 0.875rem; color: var(--par-light); }
+.align_start { align-items: flex-start; }
+.align_center { align-items: center; }
+.contact_icon { font-size: 20px; color: var(--tu_blue_primary); flex-shrink: 0; }
+.footer_icon { display: flex; align-items: center; justify-content: center; font-size: 28px; width: 1.5rem; height: 1.5rem; border-radius: 0.5rem; color: rgb(var(--tu_blue_primary_rgb)); }
+
+@media (min-width: 768px) { .footer_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .footer_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (prefers-color-scheme: dark) {
+  .footer_container { background-color: var(--bg-dark); border-top-color: var(--tu_blue_primary); }
+  .icon_square_primary { background-color: rgba(var(--tu_blue_primary_rgb), 0.2); border: 1px solid var(--border-dark); }
+  .footer_primary, .footer_label { color: var(--text-dark); }
+  .footer_bio, .contact_item { color: var(--par-dark); }
+}

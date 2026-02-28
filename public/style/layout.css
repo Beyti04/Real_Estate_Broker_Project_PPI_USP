@@ -1,0 +1,67 @@
+.hero_gradient_overlay {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 10;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.7) 100%);
+}
+.hero_content_container {
+  position: relative; z-index: 10; margin-left: auto; margin-right: auto; max-width: 80rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 600px;
+  text-align: center; padding: 5rem 1rem;
+}
+.hero_title { max-width: 56rem; font-weight: 900; letter-spacing: -0.025em; color: var(--text-dark); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.05)); font-size: 2.25rem; line-height: 1; }
+.hero_subtitle { margin-top: 1.5rem; max-width: 42rem; font-weight: 300; color: #e2e8f0; font-size: 1.125rem; line-height: 1.75rem; }
+
+.content_section { background-color: var(--bg-light); padding-top: 6rem; padding-bottom: 6rem; }
+.container_center { margin-left: auto; margin-right: auto; max-width: 80rem; padding-left: 1rem; padding-right: 1rem; }
+.section_title { font-weight: 700; letter-spacing: -0.025em; color: var(--text-light); line-height: 2.25rem; }
+.section_description { margin-left: auto; margin-right: auto; max-width: 42rem; margin-top: 1rem; font-size: 1.125rem; line-height: 1.75rem; color: #475569; }
+
+.properties_grid { margin-top: 4rem; display: grid; gap: 2rem; grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.property_card { position: relative; border-radius: 0.75rem; padding: 2rem; background-color: white; border: 1px solid var(--border-light); transition: box-shadow 0.3s ease; }
+.property_card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+.service_icon_container { display: inline-flex; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; margin-bottom: 1.25rem; border-radius: 0.5rem; background-color: rgba(var(--tu_blue_primary_rgb), 0.1); color: var(--tu_blue_primary); font-size: 1.875rem; object-fit: contain; padding: 0.75rem; }
+.card_title { font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: var(--text-light); }
+.card_description { margin-top: 0.75rem; font-size: 1rem; line-height: 1.5rem; color: #475569; }
+
+/* Карта и Split екран */
+.leaflet-container { overflow: hidden; position: relative; z-index: 1; }
+.split_container { display: flex; flex-direction: row; width: 100%; height: calc(100vh - 140px); overflow: hidden; }
+#map-container { flex: 0 0 40%; height: 100%; order: 1; border-right: 1px solid var(--border-light); z-index: 1; }
+.listings_side { flex: 0 0 50%; height: 100%; order: 2; overflow-y: auto; background-color: var(--search-light); padding: 20px; }
+
+@media (max-width: 768px) {
+  .split_container { flex-direction: column; height: auto; }
+  #map-container, .listings_side { flex: 0 0 auto; width: 100%; }
+  #map-container { height: 300px; }
+}
+
+@media (max-width: 1023px) {
+  #map-container { display: none !important; }
+  .split_container { display: block; height: auto; overflow: visible; }
+  .listings_side { width: 100%; height: auto; overflow: visible; padding: 1.5rem 1rem; }
+  .properties_grid { grid-template-columns: 1fr; }
+  .hero_subtitle { font-size: 1.25rem; }
+  .hero_content_container, .container_center { padding-left: 2rem; padding-right: 2rem; }
+  .section_title { font-size: 2.25rem; line-height: 2.5rem; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .properties_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .properties_grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .listings_side .properties_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .split_container { display: flex; height: calc(100vh - 140px); overflow: hidden; }
+  #map-container { flex: 0 0 40%; display: block; }
+  .listings_side { flex: 0 0 60%; overflow-y: auto; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .content_section { background-color: var(--search-dark); }
+  .section_title { color: var(--bg-light); }
+  .section_description, .card_description { color: var(--par-dark); }
+  .card_title { color: var(--text-dark); }
+  .property_card { background-color: var(--bg-dark); border-color: var(--tu_blue_primary); }
+  .service_icon_container { background-color: rgba(var(--tu_blue_primary_rgb), 0.1); }
+  .listings_side { background-color: var(--bg-dark); }
+}
