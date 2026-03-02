@@ -1,67 +1,497 @@
 .hero_gradient_overlay {
-  position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 10;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.7) 100%);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.4) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
 }
 .hero_content_container {
-  position: relative; z-index: 10; margin-left: auto; margin-right: auto; max-width: 80rem;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 600px;
-  text-align: center; padding: 5rem 1rem;
+  position: relative;
+  z-index: 10;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+  text-align: center;
+  padding: 5rem 1rem;
 }
-.hero_title { max-width: 56rem; font-weight: 900; letter-spacing: -0.025em; color: var(--text-dark); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.05)); font-size: 2.25rem; line-height: 1; }
-.hero_subtitle { margin-top: 1.5rem; max-width: 42rem; font-weight: 300; color: #e2e8f0; font-size: 1.125rem; line-height: 1.75rem; }
+.hero_title {
+  max-width: 56rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--text-dark);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.05));
+  font-size: 2.25rem;
+  line-height: 1;
+}
+.hero_subtitle {
+  margin-top: 1.5rem;
+  max-width: 42rem;
+  font-weight: 300;
+  color: #e2e8f0;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
 
-.content_section { background-color: var(--bg-light); padding-top: 6rem; padding-bottom: 6rem; }
-.container_center { margin-left: auto; margin-right: auto; max-width: 80rem; padding-left: 1rem; padding-right: 1rem; }
-.section_title { font-weight: 700; letter-spacing: -0.025em; color: var(--text-light); line-height: 2.25rem; }
-.section_description { margin-left: auto; margin-right: auto; max-width: 42rem; margin-top: 1rem; font-size: 1.125rem; line-height: 1.75rem; color: #475569; }
+.content_section {
+  background-color: var(--bg-light);
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+.container_center {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.section_title {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-light);
+  line-height: 2.25rem;
+  margin: 0px;
+}
+.section_description {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 42rem;
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: #475569;
+}
 
-.properties_grid { margin-top: 4rem; display: grid; gap: 2rem; grid-template-columns: repeat(1, minmax(0, 1fr)); }
-.property_card { position: relative; border-radius: 0.75rem; padding: 2rem; background-color: white; border: 1px solid var(--border-light); transition: box-shadow 0.3s ease; }
-.property_card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-.service_icon_container { display: inline-flex; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; margin-bottom: 1.25rem; border-radius: 0.5rem; background-color: rgba(var(--tu_blue_primary_rgb), 0.1); color: var(--tu_blue_primary); font-size: 1.875rem; object-fit: contain; padding: 0.75rem; }
-.card_title { font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: var(--text-light); }
-.card_description { margin-top: 0.75rem; font-size: 1rem; line-height: 1.5rem; color: #475569; }
+.properties_grid {
+  margin-top: 1rem;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.estate_card {
+  height: 40vh;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden; /* Clips the image corners */
+  border: 1px solid var(--border-light);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.estate_card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Image Section */
+.estate_image_wrapper {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.estate_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.estate_card:hover .estate_image {
+  transform: scale(1.05);
+}
+
+.estate_status_tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--tu_blue_primary);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.favorite_btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: 0.2s;
+}
+
+.favorite_btn:hover {
+  color: #ef4444;
+  background: white;
+}
+
+/* Content Section */
+.estate_content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.estate_header{
+  display: flex;
+  justify-content: space-between;
+}
+
+.estate_price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--tu_blue_primary);
+  margin: 0;
+}
+
+.estate_address {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.feature_item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.feature_item img {
+  width: 25px;
+  height: 25px;
+  opacity: 0.7;
+}
+
+.btn_estate_view {
+  display: block;
+  text-align: center;
+  background: #f8fafc;
+  color: var(--tu_blue_primary);
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: 0.2s;
+  border: 1px solid var(--border-light);
+}
+
+.btn_estate_view:hover {
+  background: var(--tu_blue_primary);
+  color: white;
+}
 
 /* Карта и Split екран */
-.leaflet-container { overflow: hidden; position: relative; z-index: 1; }
-.split_container { display: flex; flex-direction: row; width: 100%; height: calc(100vh - 140px); overflow: hidden; }
-#map-container { flex: 0 0 40%; height: 100%; order: 1; border-right: 1px solid var(--border-light); z-index: 1; }
-.listings_side { flex: 0 0 50%; height: 100%; order: 2; overflow-y: auto; background-color: var(--search-light); padding: 20px; }
+.leaflet-container {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+.split_container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+#map-container {
+  flex: 0 0 35%;
+  height: 100%;
+  order: 1;
+  border-right: 1px solid var(--border-light);
+  z-index: 1;
+}
+.listings_side {
+  flex: 0 0 50%;
+  height: 100%;
+  order: 2;
+  overflow-y: auto;
+  background-color: var(--search-light);
+  padding: 20px;
+}
+
+/* Ensure container_center handles the height properly */
+.listings_side .container_center {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.estate_card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+}
+
+.estate_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.estate_image_wrapper {
+  position: relative;
+  height: 65%;
+  width: 100%;
+}
+
+.estate_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.estate_status_tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(21, 64, 115, 0.9);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.estate_content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.estate_price_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.estate_price {
+  font-size: 1.25rem;
+  color: var(--price-color);
+  font-weight: 700;
+  margin: 0;
+}
+
+.estate_address {
+  font-size: 14px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.estate_features {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 15px;
+  margin: 0px;
+  padding: 8px 0;
+  border-top: 1px solid #eee;
+}
+
+.feature_item {
+  font-size: 13px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.page_numbers {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.page_node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-light);
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.page_node:hover:not(.disabled) {
+  border-color: var(--tu_blue_primary);
+  color: var(--tu_blue_primary);
+  background-color: rgba(21, 64, 115, 0.05);
+}
+
+.page_node.active {
+  background-color: var(--tu_blue_primary);
+  color: #ffffff;
+  border-color: var(--tu_blue_primary);
+}
+
+.page_node.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Reusing your arrow logic for consistency */
+.css_arrow.left {
+  transform: rotate(135deg);
+  margin-left: 4px;
+}
+
+.css_arrow.right {
+  transform: rotate(-45deg);
+  margin-right: 4px;
+}
+
+.page_dots {
+  color: var(--text-muted);
+  font-weight: bold;
+  padding: 0 4px;
+}
 
 @media (max-width: 768px) {
-  .split_container { flex-direction: column; height: auto; }
-  #map-container, .listings_side { flex: 0 0 auto; width: 100%; }
-  #map-container { height: 300px; }
+  .split_container {
+    flex-direction: column;
+    height: auto;
+  }
+  #map-container,
+  .listings_side {
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0px;
+  }
+  #map-container {
+    height: 300px;
+  }
 }
 
 @media (max-width: 1023px) {
-  #map-container { display: none !important; }
-  .split_container { display: block; height: auto; overflow: visible; }
-  .listings_side { width: 100%; height: auto; overflow: visible; padding: 1.5rem 1rem; }
-  .properties_grid { grid-template-columns: 1fr; }
-  .hero_subtitle { font-size: 1.25rem; }
-  .hero_content_container, .container_center { padding-left: 2rem; padding-right: 2rem; }
-  .section_title { font-size: 2.25rem; line-height: 2.5rem; }
+  #map-container {
+    display: none !important;
+  }
+  .split_container {
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+  .listings_side {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    padding: 0px;
+  }
+  .properties_grid {
+    grid-template-columns: 1fr;
+  }
+  .hero_subtitle {
+    font-size: 1.25rem;
+  }
+  .hero_content_container,
+  .container_center {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .section_title {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .properties_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .properties_grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {
-  .properties_grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .listings_side .properties_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .split_container { display: flex; height: calc(100vh - 140px); overflow: hidden; }
-  #map-container { flex: 0 0 40%; display: block; }
-  .listings_side { flex: 0 0 60%; overflow-y: auto; }
+  .properties_grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .listings_side .properties_grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .split_container {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+  }
+  #map-container {
+    flex: 0 0 35%;
+    display: block;
+  }
+  .listings_side {
+    flex: 0 0 60%;
+    overflow-y: auto;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-  .content_section { background-color: var(--search-dark); }
-  .section_title { color: var(--bg-light); }
-  .section_description, .card_description { color: var(--par-dark); }
-  .card_title { color: var(--text-dark); }
-  .property_card { background-color: var(--bg-dark); border-color: var(--tu_blue_primary); }
-  .service_icon_container { background-color: rgba(var(--tu_blue_primary_rgb), 0.1); }
-  .listings_side { background-color: var(--bg-dark); }
+  .content_section {
+    background-color: var(--search-dark);
+  }
+  .section_title {
+    color: var(--bg-light);
+  }
+  .section_description,
+  .card_description {
+    color: var(--par-dark);
+  }
+  .card_title {
+    color: var(--text-dark);
+  }
+  .property_card {
+    background-color: var(--bg-dark);
+    border-color: var(--tu_blue_primary);
+  }
+  .service_icon_container {
+    background-color: rgba(var(--tu_blue_primary_rgb), 0.1);
+  }
+  .listings_side {
+    background-color: var(--bg-dark);
+  }
 }

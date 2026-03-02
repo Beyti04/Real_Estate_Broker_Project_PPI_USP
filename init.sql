@@ -19,6 +19,12 @@ CREATE TABLE
     );
 
 CREATE TABLE
+    IF NOT EXISTS estate_status (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        status_name VARCHAR(255) NOT NULL
+    );
+
+CREATE TABLE
     IF NOT EXISTS listing_types (
         id INT AUTO_INCREMENT PRIMARY KEY,
         type_name VARCHAR(255) NOT NULL
@@ -81,15 +87,20 @@ CREATE TABLE
         estate_type_id INT,
         exposure_type VARCHAR(255) NOT NULL,
         rooms INT NOT NULL,
+        floor INT NOT NULL,
         description TEXT,
         listing_type_id INT NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
         owner_id INT NOT NULL,
+        creation_date DATE NOT NULL,
+        expiration_date DATE NOT NULL,
+        status_id INT NOT NULL,
         FOREIGN KEY (estate_type_id) REFERENCES estate_types (id),
         FOREIGN KEY (city_id) REFERENCES cities (id),
         FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods (id),
         FOREIGN KEY (owner_id) REFERENCES users (id),
-        FOREIGN KEY (listing_type_id) REFERENCES listing_types (id)
+        FOREIGN KEY (listing_type_id) REFERENCES listing_types (id),
+        FOREIGN KEY (status_id) REFERENCES estate_status (id)
     );
 
 CREATE TABLE

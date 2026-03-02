@@ -4,15 +4,18 @@ document.addEventListener("DOMContentLoaded", () => {
   selectMenu();
 
   // 2. Dropdown Dependencies Logic
+  // Region -> City
   syncDropdowns("regionDropdown", "locationDropdown");
+  // Category -> Type
   syncDropdowns("categoryDropdown", "typeDropdown");
+  // City -> Neighborhood (with Visibility toggle)
   handleDependentWithVisibility("locationDropdown", "neighborhoodDropdown");
 
-  // 3. Map Initialization (Point to your ADM1 simplified file)
+  // 3. Map Initialization (Unified for both ADM1 and ADM2)
   initUnifiedMap(
     "map-container",
     "map/geoBoundaries-BGR-ADM1_simplified.geojson",
-    "map/geoBoundaries-BGR-ADM2_simplified.geojson",
+    "map/geoBoundaries-BGR-ADM2_simplified.geojson"
   );
 
   // 4. Horizontal Scroll for Filter Bar
@@ -27,20 +30,20 @@ document.addEventListener("DOMContentLoaded", () => {
           closeAllMenus();
         }
       },
-      { passive: false },
+      { passive: false }
     );
   }
 });
 
 /**
  * UNIFIED MAP FUNCTION
- * Handles both Regions (ADM1) and Municipalities (ADM2) highlighting
+ * Manages one map instance and handles highlighting for both levels
  */
 function initUnifiedMap(containerId, adm1Path, adm2Path) {
   const mapElement = document.getElementById(containerId);
   if (!mapElement) return;
 
-  // 1. Initialize Map ONCE
+  // Initialize Map ONCE
   const map = L.map(containerId).setView([42.7339, 25.4858], 7);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
@@ -59,28 +62,24 @@ function initUnifiedMap(containerId, adm1Path, adm2Path) {
     },
   };
 
-  // 2. Load Both Data Sets using Promise.all
+  // Load Both GeoJSON sets
   Promise.all([
     fetch(adm1Path).then((res) => res.json()),
     fetch(adm2Path).then((res) => res.json()),
   ])
     .then(([adm1Data, adm2Data]) => {
-      // Add both layers to the map
       adm1Layer = L.geoJson(adm1Data, { style: styles.adm1 }).addTo(map);
       adm2Layer = L.geoJson(adm2Data, { style: styles.adm2 }).addTo(map);
-
       setTimeout(() => map.invalidateSize(), 300);
     })
     .catch((err) => console.error("Map Loading Error:", err));
 
-  // 3. Helper function to apply style and zoom
   const applyHighlight = (layerGroup, englishName, isADM2 = false) => {
     if (!layerGroup) return;
     let targetLayer = null;
 
     layerGroup.eachLayer((layer) => {
       const props = layer.feature.properties;
-      // Match against common GeoJSON property keys
       const match =
         props.shapeName === englishName ||
         props.NAME_1 === englishName ||
@@ -96,20 +95,15 @@ function initUnifiedMap(containerId, adm1Path, adm2Path) {
     });
 
     if (targetLayer) {
-      map.fitBounds(targetLayer.getBounds(), {
-        padding: [50, 50],
-        animate: true,
-      });
+      map.fitBounds(targetLayer.getBounds(), { padding: [50, 50], animate: true });
     }
   };
 
-  // 4. Single Event Listener
   document.addEventListener("selectionChanged", (e) => {
     const selectedValue = e.detail.value;
     const btn = e.target.querySelector(".dropdown_toggle");
     const englishName = btn?.getAttribute("data-selected-name");
 
-    // Reset view if "Any" is selected
     if (selectedValue === "any") {
       adm1Layer?.eachLayer((l) => l.setStyle(styles.adm1));
       adm2Layer?.eachLayer((l) => l.setStyle(styles.adm2));
@@ -118,13 +112,9 @@ function initUnifiedMap(containerId, adm1Path, adm2Path) {
     }
 
     if (e.target.id === "regionDropdown") {
-      // Highlight Region (ADM1)
       applyHighlight(adm1Layer, englishName, false);
-      // Optional: Dim ADM2 layers to make Region selection clearer
       adm2Layer?.eachLayer((l) => l.setStyle({ fillOpacity: 0, weight: 0 }));
     } else if (e.target.id === "locationDropdown") {
-      // Highlight Municipality (ADM2)
-      // Reset ADM1 to default so we see the municipality inside it
       adm1Layer?.eachLayer((l) => l.setStyle(styles.adm1));
       applyHighlight(adm2Layer, englishName, true);
     }
@@ -182,23 +172,20 @@ function selectMenu() {
       option.addEventListener("click", (e) => {
         e.stopPropagation();
         const val = option.getAttribute("data-value");
-        const nameEn = option.getAttribute("data-name"); // Get English Name
+        const nameEn = option.getAttribute("data-name");
 
         label.innerText = option.innerText;
-
-        // Save the English name to the button so the map can find it
         btn.setAttribute("data-selected-name", nameEn || "");
 
         closeAllMenus();
 
         btn.style.borderColor = val !== "any" ? "var(--tu_blue_primary)" : "";
 
-        // Dispatch selection event
         wrapper.dispatchEvent(
           new CustomEvent("selectionChanged", {
             detail: { value: val },
             bubbles: true,
-          }),
+          })
         );
       });
     });
@@ -215,17 +202,11 @@ function closeAllMenus() {
       if (!m.classList.contains("show")) m.style.display = "none";
     }, 200);
   });
-  document
-    .querySelectorAll(".filter_pill")
-    .forEach((b) => b.classList.remove("active"));
+  document.querySelectorAll(".dropdown_toggle").forEach((b) => b.classList.remove("active"));
 }
 
 function getMenuFromWrapper(wrapperId) {
-  const wrapper = document.getElementById(wrapperId);
-  return (
-    wrapper?.querySelector(".dropdown_content") ||
-    document.querySelector(`.dropdown_content[data-parent-id="${wrapperId}"]`)
-  );
+  return document.querySelector(`.dropdown_content[data-parent-id="${wrapperId}"]`);
 }
 
 function syncDropdowns(parentId, childId) {
@@ -241,8 +222,19 @@ function syncDropdowns(parentId, childId) {
 
     if (!childMenu) return;
     const childOptions = childMenu.querySelectorAll(".dropdown_option");
+
+    // Reset child state when parent changes
     childLabel.innerText = childOptions[0].innerText;
     childBtn.style.borderColor = "";
+    childBtn.setAttribute("data-selected-name", "");
+
+    // Trigger selectionChanged on child to update visibility of any dependents
+    childWrapper.dispatchEvent(
+      new CustomEvent("selectionChanged", {
+        detail: { value: "any" },
+        bubbles: true,
+      })
+    );
 
     childOptions.forEach((opt) => {
       const dep = opt.getAttribute("data-region");
@@ -262,11 +254,16 @@ function handleDependentWithVisibility(parentId, childId) {
   if (!childWrapper || !parentWrapper) return;
 
   syncDropdowns(parentId, childId);
+
   const checkVisibility = (val) => {
-    childWrapper.style.display = val === "any" ? "none" : "inline-block";
+    // If "any" or no value is selected in parent, hide the child
+    childWrapper.style.display = (val === "any" || !val) ? "none" : "inline-block";
   };
-  parentWrapper.addEventListener("selectionChanged", (e) =>
-    checkVisibility(e.detail.value),
-  );
+
+  parentWrapper.addEventListener("selectionChanged", (e) => {
+    checkVisibility(e.detail.value);
+  });
+
+  // Run once on load
   checkVisibility("any");
 }
