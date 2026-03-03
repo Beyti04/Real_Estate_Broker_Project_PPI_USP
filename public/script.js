@@ -267,3 +267,40 @@ function handleDependentWithVisibility(parentId, childId) {
   // Run once on load
   checkVisibility("any");
 }
+
+// Добави това извикване в твоя съществуващ DOMContentLoaded event
+document.addEventListener("DOMContentLoaded", () => {
+  // ... другите ти функции (burgerMenu, selectMenu и т.н.)
+  initThemeToggle();
+});
+
+// --- ФУНКЦИЯ ЗА СМЯНА НА ТЕМАТА ---
+function initThemeToggle() {
+  const toggleBtn = document.getElementById("theme-toggle");
+  if (!toggleBtn) return;
+
+  // 1. Проверяваме дали има запазена тема в LocalStorage ИЛИ дали компютърът на потребителя е в тъмен режим
+  const currentTheme = localStorage.getItem("theme");
+  const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (currentTheme === "dark" || (!currentTheme && systemPrefersDark)) {
+    document.body.classList.add("dark-mode");
+    toggleBtn.innerHTML = "☀️"; // Слагаме слънце, защото сме в тъмен режим
+  } else {
+    toggleBtn.innerHTML = "🌙"; // Слагаме луна, защото сме в светъл режим
+  }
+
+  // 2. Добавяме събитие при клик
+  toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    
+    // Проверяваме кой режим е активен в момента
+    if (document.body.classList.contains("dark-mode")) {
+      localStorage.setItem("theme", "dark");
+      toggleBtn.innerHTML = "☀️";
+    } else {
+      localStorage.setItem("theme", "light");
+      toggleBtn.innerHTML = "🌙";
+    }
+  });
+}

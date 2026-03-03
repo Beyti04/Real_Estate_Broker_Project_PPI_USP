@@ -231,38 +231,37 @@ header {
 }
 
 /* Dark Mode за Хедъра */
-@media (prefers-color-scheme: dark) {
-  header {
+
+  body.dark-mode header {
     background-color: var(--header-bg-dark);
     border-bottom-color: var(--border-dark);
   }
-  .icon_box {
+  body.dark-mode .icon_box {
     background-color: var(--tu_logo_bg_dark);
   }
-  .heading_primary,
-  .nav_link {
+  body.dark-mode .heading_primary,
+  body.dark-mode .nav_link {
     color: var(--text-dark);
   }
-  .nav_link:hover {
+  body.dark-mode .nav_link:hover {
     color: var(--bg-light);
   }
-  .input_field {
+  body.dark-mode .input_field {
     background-color: var(--search-dark);
     border-color: var(--border-light);
     color: var(--bg-light);
   }
-  .input_field::placeholder {
+  body.dark-mode .input_field::placeholder {
     color: var(--par-dark);
   }
 
   @media (max-width: 1023px) {
-    .nav_container {
+    body.dark-mode .nav_container {
       background-color: var(--header-bg-dark);
       border-bottom-color: var(--border-dark);
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
     }
-    .menu_toggle span {
+    body.dark-mode .menu_toggle span {
       background-color: var(--text-dark);
     }
   }
-}

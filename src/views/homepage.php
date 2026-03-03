@@ -16,8 +16,8 @@
             <div class="logo">
                 <a class="logo_group" href="index.php?action=homepage">
                     <picture>
-                        <source srcset="images/broker_logo_dark.png" media="(prefers-color-scheme: dark)">
-                        <img class="icon_box" src="images/broker_logo_light.png" alt="TU Brokers Logo">
+                        <img class="icon_box theme_light_img" src="images/broker_logo_light.png" alt="TU Brokers Logo">
+                        <img class="icon_box theme_dark_img" src="images/broker_logo_dark.png" alt="TU Brokers Logo">
                     </picture>
                     <h1 class="heading_primary">TU Estates</h1>
                 </a>
@@ -44,7 +44,10 @@
                         <a class="nav_link" href="#">Agents</a>
                     </nav>
                     <div class="sing_in_btns">
-                        <?php 
+                        <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
+                            🌙
+                        </button>
+                        <?php
                         if (isset($_SESSION['user_id'])) {
                             echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
                         } else {
@@ -77,8 +80,8 @@
                 <div class="properties_grid">
                     <div class="property_card">
                         <picture>
-                            <source srcset="images/verified_dark.png" media="(prefers-color-scheme: dark)">
-                            <img class="service_icon_container" src="images/verified.png">
+                            <img class="icon_box theme_light_img" src="images/verified.png" alt="Verified Icon">
+                            <img class="icon_box theme_dark_img" src="images/verified_dark.png" alt="Verified Icon">
                         </picture>
 
                         <h3>Trusted Expertise</h3>
@@ -87,8 +90,8 @@
                     </div>
                     <div class="property_card">
                         <picture>
-                            <source srcset="images/globe_dark.png" media="(prefers-color-scheme: dark)">
-                            <img class="service_icon_container" src="images/globe.png">
+                            <img class="icon_box theme_light_img" src="images/globe.png" alt="Globe Icon">
+                            <img class="icon_box theme_dark_img" src="images/globe_dark.png" alt="Globe Icon">
                         </picture>
 
                         <h3>Global Reach</h3>
@@ -96,8 +99,8 @@
                     </div>
                     <div class="property_card">
                         <picture>
-                            <source srcset="images/sup_dark.png" media="(prefers-color-scheme: dark)">
-                            <img class="service_icon_container" src="images/sup.png">
+                            <img class="icon_box theme_light_img" src="images/sup.png" alt="Support Icon">
+                            <img class="icon_box theme_dark_img" src="images/sup_dark.png" alt="Support Icon">
                         </picture>
 
                         <h3>Personalized Service</h3>

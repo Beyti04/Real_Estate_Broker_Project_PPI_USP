@@ -21,9 +21,8 @@
 @media (min-width: 768px) { .footer_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 1024px) { .footer_grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-@media (prefers-color-scheme: dark) {
-  .footer_container { background-color: var(--bg-dark); border-top-color: var(--tu_blue_primary); }
-  .icon_square_primary { background-color: rgba(var(--tu_blue_primary_rgb), 0.2); border: 1px solid var(--border-dark); }
-  .footer_primary, .footer_label { color: var(--text-dark); }
-  .footer_bio, .contact_item { color: var(--par-dark); }
-}
+
+  body.dark-mode .footer_container { background-color: var(--bg-dark); border-top-color: var(--tu_blue_primary); }
+  body.dark-mode .icon_square_primary { background-color: rgba(var(--tu_blue_primary_rgb), 0.2); border: 1px solid var(--border-dark); }
+  body.dark-mode .footer_primary, body.dark-mode .footer_label { color: var(--text-dark); }
+  body.dark-mode .footer_bio, body.dark-mode .contact_item { color: var(--par-dark); }

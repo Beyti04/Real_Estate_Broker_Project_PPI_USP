@@ -470,28 +470,28 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .content_section {
+
+  body.dark-mode .content_section {
     background-color: var(--search-dark);
   }
-  .section_title {
+  body.dark-mode .section_title {
     color: var(--bg-light);
   }
-  .section_description,
-  .card_description {
+  body.dark-mode .section_description,
+  body.dark-mode .card_description {
     color: var(--par-dark);
   }
-  .card_title {
+  body.dark-mode .card_title {
     color: var(--text-dark);
   }
-  .property_card {
+  body.dark-mode .property_card {
     background-color: var(--bg-dark);
     border-color: var(--tu_blue_primary);
   }
-  .service_icon_container {
+  body.dark-mode .service_icon_container {
     background-color: rgba(var(--tu_blue_primary_rgb), 0.1);
   }
-  .listings_side {
+  body.dark-mode .listings_side {
     background-color: var(--bg-dark);
   }
-}
+

@@ -41,8 +41,6 @@
 }
 
 /* Dark Mode поддръжка */
-@media (prefers-color-scheme: dark) {
-  .auth_page_wrapper { background-color: var(--bg-dark); }
-  .auth_card { background-color: var(--header-bg-dark); border-color: var(--border-dark); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); }
-  .auth_label { color: var(--text-dark); }
-}
+  body.dark-mode .auth_page_wrapper { background-color: var(--bg-dark); }
+  body.dark-mode .auth_card { background-color: var(--header-bg-dark); border-color: var(--border-dark); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); }
+  body.dark-mode .auth_label { color: var(--text-dark); }

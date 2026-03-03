@@ -55,13 +55,13 @@
   background: #0d2a4d;
 }
 
-@media (prefers-color-scheme: dark) {
-  .btn_primary {
+
+  body.dark-mode .btn_primary {
     color: var(--tu_blue_primary);
     background-color: var(--bg-light);
     border-color: var(--border-dark);
   }
-  .btn_secondary {
+  body.dark-mode .btn_secondary {
     color: var(--text-dark);
     border-color: var(--border-light);
   }
@@ -82,4 +82,4 @@
       0 4px 6px -1px rgba(0, 0, 0, 0.1),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
-}
+

@@ -120,10 +120,8 @@
 .delete_btn:hover { background-color: #fee2e2; }
 
 /* Dark Mode за Админ панела (опционално) */
-@media (prefers-color-scheme: dark) {
-  .admin_layout, .table_container { background-color: var(--bg-dark); border-color: var(--border-dark); }
-  .admin_sidebar { background-color: var(--header-bg-dark); border-color: var(--border-dark); }
-  .admin_table th { background-color: var(--search-dark); border-color: var(--border-dark); }
-  .admin_table td { border-color: var(--border-dark); color: var(--text-dark); }
-  .admin_table tr:hover { background-color: rgba(255,255,255,0.02); }
-}
+  body.dark-mode .admin_layout, body.dark-mode .table_container { background-color: var(--bg-dark); border-color: var(--border-dark); }
+  body.dark-mode .admin_sidebar { background-color: var(--header-bg-dark); border-color: var(--border-dark); }
+  body.dark-mode .admin_table th { background-color: var(--search-dark); border-color: var(--border-dark); }
+  body.dark-mode .admin_table td { border-color: var(--border-dark); color: var(--text-dark); }
+  body.dark-mode .admin_table tr:hover { background-color: rgba(255,255,255,0.02); }

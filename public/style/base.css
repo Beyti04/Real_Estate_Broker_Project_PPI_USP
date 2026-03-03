@@ -55,10 +55,24 @@ body {
   object-fit: cover;
 }
 
-/* Dark Mode за основата */
-@media (prefers-color-scheme: dark) {
-  body {
+
+  body.dark-mode {
     background-color: var(--bg-dark);
     color: var(--text-dark);
   }
+
+  /* 1. По подразбиране (светъл режим) - скриваме тъмните картинки */
+.theme_dark_img {
+  display: none !important;
+}
+
+/* 2. Когато сме в Тъмен режим (.dark-mode) - скриваме светлите картинки */
+body.dark-mode .theme_light_img {
+  display: none !important;
+}
+
+/* 3. И показваме тъмните картинки */
+body.dark-mode .theme_dark_img {
+  /* Използваме flex или inline-flex, защото твоите .icon_box и .footer_icon са flex елементи според оригиналния ти CSS */
+  display: inline-flex !important; 
 }
