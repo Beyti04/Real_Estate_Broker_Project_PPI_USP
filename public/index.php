@@ -52,6 +52,53 @@ switch ($action) {
         require VIEW_DIR . 'admin.php';
         break;
 
+    case 'admin_delete_user':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { 
+            header("Location: index.php"); exit; 
+        }
+        
+        $id = (int)($_GET['id'] ?? 0);
+        if ($id > 0 && $id !== $_SESSION['user_id']) {
+            \App\Controllers\UserController::deleteUser($id);
+        }
+        header("Location: index.php?action=admin");
+        exit;
+        break;
+
+    case 'admin_add_user':
+    case 'admin_edit_user':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { 
+            header("Location: index.php"); exit; 
+        }
+        
+        $userToEdit = null;
+        if ($action === 'admin_edit_user' && isset($_GET['id'])) {
+            $userController = new \App\Controllers\UserController();
+            $userToEdit = $userController->getUserById((int)$_GET['id']);
+        }
+        
+        require VIEW_DIR . 'admin_user_form.php';
+        break;
+
+    case 'admin_save_user':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = (int)($_POST['id'] ?? 0);
+            $username = $_POST['username'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $userTypeId = (int)($_POST['user_type_id'] ?? 3);
+            
+            if ($id > 0) {
+                \App\Controllers\UserController::updateUser($id, $username, $email, $userTypeId);
+            } else {
+                $password = $_POST['password'] ?? '';
+                \App\Controllers\AuthController::register($username, $email, $password, $userTypeId);
+            }
+        }
+        header("Location: index.php?action=admin");
+        exit;
+        break;
     //Auth
     case 'login':
         require VIEW_DIR . 'login.php';

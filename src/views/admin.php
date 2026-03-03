@@ -29,7 +29,7 @@
         <main class="admin_main">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                 <h2 class="section_title">Управление на потребители</h2>
-                <button class="btn_primary">+ Нов потребител</button>
+                <a href="index.php?action=admin_add_user" class="btn_primary" style="text-decoration: none;">+ Нов потребител</a>
             </div>
 
             <div class="table_container">
@@ -63,8 +63,8 @@
                             <td><?= htmlspecialchars($user->getEmail()) ?></td>
                             <td><?= $roleName ?></td>
                             <td>
-                                <button class="action_btn edit_btn">Редакция</button>
-                                <button class="action_btn delete_btn">Изтриване</button>
+                                <a href="index.php?action=admin_edit_user&id=<?= $user->getId() ?>" class="action_btn edit_btn" style="text-decoration: none;">Редакция</a>
+                                <a href="index.php?action=admin_delete_user&id=<?= $user->getId() ?>" class="action_btn delete_btn" style="text-decoration: none;" onclick="return confirm('Сигурни ли сте, че искате да изтриете този потребител?');">Изтриване</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

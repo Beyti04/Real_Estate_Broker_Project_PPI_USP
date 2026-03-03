@@ -41,4 +41,33 @@ class UserController
             die('Error fetching user: ' . $e->getMessage());
         }
     }
+
+    public static function updateUser(int $id, string $username, string $email, int $userTypeId): bool
+    {
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("UPDATE users SET username = :username, email = :email, user_type_id = :user_type_id WHERE id = :id");
+            return $stmt->execute([
+                'username' => $username,
+                'email' => $email,
+                'user_type_id' => $userTypeId,
+                'id' => $id
+            ]);
+        } catch (PDOException $e) {
+            error_log('Error updating user: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public static function deleteUser(int $id): bool
+    {
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
+            return $stmt->execute(['id' => $id]);
+        } catch (PDOException $e) {
+            error_log('Error deleting user: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
