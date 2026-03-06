@@ -43,13 +43,11 @@
                         <a class="nav_link" href="#">Sell</a>
                         <a class="nav_link" href="#">Agents</a>
                     </nav>
+
                     <div class="sing_in_btns">
-<<<<<<< Updated upstream
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
                             🌙
                         </button>
-=======
->>>>>>> Stashed changes
                         <?php
                         if (isset($_SESSION['user_id'])) {
                             echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';

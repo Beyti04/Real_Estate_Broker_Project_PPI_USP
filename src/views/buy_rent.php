@@ -264,8 +264,8 @@
                                 <div class="estate_features">
                                     <div class="feature_item">
                                         <picture>
-                                            <img class="icon_box theme_light_img" src="images/area_icon.png" alt="TU Brokers Logo">
-                                            <img class="icon_box theme_dark_img" src="images/area_icon_dark.png" alt="TU Brokers Logo">
+                                            <source srcset="images/area_icon_dark.png" media="(prefers-color-scheme: dark)">
+                                            <img src="images/area_icon.png" alt="TU Brokers Logo">
                                         </picture>
                                         <span>75 m²</span>
                                     </div>
@@ -278,13 +278,8 @@
                                     </div>
                                     <div class="feature_item">
                                         <picture>
-<<<<<<< Updated upstream
                                             <img class="icon_box theme_light_img" src="images/floor.png" alt="TU Brokers Logo">
                                             <img class="icon_box theme_dark_img" src="images/floor_dark.png" alt="TU Brokers Logo">
-=======
-                                            <source srcset="images/floor_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/floor.png" alt="TU Brokers Logo">
->>>>>>> Stashed changes
                                         </picture>
                                         <span>4th Floor</span>
                                     </div>

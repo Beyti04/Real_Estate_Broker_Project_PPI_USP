@@ -104,6 +104,15 @@ CREATE TABLE
     );
 
 CREATE TABLE
+    IF NOT EXISTS estate_images (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        estate_id INT NOT NULL,
+        is_primary BOOLEAN NOT NULL,
+        image_path VARCHAR(255) NOT NULL,
+        FOREIGN KEY (estate_id) REFERENCES estates (id)
+    );
+
+CREATE TABLE
     IF NOT EXISTS audit_logs (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
