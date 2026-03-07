@@ -143,6 +143,9 @@ VALUES
     ('Продажба'),
     ('Наем');
 
+INSERT INTO estate_status (status_name) 
+VALUES ('Активна'), ('Архивирана'), ('Изтекла');
+
 INSERT INTO
     price_ranges (range_name, range_value)
 VALUES
