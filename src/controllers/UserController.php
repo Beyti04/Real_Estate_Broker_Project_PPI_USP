@@ -42,7 +42,7 @@ class UserController
         return $users;
     }
 
-    public function getUserById(int $id): ?User
+    public static function getUserById(int $id): ?User
     {
         $pdo = Database::getInstance();
         try {
@@ -84,6 +84,42 @@ class UserController
             return $stmt->execute(['id' => $id]);
         } catch (PDOException $e) {
             error_log('Error deleting user: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public static function updateProfile(int $id, string $username, string $email, string $newPassword = '', string $currentPassword = ''): bool
+    {
+        $pdo = \Config\Database::getInstance();
+        
+        try {
+            if (!empty($newPassword)) {
+                
+                $user = self::getUserById($id);
+                
+                if (empty($currentPassword) || !password_verify($currentPassword, $user->getPassword())) {
+                    return false; 
+                }
+
+                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("UPDATE users SET username = :username, email = :email, password = :password WHERE id = :id");
+                return $stmt->execute([
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => $hashedPassword,
+                    'id' => $id
+                ]);
+                
+            } else {
+                $stmt = $pdo->prepare("UPDATE users SET username = :username, email = :email WHERE id = :id");
+                return $stmt->execute([
+                    'username' => $username,
+                    'email' => $email,
+                    'id' => $id
+                ]);
+            }
+        } catch (\PDOException $e) {
+            error_log('Error updating profile: ' . $e->getMessage());
             return false;
         }
     }

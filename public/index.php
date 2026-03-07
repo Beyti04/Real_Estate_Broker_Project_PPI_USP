@@ -166,7 +166,37 @@ switch ($action) {
             exit;
             break;
 
+        case 'admin_settings':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
         
+        $userController = new \App\Controllers\UserController();
+        $currentUser = $userController->getUserById($_SESSION['user_id']);
+        
+        require VIEW_DIR . 'admin_settings.php';
+        break;
+
+    case 'admin_save_settings':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_SESSION['user_id'];
+            $username = $_POST['username'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $newPassword = $_POST['new_password'] ?? '';
+            $currentPassword = $_POST['current_password'] ?? '';
+            
+            $success = \App\Controllers\UserController::updateProfile($userId, $username, $email, $newPassword, $currentPassword);
+            
+            if ($success) {
+                $_SESSION['username'] = $username;
+                header("Location: index.php?action=admin_settings&success=1");
+            } else {
+                header("Location: index.php?action=admin_settings&error=1");
+            }
+            exit;
+        }
+        break;
+
     //Auth
     case 'login':
         require VIEW_DIR . 'login.php';
