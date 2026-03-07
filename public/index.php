@@ -99,6 +99,74 @@ switch ($action) {
         header("Location: index.php?action=admin");
         exit;
         break;
+
+        case 'admin_estates':
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
+            require VIEW_DIR . 'admin_estates.php';
+            break;
+
+        case 'admin_add_estate':
+        case 'admin_edit_estate':
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
+
+            if ($action === 'admin_edit_estate' && isset($_GET['id'])) {
+                $estateController = new \App\Controllers\EstateController();
+                $estateToEdit = $estateController->getEstateById((int)$_GET['id']);
+            } else {
+                $estateToEdit = null;
+            }
+
+            require VIEW_DIR . 'admin_estate_form.php';
+            break;
+       
+        case 'admin_save_estate':
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
+            
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $id = (int)($_POST['id'] ?? 0);
+                $cityId = (int)$_POST['city_id'];
+                $neighborhoodId = (int)$_POST['neighborhood_id'];
+                $address = $_POST['estate_address'] ?? '';
+                $estateTypeId = (int)$_POST['estate_type_id'];
+                $exposureType = $_POST['exposure_type'] ?? '';
+                $rooms = (int)$_POST['rooms'];
+                $floor = (int)$_POST['floor'];
+                $description = $_POST['description'] ?? '';
+                $listingTypeId = (int)$_POST['listing_type_id'];
+                $price = (float)$_POST['price'];
+                $ownerId = (int)$_POST['owner_id'];
+                $statusId = (int)$_POST['status_id'];
+
+                if ($id > 0) {
+                    \App\Controllers\EstateController::updateEstate(
+                        $id, $cityId, $neighborhoodId, $address, $estateTypeId, 
+                        $exposureType, $rooms, $floor, $description, 
+                        $listingTypeId, $price, $ownerId, $statusId
+                    );
+                } else {
+                    \App\Controllers\EstateController::createEstate(
+                        $cityId, $neighborhoodId, $address, $estateTypeId, 
+                        $exposureType, $rooms, $floor, $description, 
+                        $listingTypeId, $price, $ownerId, $statusId
+                    );
+                }
+            }
+            header("Location: index.php?action=admin_estates");
+            exit;
+            break;
+
+        case 'admin_delete_estate':
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
+            
+            $id = (int)($_GET['id'] ?? 0);
+            if ($id > 0) {
+                \App\Controllers\EstateController::deleteEstate($id);
+            }
+            header("Location: index.php?action=admin_estates");
+            exit;
+            break;
+
+        
     //Auth
     case 'login':
         require VIEW_DIR . 'login.php';

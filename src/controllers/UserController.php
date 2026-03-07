@@ -24,6 +24,23 @@ class UserController
 
         return $users;
     }
+    
+    public static function getUserWithoutAdmin(): array
+    {
+        $pdo = Database::getInstance();
+        $users = [];
+
+        try {
+            $stmt = $pdo->query("SELECT id, username, email, password, user_type_id FROM users WHERE user_type_id != 1");
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $users[] = new User($row['id'], $row['username'], $row['email'], $row['password'], $row['user_type_id']);
+            }
+        } catch (PDOException $e) {
+            die('Error fetching users: ' . $e->getMessage());
+        }
+
+        return $users;
+    }
 
     public function getUserById(int $id): ?User
     {
