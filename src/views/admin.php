@@ -20,7 +20,7 @@
         <aside class="admin_sidebar">
             <nav class="admin_nav">
                 <a href="index.php?action=admin" class="admin_nav_link active">👥 Потребители</a>
-                <a href="#" class="admin_nav_link">🏠 Обяви (Очаквайте)</a>
+                <a href="index.php?action=admin_estates" class="admin_nav_link">🏠 Обяви</a>
                 <a href="#" class="admin_nav_link">⚙️ Настройки</a>
                 <a href="index.php?action=homepage" class="admin_nav_link" style="margin-top: auto;">🌐 Към сайта</a>
             </nav>
