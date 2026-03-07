@@ -1,4 +1,7 @@
 <?php
+
+use Config\Database;
+
 session_start();
 
 const VIEW_DIR = __DIR__ . '/../src/views/';
@@ -38,6 +41,7 @@ $action = $_GET['action'] ?? 'homepage';
 
 switch ($action) {
     case 'homepage':
+        Database::getInstance(); // Ensure DB is initialized before loading homepage
         require VIEW_DIR . 'homepage.php';
         break;
     case 'buy_rent':

@@ -76,6 +76,7 @@
 
 .properties_grid {
   margin-top: 1rem;
+  margin-bottom: 1rem;
   display: grid;
   gap: 2rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -407,10 +408,28 @@
   font-size: 28px;
   width: 3rem;
   height: 3rem;
-  padding:0.5rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
   background-color: rgba(var(--tu_blue_primary_rgb), 0.1);
   color: rgb(var(--tu_blue_primary_rgb));
+}
+
+.property_card {
+  padding: 1rem;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.property_card:hover {
+  transform: translateY(-5px);
+  box-shadow: 8px 8px 12px 2px rgba(71, 85, 105, 0.65);
+}
+
+.estate_icon{
+  width: 2rem;
+  height: 2rem;
+  padding: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -489,28 +508,26 @@
   }
 }
 
-
-  body.dark-mode .content_section {
-    background-color: var(--search-dark);
-  }
-  body.dark-mode .section_title {
-    color: var(--bg-light);
-  }
-  body.dark-mode .section_description,
-  body.dark-mode .card_description {
-    color: var(--par-dark);
-  }
-  body.dark-mode .card_title {
-    color: var(--text-dark);
-  }
-  body.dark-mode .property_card {
-    background-color: var(--bg-dark);
-    border-color: var(--tu_blue_primary);
-  }
-  body.dark-mode .service_icon_container {
-    background-color: rgba(var(--tu_blue_primary_rgb), 0.1);
-  }
-  body.dark-mode .listings_side {
-    background-color: var(--bg-dark);
-  }
-
+body.dark-mode .content_section {
+  background-color: var(--search-dark);
+}
+body.dark-mode .section_title {
+  color: var(--bg-light);
+}
+body.dark-mode .section_description,
+body.dark-mode .card_description {
+  color: var(--par-dark);
+}
+body.dark-mode .card_title {
+  color: var(--text-dark);
+}
+body.dark-mode .property_card {
+  background-color: var(--bg-dark);
+  border-color: var(--tu_blue_primary);
+}
+body.dark-mode .service_icon_container {
+  background-color: rgba(var(--tu_blue_primary_rgb), 0.1);
+}
+body.dark-mode .listings_side {
+  background-color: var(--bg-dark);
+}

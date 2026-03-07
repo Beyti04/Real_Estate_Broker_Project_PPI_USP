@@ -216,19 +216,21 @@ function syncDropdowns(parentId, childId) {
 
   parentWrapper.addEventListener("selectionChanged", (e) => {
     const selectedValue = e.detail.value;
-    const childMenu = getMenuFromWrapper(childId);
+    
+    // ТЪРСИМ МЕНЮТО И В BODY (ако е отворено), И ВЪТРЕ В WRAPPER-A (ако не е отваряно)
+    let childMenu = getMenuFromWrapper(childId) || childWrapper.querySelector(".dropdown_content");
+    
     const childLabel = childWrapper.querySelector(".filter_label");
     const childBtn = childWrapper.querySelector(".dropdown_toggle");
 
     if (!childMenu) return;
     const childOptions = childMenu.querySelectorAll(".dropdown_option");
 
-    // Reset child state when parent changes
+    // Reset child state
     childLabel.innerText = childOptions[0].innerText;
     childBtn.style.borderColor = "";
     childBtn.setAttribute("data-selected-name", "");
 
-    // Trigger selectionChanged on child to update visibility of any dependents
     childWrapper.dispatchEvent(
       new CustomEvent("selectionChanged", {
         detail: { value: "any" },
@@ -238,12 +240,13 @@ function syncDropdowns(parentId, childId) {
 
     childOptions.forEach((opt) => {
       const dep = opt.getAttribute("data-region");
-      opt.style.display =
-        selectedValue === "any" ||
-        dep === selectedValue ||
-        opt.getAttribute("data-value") === "any"
-          ? "block"
-          : "none";
+      const isAny = opt.getAttribute("data-value") === "any";
+      
+      if (selectedValue === "any" || dep === selectedValue || isAny) {
+        opt.style.display = "block";
+      } else {
+        opt.style.display = "none";
+      }
     });
   });
 }

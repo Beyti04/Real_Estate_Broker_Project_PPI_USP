@@ -251,7 +251,7 @@
                     <div class="properties_grid">
                         <article class="estate_card">
                             <div class="estate_image_wrapper">
-                                <img src="images/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
+                                <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
                                 <div class="estate_status_tag">For Sale</div>
                             </div>
 
@@ -264,22 +264,22 @@
                                 <div class="estate_features">
                                     <div class="feature_item">
                                         <picture>
-                                            <source srcset="images/area_icon_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/area_icon.png" alt="TU Brokers Logo">
+                                            <img class="theme_light_img" src="images/room.png" alt="TU Brokers Logo">
+                                            <img class="theme_dark_img" src="images/room_dark.png" alt="TU Brokers Logo">
                                         </picture>
                                         <span>75 m²</span>
                                     </div>
                                     <div class="feature_item">
                                         <picture>
-                                            <img class="icon_box theme_light_img" src="images/area_icon.png" alt="TU Brokers Logo">
-                                            <img class="icon_box theme_dark_img" src="images/area_icon_dark.png" alt="TU Brokers Logo">
+                                            <img class="theme_light_img" src="images/area_icon.png" alt="TU Brokers Logo">
+                                            <img class="theme_dark_img" src="images/area_icon_dark.png" alt="TU Brokers Logo">
                                         </picture>
                                         <span>3 Rooms</span>
                                     </div>
                                     <div class="feature_item">
                                         <picture>
-                                            <img class="icon_box theme_light_img" src="images/floor.png" alt="TU Brokers Logo">
-                                            <img class="icon_box theme_dark_img" src="images/floor_dark.png" alt="TU Brokers Logo">
+                                            <img class="theme_light_img" src="images/floor.png" alt="TU Brokers Logo">
+                                            <img class="theme_dark_img" src="images/floor_dark.png" alt="TU Brokers Logo">
                                         </picture>
                                         <span>4th Floor</span>
                                     </div>
@@ -288,88 +288,6 @@
                                 <a href="estate_details.php?id=1" class="btn_secondary" style="text-decoration: none;">View Details</a>
                             </div>
                         </article>
-
-                        <article class="estate_card">
-                            <div class="estate_image_wrapper">
-                                <img src="images/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
-                                <div class="estate_status_tag">For Sale</div>
-                            </div>
-
-                            <div class="estate_content">
-                                <div class="estate_header">
-                                    <h3 class="estate_price">€ 125,000</h3>
-                                    <p class="estate_address">Lozenets, Sofia</p>
-                                </div>
-
-                                <div class="estate_features">
-                                    <div class="feature_item">
-                                        <picture>
-                                            <source srcset="images/area_icon_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/area_icon.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>75 m²</span>
-                                    </div>
-                                    <div class="feature_item">
-                                        <picture>
-                                            <source srcset="images/area_icon_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/area_icon.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>3 Rooms</span>
-                                    </div>
-                                    <div class="feature_item">
-                                        <picture>
-                                            <source srcset="images/floor_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/floor.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>4th Floor</span>
-                                    </div>
-                                </div>
-
-                                <a href="estate_details.php?id=1" class="btn_estate_view">View Details</a>
-                            </div>
-                        </article>
-
-                        <article class="estate_card">
-                            <div class="estate_image_wrapper">
-                                <img src="images/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
-                                <div class="estate_status_tag">For Sale</div>
-                            </div>
-
-                            <div class="estate_content">
-                                <div class="estate_header">
-                                    <h3 class="estate_price">€ 125,000</h3>
-                                    <p class="estate_address">Lozenets, Sofia</p>
-                                </div>
-
-                                <div class="estate_features">
-                                    <div class="feature_item">
-                                        <picture>
-                                            <source srcset="images/area_icon_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/area_icon.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>75 m²</span>
-                                    </div>
-                                    <div class="feature_item">
-                                        <picture>
-                                            <source srcset="images/area_icon_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/area_icon.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>3 Rooms</span>
-                                    </div>
-                                    <div class="feature_item">
-                                        <picture>
-                                            <source srcset="images/floor_dark.png" media="(prefers-color-scheme: dark)">
-                                            <img src="images/floor.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>4th Floor</span>
-                                    </div>
-                                </div>
-
-                                <a href="estate_details.php?id=1" class="btn_estate_view">View Details</a>
-                            </div>
-                        </article>
-
-
 
                     </div>
                 </div>

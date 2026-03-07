@@ -116,9 +116,9 @@
                 <div class="flex_column_gap">
                     <div class="flex_center_row">
                         <picture>
-                            <source srcset="images/broker_logo_dark.png" media="(prefers-color-scheme: dark)">
-                            <img class="icon_box" src="images/broker_logo_light.png" alt="TU Brokers Logo">
-                        </picture>
+                        <img class="icon_box theme_light_img" src="images/broker_logo_light.png" alt="TU Brokers Logo">
+                        <img class="icon_box theme_dark_img" src="images/broker_logo_dark.png" alt="TU Brokers Logo">
+                    </picture>
                         <h3 class="footer_primary">TU Estates</h3>
                     </div>
                     <p class="footer_bio">Providing unparalleled real estate services for the most

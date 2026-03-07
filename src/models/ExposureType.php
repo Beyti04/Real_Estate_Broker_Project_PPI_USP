@@ -3,16 +3,16 @@
 namespace App\Models;
 
 enum ExposureType: string{
-    case NORTH = 'North';
-    case SOUTH = 'South';
-    case EAST = 'East';
-    case WEST = 'West';
+    case NORTH = 'Север';
+    case SOUTH = 'Юг';
+    case EAST = 'Изток';
+    case WEST = 'Запад';
 
-    case NORTHEAST = 'North-East';
-    case NORTHWEST = 'North-West';
+    case NORTHEAST = 'Северо-Изток';
+    case NORTHWEST = 'Северо-Запад';
 
-    case SOUTHEAST = 'South-East';
-    case SOUTHWEST = 'South-West';
+    case SOUTHEAST = 'Юго-Изток';
+    case SOUTHWEST = 'Юго-Запад';
 
     public static function getOptions(): array{
         $options=[];
