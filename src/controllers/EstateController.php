@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Estate;
+use App\Models\ExposureType;
 use Config\Database;
 use PDO, PDOException;
 
@@ -13,22 +14,28 @@ class EstateController
         $db = Database::getInstance();
 
         $query = "
-            SELECT 
-                e.id, 
-                e.price, 
-                e.rooms,
-                et.type_name AS estate_type, 
+            SELECT
+                e.id,
                 c.city_name_bg AS city_name,
                 n.neighborhood_name_bg AS neighborhood_name,
+                e.estate_address,
+                et.type_name AS estate_type,
+                e.rooms, e.area, e.floor,
+                e.exposure_type,
+                e.description,
                 lt.type_name AS listing_type,
-                u.username AS owner_name
+                e.price,
+                u.username AS owner_name,
+                e.creation_date,
+                e.expiration_date,
+                s.status_name
             FROM estates e
-            LEFT JOIN estate_types et ON e.estate_type_id = et.id
-            LEFT JOIN cities c ON e.city_id = c.id
-            LEFT JOIN neighborhoods n ON e.neighborhood_id = n.id
-            LEFT JOIN listing_types lt ON e.listing_type_id = lt.id
-            LEFT JOIN users u ON e.owner_id = u.id
-            ORDER BY e.id DESC
+            LEFT JOIN cities c ON e.city_id=c.id
+            LEFT JOIN neighborhoods n ON e.neighborhood_id=n.id
+            LEFT JOIN estate_types et ON e.estate_type_id=et.id
+            LEFT JOIN listing_types lt ON e.listing_type_id=lt.id
+            LEFT JOIN users u ON e.owner_id=u.id
+            LEFT JOIN estate_status s ON e.status_id=s.id
         ";
         
         $stmt = $db->prepare($query);
@@ -51,9 +58,10 @@ class EstateController
                     $row['neighborhood_id'], 
                     $row['estate_address'], 
                     $row['estate_type_id'], 
-                    $row['exposure_type'], 
                     $row['rooms'], 
                     $row['floor'], 
+                    $row['area'],
+                    ExposureType::from($row['exposure_type']), 
                     $row['description'], 
                     $row['listing_type_id'], 
                     $row['price'], 

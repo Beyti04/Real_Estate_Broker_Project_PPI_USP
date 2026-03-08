@@ -11,9 +11,10 @@ class Estate
     private int $neighborhoodId;
     private string $estateAddress;
     private int $estateTypeId;
-    private string $exposureType;
     private int $rooms;
+    private float $area;
     private int $floor;
+    private ExposureType $exposureType;        
     private string $description;
     private int $listingTypeId;
     private float $price;
@@ -23,17 +24,18 @@ class Estate
     private int $statusId;
 
     public function __construct(
-        int $id, int $cityId, int $neighborhoodId, string $estateAddress, int $estateTypeId, string $exposureType,
-        int $rooms, int $floor, string $description, int $listingTypeId, float $price, int $ownerId, string $creationDate, string $expirationDate, int $statusId
+        int $id, int $cityId, int $neighborhoodId, string $estateAddress, int $estateTypeId,int $rooms, int $floor,float $area, ExposureType $exposureType,
+         string $description, int $listingTypeId, float $price, int $ownerId, string $creationDate, string $expirationDate, int $statusId
     ) {
         $this->id = $id;
         $this->cityId = $cityId;
         $this->neighborhoodId = $neighborhoodId;
         $this->estateAddress = $estateAddress;
         $this->estateTypeId = $estateTypeId;
-        $this->exposureType = $exposureType;
+        $this->area = $area;
         $this->rooms = $rooms;
         $this->floor = $floor;
+        $this->exposureType = $exposureType;
         $this->description = $description;
         $this->listingTypeId = $listingTypeId;
         $this->price = $price;
@@ -68,9 +70,9 @@ class Estate
         return $this->estateTypeId;
     }
 
-    public function getExposureType(): string
+    public function getArea():float
     {
-        return $this->exposureType;
+        return $this->area;
     }
 
     public function getRooms(): int
@@ -82,7 +84,11 @@ class Estate
     {
         return $this->floor;
     }
-
+    
+    public function getExposureType(): ExposureType
+    {
+        return $this->exposureType;
+    }
     public function getDescription(): string
     {
         return $this->description;

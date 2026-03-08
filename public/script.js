@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "map/geoBoundaries-BGR-ADM2_simplified.geojson"
   );
 
+  initPaginationUI();
+
   // 4. Horizontal Scroll for Filter Bar
   const filterBar = document.querySelector(".filter_bar");
   if (filterBar) {
@@ -306,4 +308,15 @@ function initThemeToggle() {
       toggleBtn.innerHTML = "🌙";
     }
   });
+}
+
+function initPaginationUI() {
+    const pageLinks = document.querySelectorAll(".page_link");
+    
+    pageLinks.forEach(link => {
+        link.addEventListener("click", () => {
+            // Добави анимация за зареждане или скрол догоре
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
 }

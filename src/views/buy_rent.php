@@ -48,7 +48,7 @@
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
                             🌙
                         </button>
-                        <?php 
+                        <?php
                         if (isset($_SESSION['user_id'])) {
                             echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
                         } else {
@@ -245,50 +245,104 @@
         <div class="split_container">
             <div id="map-container"></div>
 
+            <?php
+            $is_mobile = is_numeric(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile"));
+
+// 2. Вземи всички имоти първо
+$all_estates = App\Controllers\EstateController::getAllEstates();
+$total_items = count($all_estates);
+
+if ($is_mobile) {
+    // На мобилен показваме всичко наведнъж
+    $items_per_page = $total_items > 0 ? $total_items : 1; 
+    $current_page = 1;
+} else {
+    // На десктоп използваме странициране
+    $items_per_page = 3; 
+    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+}
+
+$offset = ($current_page - 1) * $items_per_page;
+$total_pages = ceil($total_items / $items_per_page);
+
+// 3. Отрежи имотите спрямо страницата
+$estates = array_slice($all_estates, $offset, $items_per_page);
+            ?>
+
             <div class="listings_side">
                 <div class="container_center">
                     <h2 class="section_title">Available Estates</h2>
                     <div class="properties_grid">
-                        <article class="estate_card">
-                            <div class="estate_image_wrapper">
-                                <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
-                                <div class="estate_status_tag">For Sale</div>
-                            </div>
-
-                            <div class="estate_content">
-                                <div class="estate_header">
-                                    <h3 class="estate_price">€ 125,000</h3>
-                                    <p class="estate_address">Lozenets, Sofia</p>
+                        <?php
+                        foreach ($estates as $estate) {
+                        ?>
+                            <article class="estate_card">
+                                <div class="estate_image_wrapper">
+                                    <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
+                                    <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
                                 </div>
 
-                                <div class="estate_features">
-                                    <div class="feature_item">
-                                        <picture>
-                                            <img class="theme_light_img" src="images/room.png" alt="TU Brokers Logo">
-                                            <img class="theme_dark_img" src="images/room_dark.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>75 m²</span>
+                                <div class="estate_content">
+                                    <div class="estate_header">
+                                        <h3 class="estate_price">€<?php echo htmlspecialchars(number_format($estate->price, 2)) ?></h3>
+                                        <p class="estate_address"><?php echo htmlspecialchars($estate->city_name) ?>, <?php echo htmlspecialchars($estate->neighborhood_name) ?></p>
                                     </div>
-                                    <div class="feature_item">
-                                        <picture>
-                                            <img class="theme_light_img" src="images/area_icon.png" alt="TU Brokers Logo">
-                                            <img class="theme_dark_img" src="images/area_icon_dark.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>3 Rooms</span>
+
+                                    <div class="estate_features">
+                                        <div class="feature_item">
+                                            <picture>
+                                                <img class="theme_light_img" src="images/area_icon.png" alt="TU Brokers Logo">
+                                                <img class="theme_dark_img" src="images/area_icon_dark.png" alt="TU Brokers Logo">
+                                            </picture>
+                                            <span><?php echo htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
+                                        </div>
+                                        <div class="feature_item">
+                                            <picture>
+                                                <img class="theme_light_img" src="images/room.png" alt="TU Brokers Logo">
+                                                <img class="theme_dark_img" src="images/room_dark.png" alt="TU Brokers Logo">
+                                            </picture>
+                                            <span><?php echo htmlspecialchars($estate->rooms) ?></span>
+                                        </div>
+                                        <div class="feature_item">
+                                            <picture>
+                                                <img class="theme_light_img" src="images/floor.png" alt="TU Brokers Logo">
+                                                <img class="theme_dark_img" src="images/floor_dark.png" alt="TU Brokers Logo">
+                                            </picture>
+                                            <span><?php echo htmlspecialchars($estate->floor) ?></span>
+                                        </div>
                                     </div>
-                                    <div class="feature_item">
-                                        <picture>
-                                            <img class="theme_light_img" src="images/floor.png" alt="TU Brokers Logo">
-                                            <img class="theme_dark_img" src="images/floor_dark.png" alt="TU Brokers Logo">
-                                        </picture>
-                                        <span>4th Floor</span>
-                                    </div>
+
+                                    <a href="estate_details.php?id=1" class="btn_view" style="text-decoration: none;">View Details</a>
                                 </div>
-
-                                <a href="estate_details.php?id=1" class="btn_secondary" style="text-decoration: none;">View Details</a>
+                            </article>
+                        <?php
+                        }
+                        // Вземаме текущия екшън от URL-а, за да не го губим при смяна на страницата
+                        $current_action = isset($_GET['action']) ? $_GET['action'] : 'buy_rent';
+                        ?>
+                    </div>
+                    <div class="pagination_container">
+                        <?php if ($current_page > 1): ?>
+                            <div class="page_numbers">
+                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $current_page - 1; ?>" class="page_link">
+                                    <</a>
                             </div>
-                        </article>
+                        <?php endif; ?>
 
+                        <div class="page_numbers">
+                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $i; ?>"
+                                    class="page_link <?php echo ($i == $current_page) ? 'active' : ''; ?>">
+                                    <?php echo $i; ?>
+                                </a>
+                            <?php endfor; ?>
+                        </div>
+
+                        <?php if ($current_page < $total_pages): ?>
+                            <div class="page_numbers">
+                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $current_page + 1; ?>" class="page_link">></a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
