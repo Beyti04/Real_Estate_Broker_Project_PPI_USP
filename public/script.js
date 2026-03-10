@@ -45,14 +45,20 @@ function initUnifiedMap(containerId, adm1Path, adm2Path) {
   const mapElement = document.getElementById(containerId);
   if (!mapElement) return;
 
-  // Initialize Map ONCE
-  const map = L.map(containerId).setView([42.7339, 25.4858], 7);
+  // Център на България
+  const BULGARIA_CENTER = [42.7339, 25.4858];
+  const DEFAULT_ZOOM = 7;
+
+  // Инициализация на картата
+  const map = L.map(containerId).setView(BULGARIA_CENTER, DEFAULT_ZOOM);
+  
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
   }).addTo(map);
 
   let adm1Layer, adm2Layer;
 
+  // Дефиниция на стиловете
   const styles = {
     adm1: { fillColor: "#154073", weight: 1, color: "white", fillOpacity: 0.2 },
     adm2: { fillColor: "#154073", weight: 1, color: "white", fillOpacity: 0.1 },
@@ -62,9 +68,10 @@ function initUnifiedMap(containerId, adm1Path, adm2Path) {
       color: "#ffffff",
       fillOpacity: 0.7,
     },
+    hidden: { fillOpacity: 0, weight: 0 }
   };
 
-  // Load Both GeoJSON sets
+  // Зареждане на данните
   Promise.all([
     fetch(adm1Path).then((res) => res.json()),
     fetch(adm2Path).then((res) => res.json()),
@@ -72,52 +79,72 @@ function initUnifiedMap(containerId, adm1Path, adm2Path) {
     .then(([adm1Data, adm2Data]) => {
       adm1Layer = L.geoJson(adm1Data, { style: styles.adm1 }).addTo(map);
       adm2Layer = L.geoJson(adm2Data, { style: styles.adm2 }).addTo(map);
+      
+      // Поправка за правилно оразмеряване в контейнери
       setTimeout(() => map.invalidateSize(), 300);
     })
-    .catch((err) => console.error("Map Loading Error:", err));
+    .catch((err) => console.error("Грешка при зареждане на картата:", err));
 
+  /**
+   * Търси и оцветява обект в даден слой
+   */
   const applyHighlight = (layerGroup, englishName, isADM2 = false) => {
-    if (!layerGroup) return;
+    if (!layerGroup || !englishName) return;
+    
     let targetLayer = null;
+    const searchName = englishName.toString().toLowerCase().trim();
 
     layerGroup.eachLayer((layer) => {
       const props = layer.feature.properties;
-      const match =
-        props.shapeName === englishName ||
-        props.NAME_1 === englishName ||
-        props.NAME_2 === englishName;
+      // Проверяваме всички възможни полета за име в GeoJSON
+      const layerName = (props.shapeName || props.NAME_1 || props.NAME_2 || "").toString().toLowerCase().trim();
 
-      if (match) {
+      if (layerName === searchName) {
         layer.setStyle(styles.highlight);
         layer.bringToFront();
         targetLayer = layer;
       } else {
+        // Връщаме базовия стил за останалите в същия слой
         layer.setStyle(isADM2 ? styles.adm2 : styles.adm1);
       }
     });
 
+    // Ако сме намерили обекта, фокусираме картата върху него
     if (targetLayer) {
-      map.fitBounds(targetLayer.getBounds(), { padding: [50, 50], animate: true });
+      map.flyToBounds(targetLayer.getBounds(), { 
+        padding: [50, 50], 
+        duration: 1.5 
+      });
     }
   };
 
+  /**
+   * Слушател за събития от дропдауните
+   */
   document.addEventListener("selectionChanged", (e) => {
     const selectedValue = e.detail.value;
     const btn = e.target.querySelector(".dropdown_toggle");
     const englishName = btn?.getAttribute("data-selected-name");
 
-    if (selectedValue === "any") {
-      adm1Layer?.eachLayer((l) => l.setStyle(styles.adm1));
-      adm2Layer?.eachLayer((l) => l.setStyle(styles.adm2));
-      map.setView([42.7339, 25.4858], 7);
+    // 1. Случай: Избрано е "Всички" или няма име
+    if (selectedValue === "any" || !englishName) {
+      adm1Layer?.eachLayer(l => l.setStyle(styles.adm1));
+      adm2Layer?.eachLayer(l => l.setStyle(styles.adm2));
+      map.flyTo(BULGARIA_CENTER, DEFAULT_ZOOM);
       return;
     }
 
+    // 2. Случай: Избор на Област (Region)
     if (e.target.id === "regionDropdown") {
+      // Скриваме градовете (ADM2), за да се вижда ясно областта
+      adm2Layer?.eachLayer(l => l.setStyle(styles.hidden));
       applyHighlight(adm1Layer, englishName, false);
-      adm2Layer?.eachLayer((l) => l.setStyle({ fillOpacity: 0, weight: 0 }));
-    } else if (e.target.id === "locationDropdown") {
-      adm1Layer?.eachLayer((l) => l.setStyle(styles.adm1));
+    } 
+    
+    // 3. Случай: Избор на Град/Локация (Location)
+    else if (e.target.id === "locationDropdown") {
+      // Връщаме областите като бекграунд (опционално)
+      adm1Layer?.eachLayer(l => l.setStyle(styles.adm1));
       applyHighlight(adm2Layer, englishName, true);
     }
   });

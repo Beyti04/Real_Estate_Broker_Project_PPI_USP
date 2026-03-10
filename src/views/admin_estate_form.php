@@ -110,8 +110,16 @@
                 <div class="input_group" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
                     <div>
                         <label class="auth_label">Изложение</label>
-                        <input type="text" class="input_field auth_input" name="exposure_type" required 
-                               value="<?= $estateToEdit ? htmlspecialchars($estateToEdit->getExposureType()) : '' ?>">
+                        <?php
+                        $exposureOptions = \App\Models\ExposureType::getOptions();
+                        echo '<select class="input_field auth_input" name="exposure_type" required>';
+                        echo '<option value="">-- Избери --</option>';
+                        foreach($exposureOptions as $option) {
+                            $selected = ($estateToEdit && $estateToEdit->getExposureType()->value == $option) ? 'selected' : '';
+                            echo '<option value="'.$option.'" '.$selected.'>'.htmlspecialchars($option).'</option>';
+                        }
+                        echo '</select>';
+                        ?>
                     </div>
                     <div>
                         <label class="auth_label">Стаи</label>
