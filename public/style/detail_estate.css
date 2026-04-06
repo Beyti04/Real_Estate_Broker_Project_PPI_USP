@@ -1,0 +1,185 @@
+/* =========================================
+   СТРАНИЦА С ДЕТАЙЛИ ЗА ИМОТА
+   ========================================= */
+
+.details_page_wrapper {
+  padding: 3rem 1rem;
+}
+
+/* Заглавие и Цена */
+.details_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.estate_title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-light);
+  margin: 0 0 0.5rem 0;
+}
+
+.estate_subtitle {
+  font-size: 1rem;
+  color: var(--par-light);
+  margin: 0;
+}
+
+.details_price {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--tu_blue_primary);
+  margin: 0;
+}
+
+/* Галерия */
+.details_gallery {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  height: 500px;
+}
+
+.gallery_main {
+  position: relative;
+  height: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.gallery_thumbnails {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  height: 100%;
+}
+
+.thumb_wrapper {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.gallery_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.thumb_wrapper:hover .gallery_img {
+  transform: scale(1.05);
+}
+
+.more_overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Описание и Характеристики */
+.details_content_split {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.details_card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.card_heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--bg-light);
+  padding-bottom: 0.5rem;
+}
+
+.description_text p {
+  line-height: 1.8;
+  color: var(--par-light);
+  font-size: 1.05rem;
+}
+
+.features_list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features_list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.features_list li:last-child {
+  border-bottom: none;
+}
+
+.feature_label {
+  color: var(--par-light);
+  font-weight: 500;
+}
+
+.feature_val {
+  color: var(--text-light);
+  font-weight: 700;
+}
+
+/* Респонсив (Мобилни устройства) */
+@media (max-width: 1024px) {
+  .details_gallery {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .gallery_main { height: 350px; }
+  .gallery_thumbnails {
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(4, 1fr);
+    height: 100px;
+  }
+  .details_content_split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark Mode поддръжка */
+body.dark-mode .details_card {
+  background-color: var(--header-bg-dark);
+  border-color: var(--border-dark);
+}
+body.dark-mode .estate_title,
+body.dark-mode .card_heading,
+body.dark-mode .feature_val {
+  color: var(--text-dark);
+}
+body.dark-mode .card_heading {
+  border-bottom-color: var(--border-dark);
+}
+body.dark-mode .description_text p,
+body.dark-mode .feature_label {
+  color: var(--par-dark);
+}

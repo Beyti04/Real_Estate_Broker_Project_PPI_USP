@@ -312,7 +312,7 @@ $estates = array_slice($all_estates, $offset, $items_per_page);
                                         </div>
                                     </div>
 
-                                    <a href="estate_details.php?id=1" class="btn_view" style="text-decoration: none;">View Details</a>
+                                    <a href="index.php?action=estate_details&id=<?php echo htmlspecialchars($estate->id); ?>" class="btn_view" style="text-decoration: none;">View Details</a>
                                 </div>
                             </article>
                         <?php

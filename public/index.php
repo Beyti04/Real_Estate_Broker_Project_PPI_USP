@@ -47,6 +47,21 @@ switch ($action) {
     case 'buy_rent':
         require VIEW_DIR . 'buy_rent.php';
         break;
+    case 'estate_details':
+        $id = (int)($_GET['id'] ?? 0);
+        if ($id > 0) {
+            $estateDetails = \App\Controllers\EstateController::getEstateById($id);
+            if ($estateDetails) {
+                require VIEW_DIR . 'estate_details.php';
+            } else {
+                echo '<h2 style="text-align: center; margin-top: 4rem;">Обявата не е намерена.</h2>';
+            }
+
+        } else {
+            header('Location: index.php?action=buy_rent');
+            exit;
+        }
+        break;
     //Admin Panel
     case 'admin':
         if(!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {
