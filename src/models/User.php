@@ -21,7 +21,7 @@ class User
         $this->email = $email;
         $this->password = $password;
         $this->userType = $userType;
-            $this->phone = null;
+        $this->phone = null;
         $this->image = null;
         $this->description = null;
     }
