@@ -1032,7 +1032,7 @@ VALUES
         '$2y$10$examplehashedpassword',
         2,
         '0888123456',
-        'uploads/agents/maria.jpg',
+        'uploads/maria.jpg',
         'Experienced real estate broker specializing in residential properties.'
 );
 
