@@ -122,16 +122,6 @@ CREATE TABLE
         user_id INT NOT NULL,
         table_name VARCHAR(255) NOT NULL,
         action VARCHAR(255) NOT NULL
-    );
-    INSERT INTO users (username, email, password, user_type_id, phone, image, description)
-VALUES (
-    'Maria Ivanova',
-    'maria@example.com',
-    '$2y$10$examplehashedpassword',
-    2,
-    '0888123456',
-    'uploads/agents/maria.jpg',
-    'Experienced real estate broker specializing in residential properties.'
 );
 INSERT INTO
     user_types (type_name)
@@ -140,6 +130,8 @@ VALUES
     ('Брокер'),
     ('Частно лице'),
     ('Гост');
+
+
 
 INSERT INTO
     estate_categories (category_name)
@@ -987,38 +979,63 @@ VALUES
 
 /*Adding some users as dummy data*/
 INSERT INTO
-    users (username, email, password, user_type_id)
+    users (username, email, password, user_type_id, phone, image, description)
 VALUES
     (
         'admin',
         'admin@a.a',
         '$2y$10$yyBWf3MoblV24c3tEtukl.QCp3zx28ocoj1MWIdK/kFdGRXEmfQXe' /*admin*/,
-        1
+        1,
+        '-',
+        '-',
+        '-'
     ),
     (
         'john_doe',
         'john.doe@example.com',
         '$2y$10$ubtVQEGV/Cd46lGe6Z0DlO6Sa3JTWGUuvxyGShGHpPfKSVHY4leJ2' /*john_doe*/,
-        3
+        3,
+        '-',
+        '-',
+        '-'
     ),
     (
         'someone',
         'some.one@some.one',
         '$2y$10$PKg/or4m9dVh9LzP3Z67KukIlDn0nPNvhzASOHgJleTNH94mCAo3a' /*someone*/,
-        2
+        2,
+        '0888123456',
+        'uploads/agents/someone.jpg',
+        'Experienced real estate broker specializing in residential properties.'
     ),
     (
         'Georgi',
         'gecata@g.g',
         '$2y$10$ClNEp4qyehEXml50nzBqB.QJHr6dk7/N1PrMbyZf4ceUzZjB7uRW.' /*gecata*/,
-        3
+        3,
+        '-',
+        '-',
+        '-'
     ),
     (
         'BurgasBroker',
         'burgas.broker@b.b',
         '$2y$10$V/h/hPMK1UuinSIQBpRg6OizFrFa0LJ2u3VR9SnsK1GmIf1si76jG' /*burgas*/,
-        2
-    );
+        2,
+        '0888123456',
+        'uploads/agents/burgas.jpg',
+        'Experienced real estate broker specializing in residential properties. '
+    ),
+    (
+        'Maria Ivanova',
+        'maria@example.com',
+        '$2y$10$examplehashedpassword',
+        2,
+        '0888123456',
+        'uploads/agents/maria.jpg',
+        'Experienced real estate broker specializing in residential properties.'
+);
+
 
 INSERT INTO
     estates (
