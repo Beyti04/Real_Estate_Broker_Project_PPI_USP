@@ -73,14 +73,13 @@ CREATE TABLE
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
+        phone VARCHAR(50) NULL,
+        image VARCHAR(255) NULL,
+        description TEXT NULL,
         password VARCHAR(255) NOT NULL,
         user_type_id INT NOT NULL,
         FOREIGN KEY (user_type_id) REFERENCES user_types (id)
     );
-      ALTER TABLE users
-        ADD COLUMN phone VARCHAR(50) NULL,
-        ADD COLUMN image VARCHAR(255) NULL,
-        ADD COLUMN description TEXT NULL;
 
 CREATE TABLE
     IF NOT EXISTS estates (

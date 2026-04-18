@@ -56,7 +56,6 @@ switch ($action) {
             } else {
                 echo '<h2 style="text-align: center; margin-top: 4rem;">Обявата не е намерена.</h2>';
             }
-
         } else {
             header('Location: index.php?action=buy_rent');
             exit;
@@ -64,7 +63,7 @@ switch ($action) {
         break;
     //Admin Panel
     case 'admin':
-        if(!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {
             header('Location: index.php?action=homepage');
             exit;
         }
@@ -72,10 +71,11 @@ switch ($action) {
         break;
 
     case 'admin_delete_user':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { 
-            header("Location: index.php"); exit; 
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
         }
-        
+
         $id = (int)($_GET['id'] ?? 0);
         if ($id > 0 && $id !== $_SESSION['user_id']) {
             \App\Controllers\UserController::deleteUser($id);
@@ -86,28 +86,32 @@ switch ($action) {
 
     case 'admin_add_user':
     case 'admin_edit_user':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { 
-            header("Location: index.php"); exit; 
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
         }
-        
+
         $userToEdit = null;
         if ($action === 'admin_edit_user' && isset($_GET['id'])) {
             $userController = new \App\Controllers\UserController();
             $userToEdit = $userController->getUserById((int)$_GET['id']);
         }
-        
+
         require VIEW_DIR . 'admin_user_form.php';
         break;
 
     case 'admin_save_user':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
-        
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = (int)($_POST['id'] ?? 0);
             $username = $_POST['username'] ?? '';
             $email = $_POST['email'] ?? '';
             $userTypeId = (int)($_POST['user_type_id'] ?? 3);
-            
+
             if ($id > 0) {
                 \App\Controllers\UserController::updateUser($id, $username, $email, $userTypeId);
             } else {
@@ -119,93 +123,130 @@ switch ($action) {
         exit;
         break;
 
-        case 'admin_estates':
-            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
-            require VIEW_DIR . 'admin_estates.php';
-            break;
-
-        case 'admin_add_estate':
-        case 'admin_edit_estate':
-            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
-
-            if ($action === 'admin_edit_estate' && isset($_GET['id'])) {
-                $estateController = new \App\Controllers\EstateController();
-                $estateToEdit = $estateController->getEstateById((int)$_GET['id']);
-            } else {
-                $estateToEdit = null;
-            }
-
-            require VIEW_DIR . 'admin_estate_form.php';
-            break;
-       
-        case 'admin_save_estate':
-            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
-            
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                $id = (int)($_POST['id'] ?? 0);
-                $cityId = (int)$_POST['city_id'];
-                $neighborhoodId = (int)$_POST['neighborhood_id'];
-                $address = $_POST['estate_address'] ?? '';
-                $estateTypeId = (int)$_POST['estate_type_id'];
-                $exposureType = $_POST['exposure_type'] ?? '';
-                $rooms = (int)$_POST['rooms'];
-                $floor = (int)$_POST['floor'];
-                $description = $_POST['description'] ?? '';
-                $listingTypeId = (int)$_POST['listing_type_id'];
-                $price = (float)$_POST['price'];
-                $ownerId = (int)$_POST['owner_id'];
-                $statusId = (int)$_POST['status_id'];
-
-                if ($id > 0) {
-                    \App\Controllers\EstateController::updateEstate(
-                        $id, $cityId, $neighborhoodId, $address, $estateTypeId, 
-                        $exposureType, $rooms, $floor, $description, 
-                        $listingTypeId, $price, $ownerId, $statusId
-                    );
-                } else {
-                    \App\Controllers\EstateController::createEstate(
-                        $cityId, $neighborhoodId, $address, $estateTypeId, 
-                        $exposureType, $rooms, $floor, $description, 
-                        $listingTypeId, $price, $ownerId, $statusId
-                    );
-                }
-            }
-            header("Location: index.php?action=admin_estates");
+    case 'admin_estates':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
             exit;
-            break;
+        }
+        require VIEW_DIR . 'admin_estates.php';
+        break;
 
-        case 'admin_delete_estate':
-            if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
-            
-            $id = (int)($_GET['id'] ?? 0);
+    case 'admin_add_estate':
+    case 'admin_edit_estate':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
+        }
+
+        if ($action === 'admin_edit_estate' && isset($_GET['id'])) {
+            $estateController = new \App\Controllers\EstateController();
+            $estateToEdit = $estateController->getEstateById((int)$_GET['id']);
+        } else {
+            $estateToEdit = null;
+        }
+
+        require VIEW_DIR . 'admin_estate_form.php';
+        break;
+
+    case 'admin_save_estate':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = (int)($_POST['id'] ?? 0);
+            $cityId = (int)$_POST['city_id'];
+            $neighborhoodId = (int)$_POST['neighborhood_id'];
+            $address = $_POST['estate_address'] ?? '';
+            $estateTypeId = (int)$_POST['estate_type_id'];
+            $exposureType = $_POST['exposure_type'] ?? '';
+            $rooms = (int)$_POST['rooms'];
+            $floor = (int)$_POST['floor'];
+            $description = $_POST['description'] ?? '';
+            $listingTypeId = (int)$_POST['listing_type_id'];
+            $price = (float)$_POST['price'];
+            $ownerId = (int)$_POST['owner_id'];
+            $statusId = (int)$_POST['status_id'];
+
             if ($id > 0) {
-                \App\Controllers\EstateController::deleteEstate($id);
+                \App\Controllers\EstateController::updateEstate(
+                    $id,
+                    $cityId,
+                    $neighborhoodId,
+                    $address,
+                    $estateTypeId,
+                    $exposureType,
+                    $rooms,
+                    $floor,
+                    $description,
+                    $listingTypeId,
+                    $price,
+                    $ownerId,
+                    $statusId
+                );
+            } else {
+                \App\Controllers\EstateController::createEstate(
+                    $cityId,
+                    $neighborhoodId,
+                    $address,
+                    $estateTypeId,
+                    $exposureType,
+                    $rooms,
+                    $floor,
+                    $description,
+                    $listingTypeId,
+                    $price,
+                    $ownerId,
+                    $statusId
+                );
             }
-            header("Location: index.php?action=admin_estates");
-            exit;
-            break;
+        }
+        header("Location: index.php?action=admin_estates");
+        exit;
+        break;
 
-        case 'admin_settings':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
-        
+    case 'admin_delete_estate':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
+        }
+
+        $id = (int)($_GET['id'] ?? 0);
+        if ($id > 0) {
+            \App\Controllers\EstateController::deleteEstate($id);
+        }
+        header("Location: index.php?action=admin_estates");
+        exit;
+        break;
+
+    case 'admin_settings':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
+        }
+
         $userController = new \App\Controllers\UserController();
         $currentUser = $userController->getUserById($_SESSION['user_id']);
-        
+
         require VIEW_DIR . 'admin_settings.php';
         break;
 
     case 'admin_save_settings':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) { header("Location: index.php"); exit; }
-        
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] != 1) {
+            header("Location: index.php");
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId = $_SESSION['user_id'];
             $username = $_POST['username'] ?? '';
             $email = $_POST['email'] ?? '';
             $newPassword = $_POST['new_password'] ?? '';
             $currentPassword = $_POST['current_password'] ?? '';
-            
+
             $success = \App\Controllers\UserController::updateProfile($userId, $username, $email, $newPassword, $currentPassword);
-            
+
             if ($success) {
                 $_SESSION['username'] = $username;
                 header("Location: index.php?action=admin_settings&success=1");
@@ -224,12 +265,12 @@ switch ($action) {
         require VIEW_DIR . 'register.php';
         break;
     case 'login_process':
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
 
             $user = App\Controllers\AuthController::login($email, $password);
-            if($_SESSION['user_type_id'] === 1) {
+            if ($_SESSION['user_type_id'] === 1) {
                 header('Location: index.php?action=admin');
                 exit;
             }
@@ -244,7 +285,7 @@ switch ($action) {
         }
         break;
     case 'register_process':
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
@@ -260,19 +301,19 @@ switch ($action) {
             }
         }
         break;
-            case 'agents':
-            $agents = \App\Controllers\UserController::getAllAgents();
-            require VIEW_DIR . 'agents.php';
-         break;
+    case 'agents':
+        $agents = \App\Controllers\UserController::getAllAgents();
+        require VIEW_DIR . 'agents.php';
+        break;
 
-        case 'agent_profile':
-            $id = (int)($_GET['id'] ?? 0);
-            $agent = \App\Controllers\UserController::getAgentById($id);
+    case 'agent_profile':
+        $id = (int)($_GET['id'] ?? 0);
+        $agent = \App\Controllers\UserController::getAgentById($id);
 
-                if (!$agent) {
-                     header('Location: index.php?action=agents');
-                    exit;
-    }
+        if (!$agent) {
+            header('Location: index.php?action=agents');
+            exit;
+        }
 
         require VIEW_DIR . 'agent_profile.php';
         break;
@@ -280,7 +321,7 @@ switch ($action) {
         App\Controllers\AuthController::logout();
         header('Location: index.php?action=homepage');
         exit;
-        
+
 
     default:
         echo "404 Not Found";
