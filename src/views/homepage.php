@@ -41,7 +41,7 @@
                     <nav class="nav_links">
                         <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
                         <a class="nav_link" href="#">Sell</a>
-                        <a class="nav_link" href="#">Agents</a>
+                        <a class="nav_link" href="index.php?action=agents">Agents</a>
                     </nav>
 
                     <div class="sing_in_btns">

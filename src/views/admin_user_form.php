@@ -46,6 +46,22 @@
                     <option value="3" <?= $currentTypeId == 3 ? 'selected' : '' ?>>Частно лице</option>
                 </select>
             </div>
+              <div class="input_group">
+                <label class="auth_label">Телефон</label>
+                 <input type="text" class="input_field auth_input" name="phone"
+                        value="<?= $userToEdit ? htmlspecialchars($userToEdit->getPhone() ?? '') : '' ?>">
+            </div>
+
+            <div class="input_group">
+                <label class="auth_label">Снимка (път)</label>
+                <input type="text" class="input_field auth_input" name="image"
+                    value="<?= $userToEdit ? htmlspecialchars($userToEdit->getImage() ?? '') : '' ?>">
+            </div>
+
+            <div class="input_group">
+                <label class="auth_label">Описание</label>
+                <textarea class="input_field auth_input" name="description"><?= $userToEdit ? htmlspecialchars($userToEdit->getDescription() ?? '') : '' ?></textarea>
+            </div>
 
             <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                 <a href="index.php?action=admin" class="btn_secondary" style="flex: 1; text-decoration: none;">Отказ</a>

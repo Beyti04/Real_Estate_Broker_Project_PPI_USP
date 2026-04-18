@@ -77,6 +77,10 @@ CREATE TABLE
         user_type_id INT NOT NULL,
         FOREIGN KEY (user_type_id) REFERENCES user_types (id)
     );
+      ALTER TABLE users
+        ADD COLUMN phone VARCHAR(50) NULL,
+        ADD COLUMN image VARCHAR(255) NULL,
+        ADD COLUMN description TEXT NULL;
 
 CREATE TABLE
     IF NOT EXISTS estates (
@@ -120,7 +124,16 @@ CREATE TABLE
         table_name VARCHAR(255) NOT NULL,
         action VARCHAR(255) NOT NULL
     );
-
+    INSERT INTO users (username, email, password, user_type_id, phone, image, description)
+VALUES (
+    'Maria Ivanova',
+    'maria@example.com',
+    '$2y$10$examplehashedpassword',
+    2,
+    '0888123456',
+    'uploads/agents/maria.jpg',
+    'Experienced real estate broker specializing in residential properties.'
+);
 INSERT INTO
     user_types (type_name)
 VALUES
