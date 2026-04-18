@@ -123,4 +123,65 @@ class UserController
             return false;
         }
     }
+    public static function getAllAgents(): array
+    {
+        $pdo = Database::getInstance();
+        $agents = [];
+
+        try {
+            $stmt = $pdo -> query("
+            SELECT id, username, email, password, user_type_id, phone, image, description
+            FROM users
+            Where user_type_id = 2
+            ");
+            while ($row = $stmt -> fetch(PDO::FETCH_ASSOC)) {
+                $agents[] = new User(
+                    $row['id'],
+                    $row['username'],
+                    $row['email'],
+                    $row['password'],
+                    $row['user_type_id'],
+                    $row['phone'] ?? null,
+                    $row['image'] ?? null,
+                    $row['description'] ?? null
+                );
+            }
+        } catch (PDOException $e) {
+            die('Error fetching agents: '. $e->getMessage());
+        }
+        return $agents;
+    }
+    public static function getAgentById(int $id): ?User
+{
+    $pdo = Database::getInstance();
+
+    try {
+        $stmt = $pdo->prepare("
+            SELECT id, username, email, password, user_type_id, phone, image, description
+            FROM users
+            WHERE id = :id AND user_type_id = 2
+        ");
+        $stmt->execute(['id' => $id]);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return new User(
+                $row['id'],
+                $row['username'],
+                $row['email'],
+                $row['password'],
+                $row['user_type_id'],
+                $row['phone'] ?? null,
+                $row['image'] ?? null,
+                $row['description'] ?? null
+            );
+        }
+
+        return null;
+    } catch (PDOException $e) {
+        die('Error fetching agent: ' . $e->getMessage());
+    }
 }
+}
+

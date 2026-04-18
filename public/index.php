@@ -260,10 +260,27 @@ switch ($action) {
             }
         }
         break;
+            case 'agents':
+            $agents = \App\Controllers\UserController::getAllAgents();
+            require VIEW_DIR . 'agents.php';
+         break;
+
+        case 'agent_profile':
+            $id = (int)($_GET['id'] ?? 0);
+            $agent = \App\Controllers\UserController::getAgentById($id);
+
+                if (!$agent) {
+                     header('Location: index.php?action=agents');
+                    exit;
+    }
+
+        require VIEW_DIR . 'agent_profile.php';
+        break;
     case 'logout':
         App\Controllers\AuthController::logout();
         header('Location: index.php?action=homepage');
         exit;
+        
 
     default:
         echo "404 Not Found";
