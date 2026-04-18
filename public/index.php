@@ -302,10 +302,10 @@ switch ($action) {
         }
         break;
     case 'agents':
+        Database::getInstance();
         $agents = \App\Controllers\UserController::getAllAgents();
-        require VIEW_DIR . 'agents.php';
+        require VIEW_DIR . 'agent.php';
         break;
-
     case 'agent_profile':
         $id = (int)($_GET['id'] ?? 0);
         $agent = \App\Controllers\UserController::getAgentById($id);
@@ -321,8 +321,6 @@ switch ($action) {
         App\Controllers\AuthController::logout();
         header('Location: index.php?action=homepage');
         exit;
-
-
     default:
         echo "404 Not Found";
         break;
