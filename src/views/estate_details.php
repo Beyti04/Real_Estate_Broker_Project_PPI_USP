@@ -21,10 +21,6 @@
             </div>
             <div class="nav_wrapper">
                 <div class="nav_container" style="display: flex;">
-                    <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
-                        <a class="nav_link" href="#">Sell</a>
-                    </nav>
                     <div class="sing_in_btns">
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
                             🌙

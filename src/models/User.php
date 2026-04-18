@@ -10,20 +10,20 @@ class User
     private string $email;
     private string $password;
     private int $userType;
-       private string $phone;
+    private string $phone;
     private string $image;
     private string $description;
 
-    public function __construct(int $id, string $username, string $email, string $password, int $userType)
+    public function __construct(int $id, string $username, string $email, string $password, int $userType, string $phone, string $image, string $description)
     {
         $this->id = $id;
         $this->username = $username;
         $this->email = $email;
         $this->password = $password;
         $this->userType = $userType;
-        $this->phone = null;
-        $this->image = null;
-        $this->description = null;
+        $this->phone = $phone;
+        $this->image = $image;
+        $this->description = $description;
     }
 
     public function getId(): int
