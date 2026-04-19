@@ -91,57 +91,80 @@
                 document.addEventListener('DOMContentLoaded', function() {
                     const table = document.querySelector('.admin_table');
                     const tbody = table.querySelector('tbody');
-                    const rows = Array.from(tbody.querySelectorAll('tr'));
+                    let rows = Array.from(tbody.querySelectorAll('tr')); // Използваме let, защото ще пренареждаме масива
                     const paginationContainer = document.getElementById('pagination');
 
                     const rowsPerPage = 8;
                     let currentPage = 1;
-                    const totalPages = Math.ceil(rows.length / rowsPerPage);
+                    let sortDirection = true; // true = възходящо, false = низходящо
 
+                    // --- ФУНКЦИЯ ЗА СОРТИРАНЕ ---
+                    function sortTable(columnIndex) {
+                        sortDirection = !sortDirection; // Сменяме посоката при всеки клик
+
+                        rows.sort((rowA, rowB) => {
+                            const cellA = rowA.children[columnIndex].innerText.trim();
+                            const cellB = rowB.children[columnIndex].innerText.trim();
+
+                            // Проверка дали сортираме числа (напр. ID или цена) или текст
+                            const valA = isNaN(cellA.replace('#', '')) ? cellA.toLowerCase() : parseFloat(cellA.replace('#', ''));
+                            const valB = isNaN(cellB.replace('#', '')) ? cellB.toLowerCase() : parseFloat(cellB.replace('#', ''));
+
+                            if (valA < valB) return sortDirection ? -1 : 1;
+                            if (valA > valB) return sortDirection ? 1 : -1;
+                            return 0;
+                        });
+
+                        // Пренареждаме физически редовете в DOM структурата
+                        rows.forEach(row => tbody.appendChild(row));
+
+                        // След сортиране винаги се връщаме на страница 1
+                        goToPage(1);
+                    }
+
+                    // Добавяне на Event Listeners на заглавията (TH)
+                    table.querySelectorAll('th').forEach((th, index) => {
+                        // Пропускаме последната колона ("Действия"), защото не е логично да се сортира
+                        if (th.innerText.toLowerCase().includes('действия')) return;
+
+                        th.addEventListener('click', () => sortTable(index));
+                    });
+
+                    // --- ФУНКЦИИ ЗА ПАГИНАЦИЯ (остават същите) ---
                     function renderPagination() {
-                        paginationContainer.innerHTML = ''; // Изчистваме старото съдържание
-
+                        const totalPages = Math.ceil(rows.length / rowsPerPage);
+                        paginationContainer.innerHTML = '';
                         if (totalPages <= 1) return;
 
-                        // --- 1. Бутон за ПРЕДИШНА ( < ) ---
-                        if (currentPage > 1) {
-                            const prevDiv = document.createElement('div');
-                            prevDiv.className = 'page_numbers';
-                            prevDiv.innerHTML = `<a href="#" class="page_link"><</a>`;
-                            prevDiv.onclick = (e) => {
-                                e.preventDefault();
-                                goToPage(currentPage - 1);
-                            };
-                            paginationContainer.appendChild(prevDiv);
-                        }
-
-                        // --- 2. Числата ( 1, 2, 3... ) ---
+                        // Контейнер за страниците
                         const numbersDiv = document.createElement('div');
                         numbersDiv.className = 'page_numbers';
 
+                        // Стрелка Назад
+                        if (currentPage > 1) {
+                            const prev = document.createElement('a');
+                            prev.className = 'page_link';
+                            prev.innerHTML = '<';
+                            prev.onclick = () => goToPage(currentPage - 1);
+                            paginationContainer.appendChild(prev);
+                        }
+
                         for (let i = 1; i <= totalPages; i++) {
-                            const pageLink = document.createElement('a');
-                            pageLink.href = "#";
-                            pageLink.className = `page_link ${i === currentPage ? 'active' : ''}`;
-                            pageLink.textContent = i;
-                            pageLink.onclick = (e) => {
-                                e.preventDefault();
-                                goToPage(i);
-                            };
-                            numbersDiv.appendChild(pageLink);
+                            const link = document.createElement('a');
+                            link.className = `page_link ${i === currentPage ? 'active' : ''}`;
+                            link.innerText = i;
+                            link.onclick = () => goToPage(i);
+                            numbersDiv.appendChild(link);
                         }
                         paginationContainer.appendChild(numbersDiv);
 
-                        // --- 3. Бутон за СЛЕДВАЩА ( > ) ---
+                        // Стрелка Напред
                         if (currentPage < totalPages) {
-                            const nextDiv = document.createElement('div');
-                            nextDiv.className = 'page_numbers';
-                            nextDiv.innerHTML = `<a href="#" class="page_link">></a>`;
-                            nextDiv.onclick = (e) => {
-                                e.preventDefault();
-                                goToPage(currentPage + 1);
-                            };
-                            paginationContainer.appendChild(nextDiv);
+                            const next = document.createElement('a');
+                            next.className = 'page_link';
+                            next.innerHTML = '>';
+                            next.onclick = () => goToPage(currentPage + 1);
+                            paginationContainer.appendChild(next);
                         }
                     }
 
@@ -155,16 +178,10 @@
                         });
 
                         renderPagination();
-                        window.scrollTo({
-                            top: 0,
-                            behavior: 'smooth'
-                        });
                     }
 
-                    // Стартираме от страница 1
-                    if (rows.length > 0) {
-                        goToPage(1);
-                    }
+                    // Първоначално зареждане
+                    goToPage(1);
                 });
             </script>
         </main>
