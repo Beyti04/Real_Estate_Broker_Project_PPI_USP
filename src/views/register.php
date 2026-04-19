@@ -49,6 +49,7 @@
                     ?>
 
                     <button type="submit" class="btn_primary" style="width: 100%; margin-top: 1.5rem;">Създай профил</button>
+                    <button type="button" class="btn_secondary" style="width: 100%; margin-top: 0.5rem;" onclick="window.location.href='index.php?action=homepage'">Отказ</button>
                 </form>
 
                 <p style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: var(--par-light);">

@@ -440,6 +440,27 @@
     margin-bottom: 30px;
 }
 
+.page_link {
+    display: inline-block;
+    padding: 8px 14px;
+    border: 1px solid #ddd;
+    color: var(--tu_blue_primary, #0056b3);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s;
+    background: white;
+}
+
+.page_link:hover {
+    background-color: #f0f0f0;
+}
+
+.page_link.active {
+    background-color: var(--tu_blue_primary, #0056b3);
+    color: white;
+    border-color: var(--tu_blue_primary, #0056b3);
+}
+
 @media (max-width: 768px) {
   .split_container {
     flex-direction: column;

@@ -14,9 +14,18 @@ class UserController
         $users = [];
 
         try {
-            $stmt = $pdo->query("SELECT id, username, email, password, user_type_id FROM users");
+            $stmt = $pdo->query("SELECT id, username, email, password, user_type_id, phone, image, description FROM users");
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $users[] = new User($row['id'], $row['username'], $row['email'], $row['password'], $row['user_type_id']);
+                $users[] = new User(
+                    $row['id'],
+                    $row['username'],
+                    $row['email'],
+                    $row['password'],
+                    $row['user_type_id'],
+                    $row['phone'] ?? '-',
+                    $row['image'] ?? '-',
+                    $row['description'] ?? '-'
+                );
             }
         } catch (PDOException $e) {
             die('Error fetching users: ' . $e->getMessage());
@@ -31,9 +40,18 @@ class UserController
         $users = [];
 
         try {
-            $stmt = $pdo->query("SELECT id, username, email, password, user_type_id FROM users WHERE user_type_id != 1");
+            $stmt = $pdo->query("SELECT id, username, email, password, user_type_id, phone, image, description FROM users WHERE user_type_id != 1");
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $users[] = new User($row['id'], $row['username'], $row['email'], $row['password'], $row['user_type_id']);
+                $users[] = new User(
+                    $row['id'],
+                    $row['username'],
+                    $row['email'],
+                    $row['password'],
+                    $row['user_type_id'],
+                    $row['phone'] ?? null,
+                    $row['image'] ?? null,
+                    $row['description'] ?? null
+                );
             }
         } catch (PDOException $e) {
             die('Error fetching users: ' . $e->getMessage());
@@ -46,11 +64,20 @@ class UserController
     {
         $pdo = Database::getInstance();
         try {
-            $stmt = $pdo->prepare("SELECT id, username, email, password, user_type_id FROM users WHERE id=:id");
+            $stmt = $pdo->prepare("SELECT id, username, email, password, user_type_id, phone, image, description FROM users WHERE id=:id");
             $stmt->execute(['id' => $id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
-                return new User($row['id'], $row['username'], $row['email'], $row['password'], $row['user_type_id']);
+                return new User(
+                    $row['id'],
+                    $row['username'],
+                    $row['email'],
+                    $row['password'],
+                    $row['user_type_id'],
+                    $row['phone'] ?? "-",
+                    $row['image'] ?? "-",
+                    $row['description'] ?? "-"
+                );
             } else {
                 throw new PDOException("User not found");
             }
@@ -59,15 +86,18 @@ class UserController
         }
     }
 
-    public static function updateUser(int $id, string $username, string $email, int $userTypeId): bool
+    public static function updateUser(int $id, string $username, string $email, int $userTypeId, string $phone, string $image, string $description): bool
     {
         $pdo = Database::getInstance();
         try {
-            $stmt = $pdo->prepare("UPDATE users SET username = :username, email = :email, user_type_id = :user_type_id WHERE id = :id");
+            $stmt = $pdo->prepare("UPDATE users SET username = :username, email = :email, user_type_id = :user_type_id, phone = :phone, image = :image, description = :description WHERE id = :id");
             return $stmt->execute([
                 'username' => $username,
                 'email' => $email,
                 'user_type_id' => $userTypeId,
+                'phone' => $phone ?? '-',
+                'image' => $image ?? '-',
+                'description' => $description ?? '-',
                 'id' => $id
             ]);
         } catch (PDOException $e) {

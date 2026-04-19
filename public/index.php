@@ -111,9 +111,12 @@ switch ($action) {
             $username = $_POST['username'] ?? '';
             $email = $_POST['email'] ?? '';
             $userTypeId = (int)($_POST['user_type_id'] ?? 3);
+            $phone = $_POST['phone'] ?? '-';
+            $image = $_POST['image'] ?? '-';
+            $description = $_POST['description'] ?? '-';
 
             if ($id > 0) {
-                \App\Controllers\UserController::updateUser($id, $username, $email, $userTypeId);
+                \App\Controllers\UserController::updateUser($id, $username, $email, $userTypeId, $phone, $image, $description);
             } else {
                 $password = $_POST['password'] ?? '';
                 \App\Controllers\AuthController::register($username, $email, $password, $userTypeId);
