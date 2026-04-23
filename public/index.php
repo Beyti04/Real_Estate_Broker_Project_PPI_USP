@@ -317,6 +317,79 @@ switch ($action) {
 
         require VIEW_DIR . 'agent_profile.php';
         break;
+        case 'sell':
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: index.php?action=login');
+        exit;
+    }
+
+    require VIEW_DIR . 'create_estate.php';
+    break;
+
+case 'create_estate_process':
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: index.php?action=login');
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $cityId = (int)($_POST['city_id'] ?? 0);
+        $neighborhoodId = (int)($_POST['neighborhood_id'] ?? 0);
+        $address = trim($_POST['estate_address'] ?? '');
+        $estateTypeId = (int)($_POST['estate_type_id'] ?? 0);
+        $exposureType = trim($_POST['exposure_type'] ?? '');
+        $rooms = (int)($_POST['rooms'] ?? 0);
+        $floor = (int)($_POST['floor'] ?? 0);
+        $area = (float)($_POST['area'] ?? 0);
+        $description = trim($_POST['description'] ?? '');
+        $listingTypeId = (int)($_POST['listing_type_id'] ?? 0);
+        $price = (float)($_POST['price'] ?? 0);
+        $ownerId = (int)$_SESSION['user_id'];
+        $statusId = 1;
+
+        if (
+            empty($_FILES['images']['name'][0]) ||
+            $cityId <= 0 ||
+            $neighborhoodId <= 0 ||
+            $estateTypeId <= 0 ||
+            $listingTypeId <= 0 ||
+            empty($address) ||
+            empty($description) ||
+            empty($exposureType) ||
+            $rooms <= 0 ||
+            $area <= 0 ||
+            $price <= 0
+        ) {
+            header('Location: index.php?action=sell&error=missing_fields');
+            exit;
+        }
+
+        $created = \App\Controllers\EstateController::createEstateWithImages(
+            $cityId,
+            $neighborhoodId,
+            $address,
+            $estateTypeId,
+            $exposureType,
+            $rooms,
+            $floor,
+            $area,
+            $description,
+            $listingTypeId,
+            $price,
+            $ownerId,
+            $statusId,
+            $_FILES['images']
+        );
+
+        if ($created) {
+            header('Location: index.php?action=buy_rent&success=estate_created');
+            exit;
+        }
+
+        header('Location: index.php?action=sell&error=create_failed');
+        exit;
+    }
+    break;
     case 'logout':
         App\Controllers\AuthController::logout();
         header('Location: index.php?action=homepage');

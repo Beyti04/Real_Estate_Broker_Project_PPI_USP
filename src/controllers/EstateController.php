@@ -175,4 +175,106 @@ class EstateController
             return false;
         }
     }
+    public static function createEstateWithImages(
+    int $cityId,
+    int $neighborhoodId,
+    string $address,
+    int $estateTypeId,
+    string $exposureType,
+    int $rooms,
+    int $floor,
+    float $area,
+    string $description,
+    int $listingTypeId,
+    float $price,
+    int $ownerId,
+    int $statusId,
+    array $images
+): bool {
+    $pdo = Database::getInstance();
+
+    $creationDate = date('Y-m-d');
+    $expirationDate = date('Y-m-d', strtotime('+30 days'));
+
+    try {
+        $pdo->beginTransaction();
+
+        $stmt = $pdo->prepare("
+            INSERT INTO estates
+            (city_id, neighborhood_id, estate_address, estate_type_id, rooms, area, floor, exposure_type, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id)
+            VALUES
+            (:city_id, :neighborhood_id, :address, :estate_type_id, :rooms, :area, :floor, :exposure_type, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
+        ");
+
+        $stmt->execute([
+            'city_id' => $cityId,
+            'neighborhood_id' => $neighborhoodId,
+            'address' => $address,
+            'estate_type_id' => $estateTypeId,
+            'rooms' => $rooms,
+            'area' => $area,
+            'floor' => $floor,
+            'exposure_type' => $exposureType,
+            'description' => $description,
+            'listing_type_id' => $listingTypeId,
+            'price' => $price,
+            'owner_id' => $ownerId,
+            'creation_date' => $creationDate,
+            'expiration_date' => $expirationDate,
+            'status_id' => $statusId
+        ]);
+
+        $estateId = (int)$pdo->lastInsertId();
+
+        $uploadDir = __DIR__ . '/../../public/uploads/estates/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $insertImageStmt = $pdo->prepare("
+            INSERT INTO estate_images (estate_id, is_primary, image_path)
+            VALUES (:estate_id, :is_primary, :image_path)
+        ");
+
+        $hasUploadedAtLeastOne = false;
+
+        foreach ($images['name'] as $index => $originalName) {
+            if (empty($originalName)) {
+                continue;
+            }
+
+            $tmpName = $images['tmp_name'][$index];
+            $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+            $safeFileName = uniqid('estate_', true) . '.' . $extension;
+            $targetPath = $uploadDir . $safeFileName;
+
+            if (move_uploaded_file($tmpName, $targetPath)) {
+                $relativePath = 'uploads/estates/' . $safeFileName;
+
+                $insertImageStmt->execute([
+                    'estate_id' => $estateId,
+                    'is_primary' => $hasUploadedAtLeastOne ? 0 : 1,
+                    'image_path' => $relativePath
+                ]);
+
+                $hasUploadedAtLeastOne = true;
+            }
+        }
+
+        if (!$hasUploadedAtLeastOne) {
+            $pdo->rollBack();
+            return false;
+        }
+
+        $pdo->commit();
+        return true;
+
+    } catch (\PDOException $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        error_log('Error creating estate with images: ' . $e->getMessage());
+        return false;
+    }
+}
 }
