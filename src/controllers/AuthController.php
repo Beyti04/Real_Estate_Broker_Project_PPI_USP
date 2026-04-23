@@ -38,7 +38,16 @@ class AuthController {
                 $_SESSION['username'] = $row['username'];
                 $_SESSION['user_type_id'] = $row['user_type_id'];
 
-                return new User($row['id'], $row['username'], $row['email'], $row['password'], $row['user_type_id']);
+                return new User(
+                    $row['id'],
+                    $row['username'],
+                    $row['email'],
+                    $row['password'],
+                    $row['user_type_id'],
+                    $row['phone'] ?? "-",
+                    $row['image'] ?? "-",
+                    $row['description'] ?? "-"
+                );
             } else {
                 return null;
             }
