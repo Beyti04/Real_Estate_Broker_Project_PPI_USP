@@ -1,3 +1,46 @@
+<?php
+// Ensure session is started at the very top of your main index/router file
+// session_start(); 
+
+/**
+ * 1. FILTER PERSISTENCE LOGIC
+ * Syncs URL parameters with the Session so filters stay "sticky"
+ */
+$filterKeys = ['category', 'type', 'region', 'city', 'neighborhood', 'price', 'listing_type'];
+
+if (!isset($_SESSION['filters'])) {
+    $_SESSION['filters'] = array_fill_keys($filterKeys, 'any');
+}
+
+foreach ($filterKeys as $key) {
+    if (isset($_GET[$key])) {
+        $_SESSION['filters'][$key] = $_GET[$key];
+    }
+}
+
+// Clear Filters Logic
+if (isset($_GET['clear_filters'])) {
+    $_SESSION['filters'] = array_fill_keys($filterKeys, 'any');
+    header("Location: index.php?action=buy_rent");
+    exit();
+}
+
+$f = $_SESSION['filters'];
+
+/**
+ * 2. HELPER FUNCTIONS
+ * These ensure the HTML renders with the correct "Remembered" state
+ */
+function activeLabel($currentVal, $defaultLabel)
+{
+    return ($currentVal !== 'any' && !empty($currentVal)) ? htmlspecialchars($currentVal) : $defaultLabel;
+}
+
+function activeStyle($currentVal)
+{
+    return ($currentVal !== 'any' && !empty($currentVal)) ? 'style="border-color: var(--tu_blue_primary);"' : '';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,15 +71,12 @@
                     <div class="input_icon_wrapper">
                         <img src="images/search_icon.png" alt="Search Icon">
                     </div>
-                    <input class="input_field" placeholder="Address, City, Zip, or Neighborhood"
-                        type="text">
+                    <input class="input_field" placeholder="Address, City, Zip, or Neighborhood" type="text">
                 </div>
             </div>
             <div class="nav_wrapper">
                 <button class="menu_toggle" id="menuToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </button>
                 <div class="nav_container">
                     <nav class="nav_links">
@@ -60,298 +100,250 @@
                 </div>
             </div>
         </header>
+
         <form class="filter_bar">
-            <div class="dropdown_wrapper">
-                <button class="filter_pill dropdown_toggle" type="button">
-                    <span class="filter_label">Цена</span>
+            <div class="dropdown_wrapper" id="priceDropdown">
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-name="<?= $f['price'] ?>" <?= activeStyle($f['price']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['price'], 'Цена') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
                 </button>
                 <div class="dropdown_content">
                     <div class="dropdown_option" data-value="any">Цена</div>
-
                     <?php
 
                     use App\Controllers\PriceRangeController;
 
-                    $priceRanges = PriceRangeController::getAllPriceRanges();
-
-                    foreach ($priceRanges as $range) {
-                    ?>
-                        <div class="dropdown_option" data-value="<?php echo htmlspecialchars($range->getRangeName()) ?>"><?php echo htmlspecialchars($range->getRangeValue()) ?></div>
-
-                    <?php
-                    }
-                    ?>
-
+                    foreach (PriceRangeController::getAllPriceRanges() as $range): ?>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($range->getRangeName()) ?>"><?= htmlspecialchars($range->getRangeValue()) ?></div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="dropdown_wrapper" id="categoryDropdown">
-                <button class="filter_pill dropdown_toggle" type="button">
-                    <span class="filter_label">Категории</span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['category'] ?>" <?= activeStyle($f['category']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['category'], 'Категории') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
                 </button>
                 <div class="dropdown_content">
                     <div class="dropdown_option" data-value="any">Категории</div>
-
                     <?php
 
                     use App\Controllers\EstateCategoryController;
 
-                    $estateCategories = EstateCategoryController::getAllEstateCategories();
+                    foreach (EstateCategoryController::getAllEstateCategories() as $category): ?>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($category->getId()) ?>"><?= htmlspecialchars($category->getCategoryName()) ?></div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
-                    foreach ($estateCategories as $category) {
-                    ?>
-                        <div class="dropdown_option" data-value="<?php echo htmlspecialchars($category->getId()) ?>"><?php echo htmlspecialchars($category->getCategoryName()) ?></div>
+            <div class="dropdown_wrapper" id="listingTypeDropdown">
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['listing_type'] ?>" <?= activeStyle($f['listing_type']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['listing_type'], 'Тип обява') ?></span>
+                    <span class="arrow_container">
+                        <div class="css_arrow"></div>
+                    </span>
+                </button>
+                <div class="dropdown_content">
+                    <div class="dropdown_option" data-value="any">Тип обява</div>
                     <?php
-                    }
-                    ?>
-
+                    use App\Controllers\ListingTypeController;
+                    foreach (ListingTypeController::getAllListingTypes() as $listingType): ?>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($listingType->getId()) ?>">
+                            <?= htmlspecialchars($listingType->getTypeName()) ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="dropdown_wrapper" id="typeDropdown">
-                <button class="filter_pill dropdown_toggle" type="button">
-                    <span class="filter_label">Вид имот</span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-name="<?= $f['type'] ?>" <?= activeStyle($f['type']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['type'], 'Вид имот') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
                 </button>
                 <div class="dropdown_content">
                     <div class="dropdown_option" data-value="any">Вид имот</div>
-
                     <?php
 
                     use App\Controllers\EstateTypeController;
 
-                    $estateTypes = EstateTypeController::getAllEstateTypes();
-
-                    foreach ($estateTypes as $type) {
-                    ?>
-                        <div class="dropdown_option" data-value="<?php echo htmlspecialchars($type->getTypeName()) ?>" data-region="<?php echo htmlspecialchars($type->getCategoryId()) ?>"><?php echo htmlspecialchars($type->getTypeName()) ?></div>
-                    <?php
-                    }
-                    ?>
-
-                </div>
-            </div>
-
-            <div class="dropdown_wrapper">
-                <button class="filter_pill dropdown_toggle" type="button">
-                    <span class="filter_label">Вид обява</span>
-                    <span class="arrow_container">
-                        <div class="css_arrow"></div>
-                    </span>
-                </button>
-                <div class="dropdown_content">
-                    <div class="dropdown_option" data-value="any">Вид обява</div>
-
-                    <?php
-
-                    use App\Controllers\ListingTypeController;
-
-                    $listingTypes = ListingTypeController::getAllListingTypes();
-
-                    foreach ($listingTypes as $type) {
-                    ?>
-                        <div class="dropdown_option" data-value="<?php echo htmlspecialchars($type->getTypeName()) ?>"><?php echo htmlspecialchars($type->getTypeName()) ?></div>
-                    <?php
-                    }
-                    ?>
-
+                    foreach (EstateTypeController::getAllEstateTypes() as $type): ?>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($type->getTypeName()) ?>" data-region="<?= htmlspecialchars($type->getCategoryId()) ?>"><?= htmlspecialchars($type->getTypeName()) ?></div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="dropdown_wrapper" id="regionDropdown">
-                <button class="filter_pill dropdown_toggle" type="button">
-                    <span class="filter_label">Област</span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['region'] ?>" <?= activeStyle($f['region']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['region'], 'Област') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
                 </button>
                 <div class="dropdown_content">
                     <div class="dropdown_option" data-value="any">Област</div>
-
                     <?php
 
                     use App\Controllers\RegionController;
 
-                    $regions = RegionController::getAllRegions();
-
-                    foreach ($regions as $region) {
-                    ?>
-                        <div class="dropdown_option" data-value="<?php echo htmlspecialchars($region->getId()) ?>" data-name="<?php echo htmlspecialchars($region->getRegionNameEN()) ?>"><?php echo htmlspecialchars($region->getRegionNameBG()) ?></div>
-                    <?php
-                    }
-                    ?>
-
+                    foreach (RegionController::getAllRegions() as $region): ?>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($region->getId()) ?>" data-name="<?= htmlspecialchars($region->getRegionNameEN()) ?>"><?= htmlspecialchars($region->getRegionNameBG()) ?></div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="dropdown_wrapper" id="locationDropdown">
-                <button class="filter_pill dropdown_toggle" type="button">
-                    <span class="filter_label">Населено място</span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['city'] ?>" <?= activeStyle($f['city']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['city'], 'Населено място') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
                 </button>
                 <div class="dropdown_content">
                     <div class="dropdown_option" data-value="any">Населено място</div>
-
                     <?php
 
                     use App\Controllers\CityController;
 
-                    $cities = CityController::getAllCities();
-
-                    foreach ($cities as $city) {
-                    ?>
-                        <div class="dropdown_option" data-value="<?php echo htmlspecialchars($city->getId()) ?>" data-region="<?php echo htmlspecialchars($city->getRegionId()) ?>" data-name="<?php echo htmlspecialchars($city->getCityNameEN()) ?>"><?php echo htmlspecialchars($city->getCityNameBG()) ?></div>
-                    <?php
-                    }
-                    ?>
-
+                    foreach (CityController::getAllCities() as $city): ?>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($city->getId()) ?>" data-region="<?= htmlspecialchars($city->getRegionId()) ?>" data-name="<?= htmlspecialchars($city->getCityNameEN()) ?>"><?= htmlspecialchars($city->getCityNameBG()) ?></div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="dropdown_wrapper" id="neighborhoodDropdown">
-                <button class="filter_pill dropdown_toggle" type="button">
-                    <span class="filter_label">Квартал</span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['neighborhood'] ?>" <?= activeStyle($f['neighborhood']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['neighborhood'], 'Квартал') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
                 </button>
                 <div class="dropdown_content">
                     <div class="dropdown_option" data-value="any" data-region="any">Квартал</div>
-
                     <?php
 
                     use App\Controllers\NeighborhoodController;
 
-                    $neighborhoods = NeighborhoodController::getAllNeighborhoods();
-
-                    foreach ($neighborhoods as $neighborhood) { ?>
-                        <div class="dropdown_option"
-                            data-value="<?= htmlspecialchars($neighborhood->getId()) ?>"
-                            data-region="<?= htmlspecialchars($neighborhood->getCityId()) ?>"><?= htmlspecialchars($neighborhood->getNeighborhoodNameBG()) ?></div>
-                    <?php }; ?>
+                    foreach (NeighborhoodController::getAllNeighborhoods() as $neighborhood): ?>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($neighborhood->getId()) ?>" data-region="<?= htmlspecialchars($neighborhood->getCityId()) ?>"><?= htmlspecialchars($neighborhood->getNeighborhoodNameBG()) ?></div>
+                    <?php endforeach; ?>
                 </div>
             </div>
+
+            <a href="index.php?action=buy_rent&" class="btn_primary" style="border-radius: 100px; text-decoration: none;">Търси</a>
+            <a href="index.php?action=buy_rent&clear_filters=1" class="btn_secondary" style="height: 40px; display: flex; align-items: center; text-decoration: none; padding: 0 15px; border-radius: 20px;">Изчисти</a>
         </form>
+
         <div class="split_container">
             <div id="map-container"></div>
 
             <?php
             $is_mobile = is_numeric(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile"));
 
-// 2. Вземи всички имоти първо
-$all_estates = App\Controllers\EstateController::getAllEstates();
-$total_items = count($all_estates);
+            $all_estates = App\Controllers\EstateController::getAllEstates();
+            $total_items = count($all_estates);
 
-if ($is_mobile) {
-    // На мобилен показваме всичко наведнъж
-    $items_per_page = $total_items > 0 ? $total_items : 1; 
-    $current_page = 1;
-} else {
-    // На десктоп използваме странициране
-    $items_per_page = 3; 
-    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-}
+            if ($is_mobile) {
+                $items_per_page = $total_items > 0 ? $total_items : 1;
+                $current_page = 1;
+            } else {
+                $items_per_page = 3;
+                $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            }
 
-$offset = ($current_page - 1) * $items_per_page;
-$total_pages = ceil($total_items / $items_per_page);
-
-// 3. Отрежи имотите спрямо страницата
-$estates = array_slice($all_estates, $offset, $items_per_page);
+            $offset = ($current_page - 1) * $items_per_page;
+            $total_pages = ceil($total_items / $items_per_page);
+            $estates = array_slice($all_estates, $offset, $items_per_page);
             ?>
 
             <div class="listings_side">
                 <div class="container_center">
                     <h2 class="section_title">Available Estates</h2>
                     <div class="properties_grid">
-                        <?php
-                        foreach ($estates as $estate) {
-                        ?>
+                        <?php foreach ($estates as $estate): ?>
                             <article class="estate_card">
                                 <div class="estate_image_wrapper">
-                                   <img 
-    src="<?= !empty($estate->primary_image) ? htmlspecialchars($estate->primary_image) : 'uploads/estate_placeholder.jpg'; ?>" 
-    alt="<?= htmlspecialchars($estate->estate_address); ?>" 
-    class="estate_image"
->
+                                    <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
                                     <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
                                 </div>
 
                                 <div class="estate_content">
                                     <div class="estate_header">
-                                        <h3 class="estate_price">€<?php echo htmlspecialchars(number_format($estate->price, 2)) ?></h3>
-                                        <p class="estate_address"><?php echo htmlspecialchars($estate->city_name) ?>, <?php echo htmlspecialchars($estate->neighborhood_name) ?></p>
+                                        <h3 class="estate_price">€<?= number_format($estate->price, 2) ?></h3>
+                                        <p class="estate_address"><?= htmlspecialchars($estate->city_name) ?>, <?= htmlspecialchars($estate->neighborhood_name) ?></p>
                                     </div>
-
                                     <div class="estate_features">
                                         <div class="feature_item">
-                                            <picture>
-                                                <img class="theme_light_img" src="images/area_icon.png" alt="TU Brokers Logo">
-                                                <img class="theme_dark_img" src="images/area_icon_dark.png" alt="TU Brokers Logo">
-                                            </picture>
-                                            <span><?php echo htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
+                                            <image src="images/area_icon.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
+                                            <span><?= htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
                                         </div>
                                         <div class="feature_item">
-                                            <picture>
-                                                <img class="theme_light_img" src="images/room.png" alt="TU Brokers Logo">
-                                                <img class="theme_dark_img" src="images/room_dark.png" alt="TU Brokers Logo">
-                                            </picture>
-                                            <span><?php echo htmlspecialchars($estate->rooms) ?></span>
+                                            <image src="images/room.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;"></image>
+                                            <span><?= htmlspecialchars($estate->rooms) ?></span>
                                         </div>
                                         <div class="feature_item">
-                                            <picture>
-                                                <img class="theme_light_img" src="images/floor.png" alt="TU Brokers Logo">
-                                                <img class="theme_dark_img" src="images/floor_dark.png" alt="TU Brokers Logo">
-                                            </picture>
-                                            <span><?php echo htmlspecialchars($estate->floor) ?></span>
+                                            <image src="images/floor.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;"></image>
+                                            <span> <?= htmlspecialchars($estate->floor) ?></span>
                                         </div>
                                     </div>
-
-                                    <a href="index.php?action=estate_details&id=<?php echo htmlspecialchars($estate->id); ?>" class="btn_view" style="text-decoration: none;">View Details</a>
+                                    <a href="index.php?action=estate_details&id=<?= $estate->id ?>" class="btn_view" style="text-decoration: none;">View Details</a>
                                 </div>
                             </article>
-                        <?php
-                        }
-                        // Вземаме текущия екшън от URL-а, за да не го губим при смяна на страницата
-                        $current_action = isset($_GET['action']) ? $_GET['action'] : 'buy_rent';
-                        ?>
+                        <?php endforeach; ?>
                     </div>
+                    <?php
+                    // 1. Prepare the base parameters from the session filters
+                    $queryParams = $_SESSION['filters'];
+                    $current_action = $_GET['action'] ?? 'buy_rent';
+                    $queryParams['action'] = $current_action;
+
+                    // 2. Helper function to build the URL including ALL filters
+                    if (!function_exists('getPaginationUrl')) {
+                        function getPaginationUrl($page, $params)
+                        {
+                            $params['page'] = $page;
+                            // Clean up 'any' values so the URL stays neat
+                            foreach ($params as $key => $value) {
+                                if ($value === 'any' || empty($value)) unset($params[$key]);
+                            }
+                            return "index.php?" . http_build_query($params);
+                        }
+                    }
+                    ?>
+
                     <div class="pagination_container">
                         <?php if ($current_page > 1): ?>
                             <div class="page_numbers">
-                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $current_page - 1; ?>" class="page_link">
-                                    <</a>
+                                <a href="<?= getPaginationUrl($current_page - 1, $queryParams) ?>" class="page_link">
+                                    &laquo;
+                                </a>
                             </div>
                         <?php endif; ?>
 
                         <div class="page_numbers">
                             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $i; ?>"
-                                    class="page_link <?php echo ($i == $current_page) ? 'active' : ''; ?>">
-                                    <?php echo $i; ?>
+                                <a href="<?= getPaginationUrl($i, $queryParams) ?>"
+                                    class="page_link <?= ($i == $current_page) ? 'active' : ''; ?>">
+                                    <?= $i ?>
                                 </a>
                             <?php endfor; ?>
                         </div>
 
                         <?php if ($current_page < $total_pages): ?>
                             <div class="page_numbers">
-                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $current_page + 1; ?>" class="page_link">></a>
+                                <a href="<?= getPaginationUrl($current_page + 1, $queryParams) ?>" class="page_link">»</a>
                             </div>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
-
         </div>
+    </div>
 </body>
 
 </html>

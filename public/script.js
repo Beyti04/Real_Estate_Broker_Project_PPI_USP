@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. UI Components Initialization
   burgerMenu();
   selectMenu();
+  initThemeToggle();
+  initPaginationUI();
 
   // 2. Dropdown Dependencies Logic
   // Region -> City
@@ -11,16 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // City -> Neighborhood (with Visibility toggle)
   handleDependentWithVisibility("locationDropdown", "neighborhoodDropdown");
 
-  // 3. Map Initialization (Unified for both ADM1 and ADM2)
-  initUnifiedMap(
-    "map-container",
-    "map/geoBoundaries-BGR-ADM1_simplified.geojson",
-    "map/geoBoundaries-BGR-ADM2_simplified.geojson"
-  );
+   // 3. Map Initialization (Unified for both ADM1 and ADM2)
+   initUnifiedMap(
+     "map-container",
+     "map/geoBoundaries-BGR-ADM1_simplified.geojson",
+     "map/geoBoundaries-BGR-ADM2_simplified.geojson"
+   );
 
-  initPaginationUI();
-
-  // 4. Horizontal Scroll for Filter Bar
+   // 4. Horizontal Scroll for Filter Bar
   const filterBar = document.querySelector(".filter_bar");
   if (filterBar) {
     filterBar.addEventListener(
@@ -198,25 +198,38 @@ function selectMenu() {
     });
 
     options.forEach((option) => {
-      option.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const val = option.getAttribute("data-value");
-        const nameEn = option.getAttribute("data-name");
+        option.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const val = option.getAttribute("data-value");
+            const nameEn = option.getAttribute("data-name");
 
-        label.innerText = option.innerText;
-        btn.setAttribute("data-selected-name", nameEn || "");
+            label.innerText = option.innerText;
+            // Update appropriate data attributes based on dropdown type
+            if (wrapper.id === "priceDropdown" || wrapper.id === "typeDropdown") {
+                btn.setAttribute("data-selected-name", val);
+            } else if (wrapper.id === "regionDropdown" || wrapper.id === "locationDropdown") {
+                btn.setAttribute("data-selected-id", val);
+                if (nameEn) {
+                    btn.setAttribute("data-selected-name", nameEn);
+                } else {
+                    btn.removeAttribute("data-selected-name");
+                }
+            } else if (wrapper.id === "categoryDropdown" || wrapper.id === "neighborhoodDropdown" || wrapper.id === "listingTypeDropdown") {
+                btn.setAttribute("data-selected-id", val);
+            } else {
+                btn.setAttribute("data-selected-name", val);
+            }
 
-        closeAllMenus();
+            closeAllMenus();
 
-        btn.style.borderColor = val !== "any" ? "var(--tu_blue_primary)" : "";
-
-        wrapper.dispatchEvent(
-          new CustomEvent("selectionChanged", {
-            detail: { value: val },
-            bubbles: true,
-          })
-        );
-      });
+            btn.style.borderColor = val !== "any" ? "var(--tu_blue_primary)" : "";
+            wrapper.dispatchEvent(
+                new CustomEvent("selectionChanged", {
+                    detail: { value: val },
+                    bubbles: true,
+                })
+            );
+        });
     });
   });
 
@@ -239,72 +252,54 @@ function getMenuFromWrapper(wrapperId) {
 }
 
 function syncDropdowns(parentId, childId) {
-  const parentWrapper = document.getElementById(parentId);
-  const childWrapper = document.getElementById(childId);
-  if (!parentWrapper || !childWrapper) return;
+    const parentWrapper = document.getElementById(parentId);
+    const childWrapper = document.getElementById(childId);
+    if (!parentWrapper || !childWrapper) return;
 
-  parentWrapper.addEventListener("selectionChanged", (e) => {
-    const selectedValue = e.detail.value;
-    
-    // ТЪРСИМ МЕНЮТО И В BODY (ако е отворено), И ВЪТРЕ В WRAPPER-A (ако не е отваряно)
-    let childMenu = getMenuFromWrapper(childId) || childWrapper.querySelector(".dropdown_content");
-    
-    const childLabel = childWrapper.querySelector(".filter_label");
-    const childBtn = childWrapper.querySelector(".dropdown_toggle");
+    const updateOptions = (parentVal, isManual) => {
+        // Find the menu (might be in body or in wrapper)
+        const childMenu = document.querySelector(`.dropdown_content[data-parent-id="${childId}"]`) || childWrapper.querySelector(".dropdown_content");
+        if (!childMenu) return;
 
-    if (!childMenu) return;
-    const childOptions = childMenu.querySelectorAll(".dropdown_option");
+        const options = childMenu.querySelectorAll(".dropdown_option");
+        
+        // Hide/Show logic
+        options.forEach(opt => {
+            const dep = opt.getAttribute("data-region");
+            if (parentVal === "any" || dep === parentVal || opt.getAttribute("data-value") === "any") {
+                opt.style.display = "block";
+            } else {
+                opt.style.display = "none";
+            }
+        });
+    };
 
-    // Reset child state
-    childLabel.innerText = childOptions[0].innerText;
-    childBtn.style.borderColor = "";
-    childBtn.setAttribute("data-selected-name", "");
-
-    childWrapper.dispatchEvent(
-      new CustomEvent("selectionChanged", {
-        detail: { value: "any" },
-        bubbles: true,
-      })
-    );
-
-    childOptions.forEach((opt) => {
-      const dep = opt.getAttribute("data-region");
-      const isAny = opt.getAttribute("data-value") === "any";
-      
-      if (selectedValue === "any" || dep === selectedValue || isAny) {
-        opt.style.display = "block";
-      } else {
-        opt.style.display = "none";
-      }
+    parentWrapper.addEventListener("selectionChanged", (e) => {
+        updateOptions(e.detail.value, e.detail.isManual);
     });
-  });
+
+    // CRITICAL: Run on load to respect PHP session values
+    const initialParentId = parentWrapper.querySelector(".dropdown_toggle").getAttribute("data-selected-id");
+    if (initialParentId) updateOptions(initialParentId, false);
 }
 
 function handleDependentWithVisibility(parentId, childId) {
-  const childWrapper = document.getElementById(childId);
-  const parentWrapper = document.getElementById(parentId);
-  if (!childWrapper || !parentWrapper) return;
+    const childWrapper = document.getElementById(childId);
+    const parentWrapper = document.getElementById(parentId);
+    if (!childWrapper || !parentWrapper) return;
 
-  syncDropdowns(parentId, childId);
+    syncDropdowns(parentId, childId);
 
-  const checkVisibility = (val) => {
-    // If "any" or no value is selected in parent, hide the child
-    childWrapper.style.display = (val === "any" || !val) ? "none" : "inline-block";
-  };
+    const checkVisibility = (val) => {
+        childWrapper.style.display = (val === "any" || !val) ? "none" : "inline-block";
+    };
 
-  parentWrapper.addEventListener("selectionChanged", (e) => {
-    checkVisibility(e.detail.value);
-  });
-
-  // Run once on load
-  checkVisibility("any");
+    parentWrapper.addEventListener("selectionChanged", (e) => checkVisibility(e.detail.value));
+    
+    // CRITICAL: Run on load
+    const initialVal = parentWrapper.querySelector(".dropdown_toggle").getAttribute("data-selected-id");
+    checkVisibility(initialVal);
 }
-
-// Добави това извикване в твоя съществуващ DOMContentLoaded event
-document.addEventListener("DOMContentLoaded", () => {
-  // ... другите ти функции (burgerMenu, selectMenu и т.н.)
-  initThemeToggle();
-});
 
 // --- ФУНКЦИЯ ЗА СМЯНА НА ТЕМАТА ---
 function initThemeToggle() {
@@ -338,12 +333,43 @@ function initThemeToggle() {
 }
 
 function initPaginationUI() {
-    const pageLinks = document.querySelectorAll(".page_link");
-    
-    pageLinks.forEach(link => {
-        link.addEventListener("click", () => {
-            // Добави анимация за зареждане или скрол догоре
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+  const pageLinks = document.querySelectorAll(".page_link");
+
+  pageLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Build URL with current filter values from dropdowns
+      const url = new URL(link.href, window.location.origin);
+
+      const filterMap = {
+        priceDropdown: "price",
+        categoryDropdown: "category",
+        typeDropdown: "type",
+        regionDropdown: "region",
+        locationDropdown: "city",
+        neighborhoodDropdown: "neighborhood",
+        listingTypeDropdown: "listing_type"
+      };
+
+      Object.keys(filterMap).forEach((dropdownId) => {
+        const toggle = document.getElementById(dropdownId);
+        if (!toggle) return;
+        const paramName = filterMap[dropdownId];
+        let value;
+        if (dropdownId === "priceDropdown" || dropdownId === "typeDropdown") {
+          value = toggle.getAttribute("data-selected-name");
+        } else {
+          value = toggle.getAttribute("data-selected-id");
+        }
+        if (value && value !== "any") {
+          url.searchParams.set(paramName, value);
+        } else {
+          url.searchParams.delete(paramName);
+        }
+      });
+
+      window.location.href = url.toString();
     });
+  });
 }

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="bg">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Агенти</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="agent.css">
     <script src="script.js"></script>
 </head>
+
 <body>
     <div class="main_wrapper">
         <header>
@@ -46,65 +47,66 @@
             </div>
         </header>
 
-        <section class="content_section">
+        <section class="agent_content_section">
             <div class="container_center">
-                <div style="text-align:center; margin-bottom: 2rem;margin-top: -80px;">
-                    <h2 class="section_title">Our Agents</h2>
-                    <p class="section_description">Meet our professional real estate brokers.</p>
+                <div class="agent_header">
+                    <h2 class="section_title">Агенти</h2>
                 </div>
-
-                <div class="properties_grid">
+                <div class="agents_grid">
                     <?php foreach ($agents as $agent): ?>
-                        <div class="property_card" style="text-align:center;">
-                            <a href="index.php?action=agent_profile&id=<?= $agent->getId(); ?>" style="text-decoration:none; color:inherit;">
-                                <img
-                                    src="<?= !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'uploads/default-agent.jpg'; ?>"
-                                    alt="<?= htmlspecialchars($agent->getUsername()); ?>"
-                                    style="width:100%; height:320px; object-fit:cover; border-radius:12px; margin-bottom:1rem;"
-                                >
-                                <h3><?= htmlspecialchars($agent->getUsername()); ?></h3>
-                            </a>
-                        </div>
+                        <a class="agent_card" href="index.php?action=agent_profile&id=<?= $agent->getId(); ?>" style="text-decoration:none; color:inherit;">
+                            <img class="agent_image"
+                                src="<?= !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
+                                alt="<?= htmlspecialchars($agent->getUsername()); ?>">
+                            <div class="agent-info-row">
+                                <div class="agent_label">Име:</div>
+                                <div class="agent_data"><?= htmlspecialchars($agent->getUsername()); ?></div>
+                            </div>
+                            <div class="agent-info-row">
+                                <div class="agent_label">Телефон:</div>
+                                <div class="agent_data"><?= htmlspecialchars($agent->getPhone()); ?></div>
+                            </div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
-                 <?php
-            $is_mobile = is_numeric(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile"));
+                <?php
+                $is_mobile = is_numeric(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile"));
 
-// 2. Вземи всички имоти първо
-$all_estates = App\Controllers\EstateController::getAllEstates();
-$total_items = count($all_estates);
+                // 2. Вземи всички имоти първо
+                $all_estates = App\Controllers\EstateController::getAllEstates();
+                $total_items = count($all_estates);
 
-if ($is_mobile) {
-    // На мобилен показваме всичко наведнъж
-    $items_per_page = $total_items > 0 ? $total_items : 1; 
-    $current_page = 1;
-} else {
-    // На десктоп използваме странициране
-    $items_per_page = 3; 
-    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-}
+                if ($is_mobile) {
+                    // На мобилен показваме всичко наведнъж
+                    $items_per_page = $total_items > 0 ? $total_items : 1;
+                    $current_page = 1;
+                } else {
+                    // На десктоп използваме странициране
+                    $items_per_page = 3;
+                    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                }
 
-$offset = ($current_page - 1) * $items_per_page;
-$total_pages = ceil($total_items / $items_per_page);
+                $offset = ($current_page - 1) * $items_per_page;
+                $total_pages = ceil($total_items / $items_per_page);
 
-// 3. Отрежи имотите спрямо страницата
-$estates = array_slice($all_estates, $offset, $items_per_page);
-            ?>
+                // 3. Отрежи имотите спрямо страницата
+                $estates = array_slice($all_estates, $offset, $items_per_page);
+                ?>
 
                 <div class="page_numbers">
-                            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $i; ?>"
-                                    class="page_link <?php echo ($i == $current_page) ? 'active' : ''; ?>">
-                                    <?php echo $i; ?>
-                                </a>
-                            <?php endfor; ?>
-                        </div>
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $i; ?>"
+                            class="page_link <?php echo ($i == $current_page) ? 'active' : ''; ?>">
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+                </div>
 
-                        <?php if ($current_page < $total_pages): ?>
-                            <div class="page_numbers">
-                                <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $current_page + 1; ?>" class="page_link">></a>
-                            </div>
-                        <?php endif; ?>
+                <?php if ($current_page < $total_pages): ?>
+                    <div class="page_numbers">
+                        <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $current_page + 1; ?>" class="page_link">></a>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
     </div>

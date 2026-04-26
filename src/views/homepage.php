@@ -40,7 +40,7 @@
                 <div class="nav_container">
                     <nav class="nav_links">
                         <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
-                        <a class="nav_link" href="index.php?action=sell">Sell</a>
+                        <a class="nav_link" href="#">Sell</a>
                         <a class="nav_link" href="index.php?action=agent">Agents</a>
                     </nav>
 
