@@ -10,11 +10,18 @@ class User
     private string $email;
     private string $password;
     private int $userType;
-    private string $phone;
-    private string $image;
-    private string $description;
+    private ?string $phone;
+    private ?string $image;
+    private ?string $description;
 
-    public function __construct(int $id, string $username, string $email, string $password, int $userType, string $phone, string $image, string $description)
+    public function __construct(  int $id,
+        string $username,
+        string $email,
+        string $password,
+        int $userType,
+        ?string $phone = null,
+        ?string $image = null,
+        ?string $description = null)
     {
         $this->id = $id;
         $this->username = $username;

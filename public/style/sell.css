@@ -1,0 +1,63 @@
+.create-estate-page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.create-estate-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+    align-items: start;
+}
+
+.estate-column {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.estate-column h3 {
+    margin: 0 0 10px 0;
+    color: #0f0a0a;
+    font-size: 24px;
+}
+
+.estate-column label {
+    color: #b9c7df;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.estate-column .input_field {
+    width: 100%;
+}
+
+.estate-textarea {
+    min-height: 420px;
+    resize: vertical;
+    padding: 14px;
+}
+
+.upload-note {
+    margin-top: 10px;
+    color: #9fb4d9;
+    line-height: 1.6;
+}
+
+.upload-estate-btn {
+    margin-top: 20px;
+    width: 100%;
+}
+
+@media (max-width: 1100px) {
+    .create-estate-form {
+        grid-template-columns: 1fr;
+    }
+}

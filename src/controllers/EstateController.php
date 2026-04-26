@@ -28,7 +28,13 @@ class EstateController
                 u.username AS owner_name,
                 e.creation_date,
                 e.expiration_date,
-                s.status_name
+                s.status_name,(
+            SELECT ei.image_path
+            FROM estate_images ei
+            WHERE ei.estate_id = e.id
+            AND ei.is_primary = 1
+            LIMIT 1
+        ) AS primary_image
             FROM estates e
             LEFT JOIN cities c ON e.city_id=c.id
             LEFT JOIN neighborhoods n ON e.neighborhood_id=n.id
@@ -277,4 +283,5 @@ class EstateController
         return false;
     }
 }
+
 }

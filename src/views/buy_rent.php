@@ -278,7 +278,11 @@ $estates = array_slice($all_estates, $offset, $items_per_page);
                         ?>
                             <article class="estate_card">
                                 <div class="estate_image_wrapper">
-                                    <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
+                                   <img 
+    src="<?= !empty($estate->primary_image) ? htmlspecialchars($estate->primary_image) : 'uploads/estate_placeholder.jpg'; ?>" 
+    alt="<?= htmlspecialchars($estate->estate_address); ?>" 
+    class="estate_image"
+>
                                     <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
                                 </div>
 

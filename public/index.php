@@ -326,7 +326,7 @@ switch ($action) {
         exit;
     }
 
-    require VIEW_DIR . 'create_estate.php';
+    require VIEW_DIR . 'sell.php';
     break;
 
 case 'create_estate_process':
@@ -392,6 +392,18 @@ case 'create_estate_process':
         header('Location: index.php?action=sell&error=create_failed');
         exit;
     }
+    break;
+    case 'estate_details':
+    $id = (int)($_GET['id'] ?? 0);
+    $estate = \App\Controllers\EstateController::getEstateById($id);
+    $estateImages = \App\Controllers\EstateController::getImagesByEstateId($id);
+
+    if (!$estate) {
+        header('Location: index.php?action=buy_rent');
+        exit;
+    }
+
+    require VIEW_DIR . 'estate_details.php';
     break;
     case 'logout':
         App\Controllers\AuthController::logout();
