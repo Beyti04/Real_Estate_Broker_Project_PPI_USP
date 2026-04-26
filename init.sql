@@ -30,9 +30,11 @@ CREATE TABLE
         type_name VARCHAR(255) NOT NULL
     );
 
+
 CREATE TABLE
     IF NOT EXISTS price_ranges (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        type_id INT NOT NULL,
         range_name VARCHAR(50) NOT NULL,
         range_value VARCHAR(50) NOT NULL
     );
@@ -157,14 +159,20 @@ VALUES
     ('Изтекла');
 
 INSERT INTO
-    price_ranges (range_name, range_value)
+    price_ranges (type_id,range_name, range_value)
 VALUES
-    ('low', '< 50 000 €'),
-    ('low_mid', '50 000 € - 100 000 €'),
-    ('mid', '100 000 € - 250 000 €'),
-    ('mid_high', '250 000 € - 500 000 €'),
-    ('high', '500 000 € - 1 000 000 €'),
-    ('very_high', '> 1 000 000 €');
+    (1,'low', '< 50 000 €'),
+    (1,'low_mid', '50 000 € - 100 000 €'),
+    (1,'mid', '100 000 € - 250 000 €'),
+    (1,'mid_high', '250 000 € - 500 000 €'),
+    (1,'high', '500 000 € - 1 000 000 €'),
+    (1,'very_high', '> 1 000 000 €'),
+    (2,'low', '< 100 €'),
+    (2,'low_mid', '100 € - 200 €'),
+    (2,'mid', '200 € - 500 €'),
+    (2,'mid_high', '500 € - 1 000 €'),
+    (2,'high', '1 000 € - 2 000 €'),
+    (2,'very_high', '> 2 000 €');
 
 INSERT INTO
     estate_types (type_name, category_id)
@@ -1000,39 +1008,39 @@ VALUES
         '-'
     ),
     (
-        'someone',
-        'some.one@some.one',
-        '$2y$10$PKg/or4m9dVh9LzP3Z67KukIlDn0nPNvhzASOHgJleTNH94mCAo3a' /*someone*/,
+        'Ивайло Сашев',
+        'iv.sashev@abv.bg',
+        '$2y$10$pv4fL7o74sPTCWJEQyglBufNvYVZnKyVJlRdJaLTwx5QjcI9DdNim' /*test*/,
         2,
         '0888123456',
-        'uploads/agents/someone.jpg',
+        'uploads/agents/i_sashev.png',
         'Experienced real estate broker specializing in residential properties.'
     ),
     (
         'Georgi',
         'gecata@g.g',
-        '$2y$10$ClNEp4qyehEXml50nzBqB.QJHr6dk7/N1PrMbyZf4ceUzZjB7uRW.' /*gecata*/,
+        '$2y$10$pv4fL7o74sPTCWJEQyglBufNvYVZnKyVJlRdJaLTwx5QjcI9DdNim' /*test*/,
         3,
         '-',
         '-',
         '-'
     ),
     (
-        'BurgasBroker',
-        'burgas.broker@b.b',
-        '$2y$10$V/h/hPMK1UuinSIQBpRg6OizFrFa0LJ2u3VR9SnsK1GmIf1si76jG' /*burgas*/,
+        'Георги Димитров',
+        'g.dimitrov@gmail.com',
+        '$2y$10$pv4fL7o74sPTCWJEQyglBufNvYVZnKyVJlRdJaLTwx5QjcI9DdNim' /*test*/,
         2,
         '0888123456',
-        'uploads/agents/burgas.jpg',
+        'uploads/agents/g_dimitrov.png',
         'Experienced real estate broker specializing in residential properties. '
     ),
     (
-        'Maria Ivanova',
-        'maria@example.com',
-        '$2y$10$examplehashedpassword',
+        'Михаела Петрова',
+        'm.petrova@example.com',
+        '$2y$10$pv4fL7o74sPTCWJEQyglBufNvYVZnKyVJlRdJaLTwx5QjcI9DdNim' /*test*/,
         2,
         '0888123456',
-        'uploads/maria.jpg',
+        'uploads/agents/m_petrova.png',
         'Experienced real estate broker specializing in residential properties.'
 );
 
