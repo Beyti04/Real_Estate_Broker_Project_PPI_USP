@@ -61,6 +61,41 @@ switch ($action) {
             exit;
         }
         break;
+    
+    case 'profile':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+        require VIEW_DIR . 'profile.php';
+        break;
+    case "profile_update":
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_SESSION['user_id'];
+            $username = $_POST['username'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $phone = $_POST['phone'] ?? '';
+            $newPassword = $_POST['password'] ?? '';
+
+            if(empty($newPassword)) {
+                $success = \App\Controllers\UserController::updateUserProfile($userId, $username, $email, $phone);
+            } else {
+                $success = \App\Controllers\UserController::updateUserProfilePassword($userId, $username, $email, $phone, $newPassword);
+            }
+            if ($success) {
+                $_SESSION['username'] = $username;
+                header('Location: index.php?action=homepage');
+            } else {
+                header('Location: index.php?action=profile&error=update_failed');
+            }
+        }
+        break;
+        
     //Admin Panel
     case 'admin':
         if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {
@@ -329,13 +364,13 @@ switch ($action) {
     require VIEW_DIR . 'sell.php';
     break;
 
-case 'create_estate_process':
-    if (!isset($_SESSION['user_id'])) {
+    case 'create_estate_process':
+     if (!isset($_SESSION['user_id'])) {
         header('Location: index.php?action=login');
         exit;
-    }
+     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cityId = (int)($_POST['city_id'] ?? 0);
         $neighborhoodId = (int)($_POST['neighborhood_id'] ?? 0);
         $address = trim($_POST['estate_address'] ?? '');
@@ -391,19 +426,7 @@ case 'create_estate_process':
 
         header('Location: index.php?action=sell&error=create_failed');
         exit;
-    }
-    break;
-    case 'estate_details':
-    $id = (int)($_GET['id'] ?? 0);
-    $estate = \App\Controllers\EstateController::getEstateById($id);
-    $estateImages = \App\Controllers\EstateController::getImagesByEstateId($id);
-
-    if (!$estate) {
-        header('Location: index.php?action=buy_rent');
-        exit;
-    }
-
-    require VIEW_DIR . 'estate_details.php';
+        }
     break;
     case 'logout':
         App\Controllers\AuthController::logout();

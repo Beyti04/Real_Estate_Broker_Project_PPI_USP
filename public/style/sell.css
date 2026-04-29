@@ -14,8 +14,8 @@
 }
 
 .estate-column {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: 1px solid var(--border-light);
     border-radius: 20px;
     padding: 24px;
     display: flex;
@@ -60,4 +60,37 @@
     .create-estate-form {
         grid-template-columns: 1fr;
     }
+}
+
+/* =========================================
+   DARK MODE (Тъмна тема) - Създаване на обява
+   ========================================= */
+
+body.dark-mode .estate-column {
+    background: var(--search-dark);
+    border-color: var(--border-dark);
+}
+
+body.dark-mode .estate-column h3 {
+    color: var(--text-dark);
+}
+
+body.dark-mode .estate-column label {
+    color: var(--text-dark);
+}
+
+body.dark-mode .estate-textarea {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+    border: 1px solid var(--border-light);
+}
+
+body.dark-mode .estate-textarea:focus {
+    outline: none;
+    border-color: var(--tu_blue_primary);
+    box-shadow: 0 0 0 2px rgba(var(--tu_blue_primary_rgb), 0.4);
+}
+
+body.dark-mode .upload-note {
+    color: var(--par-dark);
 }

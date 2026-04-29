@@ -106,6 +106,41 @@ class UserController
         }
     }
 
+    public static function updateUserProfilePassword(int $id, string $username, string $email, string $phone, string $password): bool
+    {
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("UPDATE users SET username = :username, email = :email, phone = :phone, password = :password WHERE id = :id");
+            return $stmt->execute([
+                'username' => $username,
+                'email' => $email,
+                'phone' => $phone ?? '-',
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'id' => $id
+            ]);
+        } catch (PDOException $e) {
+            error_log('Error updating user profile: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public static function updateUserProfile(int $id, string $username, string $email, string $phone): bool
+    {
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("UPDATE users SET username = :username, email = :email, phone = :phone WHERE id = :id");
+            return $stmt->execute([
+                'username' => $username,
+                'email' => $email,
+                'phone' => $phone ?? '-',
+                'id' => $id
+            ]);
+        } catch (PDOException $e) {
+            error_log('Error updating user profile: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     public static function deleteUser(int $id): bool
     {
         $pdo = Database::getInstance();

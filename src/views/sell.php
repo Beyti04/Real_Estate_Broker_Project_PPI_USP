@@ -52,14 +52,31 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
 
             <div class="nav_wrapper">
+                <button class="menu_toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
                 <div class="nav_container">
                     <nav class="nav_links">
                         <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
                         <a class="nav_link" href="index.php?action=sell">Sell</a>
-                        <a class="nav_link" href="index.php?action=agents">Agents</a>
+                        <a class="nav_link" href="index.php?action=agent">Agents</a>
                     </nav>
+
                     <div class="sing_in_btns">
-                        <a href="index.php?action=logout" class="btn_secondary">Log Out</a>
+                        <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
+                            🌙
+                        </button>
+                        <?php
+                        if (isset($_SESSION['user_id'])) {
+                            echo '<a href="index.php?action=profile" class="btn_primary">Profile</a>';
+                            echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
+                        } else {
+                            echo '<a href="index.php?action=register" class="btn_primary">Sign Up</a>';
+                            echo '<a href="index.php?action=login" class="btn_secondary">Log In</a>';
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

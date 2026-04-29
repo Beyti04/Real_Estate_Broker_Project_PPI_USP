@@ -90,6 +90,7 @@ function activeStyle($currentVal)
                         </button>
                         <?php
                         if (isset($_SESSION['user_id'])) {
+                            echo '<a href="index.php?action=profile" class="btn_primary">Profile</a>';
                             echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
                         } else {
                             echo '<a href="index.php?action=register" class="btn_primary">Sign Up</a>';
