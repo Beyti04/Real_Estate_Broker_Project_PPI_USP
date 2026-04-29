@@ -81,8 +81,8 @@ function activeStyle($currentVal)
                 <div class="nav_container">
                     <nav class="nav_links">
                         <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
-                        <a class="nav_link" href="#">Sell</a>
-                        <a class="nav_link" href="#">Agents</a>
+                        <a class="nav_link" href="index.php?action=sell">Sell</a>
+                        <a class="nav_link" href="index.php?action=agents">Agents</a>
                     </nav>
                     <div class="sing_in_btns">
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
@@ -150,7 +150,9 @@ function activeStyle($currentVal)
                 <div class="dropdown_content">
                     <div class="dropdown_option" data-value="any">Тип обява</div>
                     <?php
+
                     use App\Controllers\ListingTypeController;
+
                     foreach (ListingTypeController::getAllListingTypes() as $listingType): ?>
                         <div class="dropdown_option" data-value="<?= htmlspecialchars($listingType->getId()) ?>">
                             <?= htmlspecialchars($listingType->getTypeName()) ?>
@@ -235,9 +237,45 @@ function activeStyle($currentVal)
                 </div>
             </div>
 
-            <a href="index.php?action=buy_rent&" class="btn_primary" style="border-radius: 100px; text-decoration: none;">Търси</a>
+            <button type="button" id="searchBtn" class="btn_primary" style="border-radius: 100px; outline: none; border: none; cursor: pointer; padding: 0 25px; height: 40px; font-size: 1rem;">Търси</button>
             <a href="index.php?action=buy_rent&clear_filters=1" class="btn_secondary" style="height: 40px; display: flex; align-items: center; text-decoration: none; padding: 0 15px; border-radius: 20px;">Изчисти</a>
         </form>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const searchBtn = document.getElementById('searchBtn');
+
+                if (searchBtn) {
+                    searchBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        // Взимаме стойностите от data-атрибутите на бутоните за всяко меню
+                        const filters = {
+                            price: document.querySelector('#priceDropdown .dropdown_toggle').getAttribute('data-selected-name'),
+                            category: document.querySelector('#categoryDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                            listing_type: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                            type: document.querySelector('#typeDropdown .dropdown_toggle').getAttribute('data-selected-name'),
+                            region: document.querySelector('#regionDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                            city: document.querySelector('#locationDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                            neighborhood: document.querySelector('#neighborhoodDropdown .dropdown_toggle').getAttribute('data-selected-id')
+                        };
+
+                        // Базовият URL
+                        let url = 'index.php?action=buy_rent';
+
+                        // Минаваме през всеки филтър и го добавяме към URL-а, ако не е "any"
+                        for (const [key, value] of Object.entries(filters)) {
+                            if (value && value !== 'any') {
+                                url += `&${key}=${encodeURIComponent(value)}`;
+                            }
+                        }
+
+                        // Пренасочваме браузъра към генерирания URL с филтрите
+                        window.location.href = url;
+                    });
+                }
+            });
+        </script>
 
         <div class="split_container">
             <div id="map-container"></div>
@@ -245,7 +283,11 @@ function activeStyle($currentVal)
             <?php
             $is_mobile = is_numeric(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile"));
 
-            $all_estates = App\Controllers\EstateController::getAllEstates();
+            // Взимаме масива с филтри от сесията
+            $current_filters = $_SESSION['filters'] ?? [];
+
+            // Извикваме новата функция, която връща само филтрираните резултати
+            $all_estates = App\Controllers\EstateController::getFilteredEstates($current_filters);
             $total_items = count($all_estates);
 
             if ($is_mobile) {
@@ -265,7 +307,12 @@ function activeStyle($currentVal)
                 <div class="container_center">
                     <h2 class="section_title">Available Estates</h2>
                     <div class="properties_grid">
-                        <?php foreach ($estates as $estate): ?>
+                        <?php
+                        if (empty($estates)) {
+                            echo '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">No properties found matching your criteria.</p>';
+                        }
+                        
+                         foreach ($estates as $estate): ?>
                             <article class="estate_card">
                                 <div class="estate_image_wrapper">
                                     <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
@@ -280,7 +327,7 @@ function activeStyle($currentVal)
                                     <div class="estate_features">
                                         <div class="feature_item">
                                             <image src="images/area_icon.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
-                                            <span><?= htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
+                                                <span><?= htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
                                         </div>
                                         <div class="feature_item">
                                             <image src="images/room.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;"></image>

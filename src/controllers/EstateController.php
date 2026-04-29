@@ -196,7 +196,7 @@ class EstateController
     int $ownerId,
     int $statusId,
     array $images
-): bool {
+    ): bool {
     $pdo = Database::getInstance();
 
     $creationDate = date('Y-m-d');
@@ -282,6 +282,101 @@ class EstateController
         error_log('Error creating estate with images: ' . $e->getMessage());
         return false;
     }
-}
+    }
+
+    public static function getImagesByEstateId(int $id){
+        
+    }
+
+    public static function getFilteredEstates(array $filters): array
+    {
+        $db = Database::getInstance();
+        
+        // Базовата заявка (същата като в getAllEstates, но добавяме WHERE 1=1 за лесно закачане на условия)
+        $query = "
+            SELECT
+                e.id,
+                c.city_name_bg AS city_name,
+                n.neighborhood_name_bg AS neighborhood_name,
+                e.estate_address,
+                et.type_name AS estate_type,
+                e.rooms, e.area, e.floor,
+                e.exposure_type,
+                e.description,
+                lt.type_name AS listing_type,
+                e.price,
+                u.username AS owner_name,
+                e.creation_date,
+                e.expiration_date,
+                s.status_name,
+                (
+                    SELECT ei.image_path
+                    FROM estate_images ei
+                    WHERE ei.estate_id = e.id
+                    AND ei.is_primary = 1
+                    LIMIT 1
+                ) AS primary_image
+            FROM estates e
+            LEFT JOIN cities c ON e.city_id=c.id
+            LEFT JOIN neighborhoods n ON e.neighborhood_id=n.id
+            LEFT JOIN estate_types et ON e.estate_type_id=et.id
+            LEFT JOIN listing_types lt ON e.listing_type_id=lt.id
+            LEFT JOIN users u ON e.owner_id=u.id
+            LEFT JOIN estate_status s ON e.status_id=s.id
+            WHERE 1=1
+        ";
+
+        $params = [];
+
+        // Динамично добавяне на филтри
+        if (!empty($filters['city']) && $filters['city'] !== 'any') {
+            $query .= " AND e.city_id = :city";
+            $params['city'] = $filters['city'];
+        }
+
+        if (!empty($filters['neighborhood']) && $filters['neighborhood'] !== 'any') {
+            $query .= " AND e.neighborhood_id = :neighborhood";
+            $params['neighborhood'] = $filters['neighborhood'];
+        }
+
+        if (!empty($filters['listing_type']) && $filters['listing_type'] !== 'any') {
+            $query .= " AND e.listing_type_id = :listing_type";
+            $params['listing_type'] = $filters['listing_type'];
+        }
+
+        if (!empty($filters['category']) && $filters['category'] !== 'any') {
+            // Предполагам, че имаш category_id в estates или estate_types.
+            // Ако е в estate_types, заявката ще изглежда така:
+            $query .= " AND et.category_id = :category"; 
+            $params['category'] = $filters['category'];
+        }
+
+        if (!empty($filters['type']) && $filters['type'] !== 'any') {
+            $query .= " AND et.type_name = :type"; // Тъй като в HTML пращаш името, а не ID-то
+            $params['type'] = $filters['type'];
+        }
+
+        // Логика за цена (ако идва във формат напр. "0-50000" или "100000+")
+        if (!empty($filters['price']) && $filters['price'] !== 'any') {
+            if (strpos($filters['price'], '-') !== false) {
+                list($min, $max) = explode('-', $filters['price']);
+                $query .= " AND e.price >= :min_price AND e.price <= :max_price";
+                $params['min_price'] = (float)$min;
+                $params['max_price'] = (float)$max;
+            } elseif (strpos($filters['price'], '+') !== false) {
+                $min = str_replace('+', '', $filters['price']);
+                $query .= " AND e.price >= :min_price";
+                $params['min_price'] = (float)$min;
+            }
+        }
+
+        // Подреждане от най-новите към най-старите (по желание)
+        $query .= " ORDER BY e.creation_date DESC";
+
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 
 }
