@@ -22,15 +22,6 @@
                     <h1 class="heading_primary">TU Estates</h1>
                 </a>
             </div>
-            <div class="desktop_search_container">
-                <div class="relative_container">
-                    <div class="input_icon_wrapper">
-                        <img src="images/search_icon.png" alt="Search Icon">
-                    </div>
-                    <input class="input_field" placeholder="Address, City, Zip, or Neighborhood"
-                        type="text">
-                </div>
-            </div>
             <div class="nav_wrapper">
                 <button class="menu_toggle" id="menuToggle">
                     <span></span>
@@ -39,9 +30,9 @@
                 </button>
                 <div class="nav_container">
                     <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
-                        <a class="nav_link" href="index.php?action=sell">Sell</a>
-                        <a class="nav_link" href="index.php?action=agent">Agents</a>
+                        <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
+                        <a class="nav_link" href="index.php?action=sell">Продай</a>
+                        <a class="nav_link" href="index.php?action=agents">Агенти</a>
                     </nav>
 
                     <div class="sing_in_btns">
@@ -50,11 +41,11 @@
                         </button>
                         <?php
                         if (isset($_SESSION['user_id'])) {
-                            echo '<a href="index.php?action=profile" class="btn_primary">Profile</a>';
-                            echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
+                            echo '<a href="index.php?action=profile" class="btn_primary">Профил</a>';
+                            echo '<a href="index.php?action=logout" class="btn_secondary">Изход</a>';
                         } else {
-                            echo '<a href="index.php?action=register" class="btn_primary">Sign Up</a>';
-                            echo '<a href="index.php?action=login" class="btn_secondary">Log In</a>';
+                            echo '<a href="index.php?action=register" class="btn_primary">Регистрация</a>';
+                            echo '<a href="index.php?action=login" class="btn_secondary">Вход</a>';
                         }
                         ?>
                     </div>
@@ -67,17 +58,15 @@
                 <div class="hero_gradient_overlay"></div>
             </div>
             <div class="hero_content_container">
-                <h1 class="hero_title">Find Your Dream Sanctuary</h1>
-                <p class="hero_subtitle">Exceptional properties, expert service. Discover the finest real
-                    estate listings in the most exclusive neighborhoods.</p>
+                <h1 class="hero_title">Намерете вашето мечтано кътче спокойствие</h1>
+                <p class="hero_subtitle">Изключителни имоти, експертно обслужване. Открийте най-добрите предложения в най-ексклузивните райони.</p>
             </div>
         </div>
         <section class="content_section">
             <div class="container_center">
                 <div style="text-align:center">
-                    <h2 class="section_title">Why Choose TU Estates</h2>
-                    <p class="section_description">We provide a seamless real estate experience with a focus on
-                        trust, expertise, and personalized service.</p>
+                    <h2 class="section_title">Защо да изберета TU Estates</h2>
+                    <p class="section_description">Осигуряваме безпроблемен процес при сделките с имоти, основан на доверие, експертен опит и лично отношение.</p>
                 </div>
                 <div class="properties_grid">
                     <div class="property_card">
@@ -86,9 +75,8 @@
                             <img class="icon_box theme_dark_img" src="images/verified_dark.png" alt="Verified Icon">
                         </picture>
 
-                        <h3>Trusted Expertise</h3>
-                        <p class="card_description">Our agents are top-tier professionals with deep market knowledge
-                            and a proven track record of success.</p>
+                        <h3>Доказана експертност</h3>
+                        <p class="card_description">Нашите консултанти са доказани професионалисти с дълбоки познания за пазара и солидна история от успешни сделки.</p>
                     </div>
                     <div class="property_card">
                         <picture>
@@ -96,8 +84,8 @@
                             <img class="icon_box theme_dark_img" src="images/globe_dark.png" alt="Globe Icon">
                         </picture>
 
-                        <h3>Global Reach</h3>
-                        <p class="card_description">We connect buyers and sellers from around the world, ensuring your property gets maximum exposure.</p>
+                        <h3>Национален обхват</h3>
+                        <p class="card_description">Нашите консултанти са водещи професионалисти с задълбочени познания за българския пазар и доказана история от успешни сделки в най-престижните локации.</p>
                     </div>
                     <div class="property_card">
                         <picture>
@@ -105,9 +93,8 @@
                             <img class="icon_box theme_dark_img" src="images/sup_dark.png" alt="Support Icon">
                         </picture>
 
-                        <h3>Personalized Service</h3>
-                        <p class="card_description">We connect buyers and sellers from around the world, ensuring
-                            your property gets maximum exposure.</p>
+                        <h3>Индивидуален подход</h3>
+                        <p class="card_description">Вярваме, че всяка сделка е уникална, затова поставяме Вашите индивидуални нужди в центъра на нашата работа. Нашите експерти предлагат персонални решения и внимателно отношение</p>
                     </div>
                 </div>
             </div>
@@ -122,8 +109,7 @@
                     </picture>
                         <h3 class="footer_primary">TU Estates</h3>
                     </div>
-                    <p class="footer_bio">Providing unparalleled real estate services for the most
-                        discerning clients. Your dream home awaits.</p>
+                    <p class="footer_bio">Предоставяме несравними услуги в сферата на недвижимите имоти за най-взискателните клиенти. Вашият мечтан дом Ви очаква.</p>
                 </div>
 
                 <div>

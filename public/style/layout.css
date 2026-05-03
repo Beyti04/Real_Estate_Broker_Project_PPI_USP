@@ -329,6 +329,14 @@
   
 }
 
+.estate_card_link {
+    text-decoration: none;
+    color: inherit; /* Взима цвета на текста от родителя */
+    display: block; /* Важно за запълване на пространството */
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
 .feature_item {
   font-size: 13px;
   color: var(--text-main);

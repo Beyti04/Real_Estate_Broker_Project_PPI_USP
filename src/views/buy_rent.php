@@ -8,19 +8,91 @@
  */
 $filterKeys = ['category', 'type', 'region', 'city', 'neighborhood', 'price', 'listing_type'];
 
+$defaults = [
+    'category'     => ['key' => 'any', 'value' => 'Категория'],
+    'type'         => ['key' => 'any', 'value' => 'Вид имот'],
+    'region'       => ['key' => 'any', 'value' => 'Област'],
+    'city'         => ['key' => 'any', 'value' => 'Град'],
+    'neighborhood' => ['key' => 'any', 'value' => 'Квартал'],
+    'price'        => ['key' => 'any', 'value' => 'Цена'],
+    'listing_type' => ['key' => 'any', 'value' => 'Вид обява'],
+];
+
 if (!isset($_SESSION['filters'])) {
-    $_SESSION['filters'] = array_fill_keys($filterKeys, 'any');
+    $_SESSION['filters'] = $defaults;
 }
 
 foreach ($filterKeys as $key) {
     if (isset($_GET[$key])) {
-        $_SESSION['filters'][$key] = $_GET[$key];
+        $val = $_GET[$key];
+        $_SESSION['filters'][$key]['key'] = $val;
+
+        if ($val === 'any') {
+            $_SESSION['filters'][$key]['value'] = $defaults[$key]['value'];
+        } else {
+            // Превръщаме техническата стойност в красив текст според типа на филтъра
+            switch ($key) {
+                case 'price':
+    // Взимаме избрания тип обява от GET (ако сега се праща) или от сесията
+    $currentLT = $_GET['listing_type'] ?? ($_SESSION['filters']['listing_type']['key'] ?? 'any');
+    
+    foreach (App\Controllers\PriceRangeController::getAllPriceRanges() as $r) {
+        // Проверяваме дали името съвпада И дали принадлежи на избрания тип обява
+        // Приемаме, че имате метод getListingTypeId() в обекта на цената
+        if ($r->getRangeName() === $val) {
+            if ($currentLT === 'any' || $r->getListingType() == $currentLT) {
+                $_SESSION['filters'][$key]['value'] = $r->getRangeValue();
+                break; 
+            }
+        }
+    }
+    break;
+
+                case 'category':
+                    foreach (App\Controllers\EstateCategoryController::getAllEstateCategories() as $c) {
+                        if ($c->getId() == $val) { $_SESSION['filters'][$key]['value'] = $c->getCategoryName(); break; }
+                    }
+                    break;
+
+                case 'listing_type':
+                    foreach (App\Controllers\ListingTypeController::getAllListingTypes() as $lt) {
+                        if ($lt->getId() == $val) { $_SESSION['filters'][$key]['value'] = $lt->getTypeName(); break; }
+                    }
+                    break;
+
+                case 'region':
+                    foreach (App\Controllers\RegionController::getAllRegions() as $reg) {
+                        if ($reg->getId() == $val) { $_SESSION['filters'][$key]['value'] = $reg->getRegionNameBG(); break; }
+                    }
+                    break;
+
+                case 'city':
+                    foreach (App\Controllers\CityController::getAllCities() as $city) {
+                        if ($city->getId() == $val) { $_SESSION['filters'][$key]['value'] = $city->getCityNameBG(); break; }
+                    }
+                    break;
+
+                case 'neighborhood':
+                    foreach (App\Controllers\NeighborhoodController::getAllNeighborhoods() as $n) {
+                        if ($n->getId() == $val) { $_SESSION['filters'][$key]['value'] = $n->getNeighborhoodNameBG(); break; }
+                    }
+                    break;
+                
+                case 'type':
+                    $_SESSION['filters'][$key]['value'] = $val; 
+                    break;
+
+                default:
+                    $_SESSION['filters'][$key]['value'] = $val;
+                    break;
+            }
+        }
     }
 }
 
 // Clear Filters Logic
 if (isset($_GET['clear_filters'])) {
-    $_SESSION['filters'] = array_fill_keys($filterKeys, 'any');
+    $_SESSION['filters'] = $defaults;
     header("Location: index.php?action=buy_rent");
     exit();
 }
@@ -80,9 +152,9 @@ function activeStyle($currentVal)
                 </button>
                 <div class="nav_container">
                     <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
-                        <a class="nav_link" href="index.php?action=sell">Sell</a>
-                        <a class="nav_link" href="index.php?action=agents">Agents</a>
+                        <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
+                        <a class="nav_link" href="index.php?action=sell">Продай</a>
+                        <a class="nav_link" href="index.php?action=agents">Агенти</a>
                     </nav>
                     <div class="sing_in_btns">
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
@@ -90,22 +162,21 @@ function activeStyle($currentVal)
                         </button>
                         <?php
                         if (isset($_SESSION['user_id'])) {
-                            echo '<a href="index.php?action=profile" class="btn_primary">Profile</a>';
-                            echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
+                            echo '<a href="index.php?action=profile" class="btn_primary">Профил</a>';
+                            echo '<a href="index.php?action=logout" class="btn_secondary">Изход</a>';
                         } else {
-                            echo '<a href="index.php?action=register" class="btn_primary">Sign Up</a>';
-                            echo '<a href="index.php?action=login" class="btn_secondary">Log In</a>';
+                            echo '<a href="index.php?action=register" class="btn_primary">Регистрация</a>';
+                            echo '<a href="index.php?action=login" class="btn_secondary">Вход</a>';
                         }
                         ?>
                     </div>
                 </div>
             </div>
         </header>
-
         <form class="filter_bar">
             <div class="dropdown_wrapper" id="priceDropdown">
-                <button class="filter_pill dropdown_toggle" type="button" data-selected-name="<?= $f['price'] ?>" <?= activeStyle($f['price']) ?>>
-                    <span class="filter_label"><?= activeLabel($f['price'], 'Цена') ?></span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-name="<?= $f['price']['key'] ?>" data-selected-value="<?= $f['price']['value'] ?>" <?= activeStyle($f['price']['key']) ?>>
+                    <span class="filter_label" id="label_data"><?= activeLabel($f['price']['value'], 'Цена') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
@@ -117,14 +188,14 @@ function activeStyle($currentVal)
                     use App\Controllers\PriceRangeController;
 
                     foreach (PriceRangeController::getAllPriceRanges() as $range): ?>
-                        <div class="dropdown_option" data-value="<?= htmlspecialchars($range->getRangeName()) ?>"><?= htmlspecialchars($range->getRangeValue()) ?></div>
+                        <div class="dropdown_option" data-value="<?= htmlspecialchars($range->getRangeName()) ?>" data-value-data="<?= htmlspecialchars($range->getRangeValue()) ?>" data-listing-type="<?= htmlspecialchars($range->getListingType()) ?>"><?= htmlspecialchars($range->getRangeValue()) ?></div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
             <div class="dropdown_wrapper" id="categoryDropdown">
-                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['category'] ?>" <?= activeStyle($f['category']) ?>>
-                    <span class="filter_label"><?= activeLabel($f['category'], 'Категории') ?></span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['category']['key'] ?>" data-selected-value="<?= $f['category']['value'] ?>" <?= activeStyle($f['category']['key']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['category']['value'], 'Категории') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
@@ -142,8 +213,8 @@ function activeStyle($currentVal)
             </div>
 
             <div class="dropdown_wrapper" id="listingTypeDropdown">
-                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['listing_type'] ?>" <?= activeStyle($f['listing_type']) ?>>
-                    <span class="filter_label"><?= activeLabel($f['listing_type'], 'Тип обява') ?></span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['listing_type']['key'] ?>" data-selected-value="<?= $f['listing_type']['value'] ?>" <?= activeStyle($f['listing_type']['key']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['listing_type']['value'], 'Тип обява') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
@@ -163,8 +234,8 @@ function activeStyle($currentVal)
             </div>
 
             <div class="dropdown_wrapper" id="typeDropdown">
-                <button class="filter_pill dropdown_toggle" type="button" data-selected-name="<?= $f['type'] ?>" <?= activeStyle($f['type']) ?>>
-                    <span class="filter_label"><?= activeLabel($f['type'], 'Вид имот') ?></span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['type']['key'] ?>" data-selected-value="<?= $f['type']['value'] ?>" <?= activeStyle($f['type']['key']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['type']['value'], 'Вид имот') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
@@ -182,8 +253,8 @@ function activeStyle($currentVal)
             </div>
 
             <div class="dropdown_wrapper" id="regionDropdown">
-                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['region'] ?>" <?= activeStyle($f['region']) ?>>
-                    <span class="filter_label"><?= activeLabel($f['region'], 'Област') ?></span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['region']['key'] ?>" data-selected-value="<?= $f['region']['value'] ?>" <?= activeStyle($f['region']['key']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['region']['value'], 'Област') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
@@ -201,8 +272,8 @@ function activeStyle($currentVal)
             </div>
 
             <div class="dropdown_wrapper" id="locationDropdown">
-                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['city'] ?>" <?= activeStyle($f['city']) ?>>
-                    <span class="filter_label"><?= activeLabel($f['city'], 'Населено място') ?></span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['city']['key'] ?>" data-selected-value="<?= $f['city']['value'] ?>" <?= activeStyle($f['city']['key']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['city']['value'], 'Населено място') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
@@ -220,8 +291,8 @@ function activeStyle($currentVal)
             </div>
 
             <div class="dropdown_wrapper" id="neighborhoodDropdown">
-                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['neighborhood'] ?>" <?= activeStyle($f['neighborhood']) ?>>
-                    <span class="filter_label"><?= activeLabel($f['neighborhood'], 'Квартал') ?></span>
+                <button class="filter_pill dropdown_toggle" type="button" data-selected-id="<?= $f['neighborhood']['key'] ?>" data-selected-value="<?= $f['neighborhood']['value'] ?>" <?= activeStyle($f['neighborhood']['key']) ?>>
+                    <span class="filter_label"><?= activeLabel($f['neighborhood']['value'], 'Квартал') ?></span>
                     <span class="arrow_container">
                         <div class="css_arrow"></div>
                     </span>
@@ -252,26 +323,49 @@ function activeStyle($currentVal)
 
                         // Взимаме стойностите от data-атрибутите на бутоните за всяко меню
                         const filters = {
-                            price: document.querySelector('#priceDropdown .dropdown_toggle').getAttribute('data-selected-name'),
-                            category: document.querySelector('#categoryDropdown .dropdown_toggle').getAttribute('data-selected-id'),
-                            listing_type: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-id'),
-                            type: document.querySelector('#typeDropdown .dropdown_toggle').getAttribute('data-selected-name'),
-                            region: document.querySelector('#regionDropdown .dropdown_toggle').getAttribute('data-selected-id'),
-                            city: document.querySelector('#locationDropdown .dropdown_toggle').getAttribute('data-selected-id'),
-                            neighborhood: document.querySelector('#neighborhoodDropdown .dropdown_toggle').getAttribute('data-selected-id')
+                            price:
+                             {  
+                                key: document.querySelector('#priceDropdown .dropdown_toggle').getAttribute('data-selected-name'),
+                                value: document.querySelector('#priceDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                             },
+                            category:
+                            {
+                                key: document.querySelector('#categoryDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                                value: document.querySelector('#categoryDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                            } ,
+                            listing_type: 
+                            {
+                                    key: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                                    value: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                            },
+                            type:
+                            {
+                                key: document.querySelector('#typeDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                                value: document.querySelector('#typeDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                            },
+                            region:
+                            {
+                                key: document.querySelector('#regionDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                                value: document.querySelector('#regionDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                            },
+                            city: {
+                                key: document.querySelector('#locationDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                                value: document.querySelector('#locationDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                            },
+                            neighborhood: {
+                                key: document.querySelector('#neighborhoodDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                                value: document.querySelector('#neighborhoodDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                            }
                         };
 
                         // Базовият URL
                         let url = 'index.php?action=buy_rent';
 
-                        // Минаваме през всеки филтър и го добавяме към URL-а, ако не е "any"
-                        for (const [key, value] of Object.entries(filters)) {
-                            if (value && value !== 'any') {
-                                url += `&${key}=${encodeURIComponent(value)}`;
+                        for(const [key, value] of Object.entries(filters)) {
+                            if(value.key && value.key !== 'any') {
+                                url += `&${key}=${encodeURIComponent(value.key)}`;
                             }
                         }
-
-                        // Пренасочваме браузъра към генерирания URL с филтрите
                         window.location.href = url;
                     });
                 }
@@ -287,8 +381,13 @@ function activeStyle($currentVal)
             // Взимаме масива с филтри от сесията
             $current_filters = $_SESSION['filters'] ?? [];
 
+            $filter_data = [];
+            foreach ($current_filters as $key => $data) {
+                    $filter_data[$key] = $data['key'] ?? 'any';
+            }
+
             // Извикваме новата функция, която връща само филтрираните резултати
-            $all_estates = App\Controllers\EstateController::getFilteredEstates($current_filters);
+            $all_estates = App\Controllers\EstateController::getFilteredEstates($filter_data);
             $total_items = count($all_estates);
 
             if ($is_mobile) {
@@ -306,7 +405,7 @@ function activeStyle($currentVal)
 
             <div class="listings_side">
                 <div class="container_center">
-                    <h2 class="section_title">Available Estates</h2>
+                    <h2 class="section_title">Налични имоти</h2>
                     <div class="properties_grid">
                         <?php
                         if (empty($estates)) {
@@ -315,38 +414,48 @@ function activeStyle($currentVal)
                         
                          foreach ($estates as $estate): ?>
                             <article class="estate_card">
-                                <div class="estate_image_wrapper">
-                                    <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment in Sofia" class="estate_image">
-                                    <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
-                                </div>
+    <!-- Добавяме основен линк, който обгръща цялото съдържание -->
+    <a href="index.php?action=estate_details&id=<?= $estate->id ?>" class="estate_card_link">
+        
+        <div class="estate_image_wrapper">
+            <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment" class="estate_image">
+            <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
+        </div>
 
-                                <div class="estate_content">
-                                    <div class="estate_header">
-                                        <h3 class="estate_price">€<?= number_format($estate->price, 2) ?></h3>
-                                        <p class="estate_address"><?= htmlspecialchars($estate->city_name) ?>, <?= htmlspecialchars($estate->neighborhood_name) ?></p>
-                                    </div>
-                                    <div class="estate_features">
-                                        <div class="feature_item">
-                                            <image src="images/area_icon.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
-                                                <span><?= htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
-                                        </div>
-                                        <div class="feature_item">
-                                            <image src="images/room.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;"></image>
-                                            <span><?= htmlspecialchars($estate->rooms) ?></span>
-                                        </div>
-                                        <div class="feature_item">
-                                            <image src="images/floor.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;"></image>
-                                            <span> <?= htmlspecialchars($estate->floor) ?></span>
-                                        </div>
-                                    </div>
-                                    <a href="index.php?action=estate_details&id=<?= $estate->id ?>" class="btn_view" style="text-decoration: none;">View Details</a>
-                                </div>
-                            </article>
+        <div class="estate_content">
+            <div class="estate_header">
+                <h3 class="estate_price">€<?= number_format($estate->price, 2) ?></h3>
+                <p class="estate_address"><?= htmlspecialchars($estate->city_name) ?>, <?= htmlspecialchars($estate->neighborhood_name) ?></p>
+            </div>
+            
+            <div class="estate_features">
+                <div class="feature_item">
+                    <img class="theme_light_img" src="images/area_icon.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
+                    <img class="theme_dark_img" src="images/area_icon_dark.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
+                    <span><?= htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
+                </div>
+                <div class="feature_item">
+                    <img class="theme_light_img" src="images/room.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;">
+                    <img class="theme_dark_img" src="images/room_dark.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;">
+                    <span><?= htmlspecialchars($estate->rooms) ?></span>
+                </div>
+                <div class="feature_item">
+                    <img class="theme_light_img" src="images/floor.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;">
+                    <img class="theme_dark_img" src="images/floor_dark.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;">
+                    <span> <?= htmlspecialchars($estate->floor) ?></span>
+                </div>
+            </div>
+
+            <!-- Бутонът остава за визуален ориентир, но вече е част от общия линк -->
+            <div class="btn_view">Преглед</div>
+        </div>
+    </a>
+</article>
                         <?php endforeach; ?>
                     </div>
                     <?php
                     // 1. Prepare the base parameters from the session filters
-                    $queryParams = $_SESSION['filters'];
+                    $queryParams = $filter_data; // This should be the same data structure you used to generate the filters, but flattened to key => value pairs
                     $current_action = $_GET['action'] ?? 'buy_rent';
                     $queryParams['action'] = $current_action;
 

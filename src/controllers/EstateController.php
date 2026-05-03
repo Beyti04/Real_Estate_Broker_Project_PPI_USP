@@ -43,10 +43,10 @@ class EstateController
             LEFT JOIN users u ON e.owner_id=u.id
             LEFT JOIN estate_status s ON e.status_id=s.id
         ";
-        
+
         $stmt = $db->prepare($query);
         $stmt->execute();
-        
+
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -59,21 +59,21 @@ class EstateController
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
                 return new Estate(
-                    $row['id'], 
-                    $row['city_id'], 
-                    $row['neighborhood_id'], 
-                    $row['estate_address'], 
-                    $row['estate_type_id'], 
-                    $row['rooms'], 
-                    $row['floor'], 
+                    $row['id'],
+                    $row['city_id'],
+                    $row['neighborhood_id'],
+                    $row['estate_address'],
+                    $row['estate_type_id'],
+                    $row['rooms'],
+                    $row['floor'],
                     $row['area'],
-                    ExposureType::from($row['exposure_type']), 
-                    $row['description'], 
-                    $row['listing_type_id'], 
-                    $row['price'], 
-                    $row['owner_id'], 
-                    $row['creation_date'], 
-                    $row['expiration_date'], 
+                    ExposureType::from($row['exposure_type']),
+                    $row['description'],
+                    $row['listing_type_id'],
+                    $row['price'],
+                    $row['owner_id'],
+                    $row['creation_date'],
+                    $row['expiration_date'],
                     $row['status_id']
                 );
             } else {
@@ -83,14 +83,23 @@ class EstateController
             die('Error fetching estate: ' . $e->getMessage());
         }
     }
-    
+
     public static function createEstate(
-        int $cityId, int $neighborhoodId, string $address, 
-        int $estateTypeId, string $exposureType, int $rooms, int $floor,
-        string $description, int $listingTypeId, float $price, int $ownerId, int $statusId
+        int $cityId,
+        int $neighborhoodId,
+        string $address,
+        int $estateTypeId,
+        string $exposureType,
+        int $rooms,
+        int $floor,
+        string $description,
+        int $listingTypeId,
+        float $price,
+        int $ownerId,
+        int $statusId
     ): bool {
         $pdo = Database::getInstance();
-        
+
         $creationDate = date('Y-m-d');
         $expirationDate = date('Y-m-d', strtotime('+30 days'));
 
@@ -101,7 +110,7 @@ class EstateController
                 VALUES 
                 (:city_id, :neighborhood_id, :address, :estate_type_id, :exposure_type, :rooms, :floor, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
             ");
-            
+
             return $stmt->execute([
                 'city_id' => $cityId,
                 'neighborhood_id' => $neighborhoodId,
@@ -137,12 +146,22 @@ class EstateController
     }
 
     public static function updateEstate(
-        int $id, int $cityId, int $neighborhoodId, string $address, 
-        int $estateTypeId, string $exposureType, int $rooms, int $floor,
-        string $description, int $listingTypeId, float $price, int $ownerId, int $statusId
+        int $id,
+        int $cityId,
+        int $neighborhoodId,
+        string $address,
+        int $estateTypeId,
+        string $exposureType,
+        int $rooms,
+        int $floor,
+        string $description,
+        int $listingTypeId,
+        float $price,
+        int $ownerId,
+        int $statusId
     ): bool {
         $pdo = Database::getInstance();
-        
+
         try {
             $stmt = $pdo->prepare("
                 UPDATE estates SET 
@@ -160,7 +179,7 @@ class EstateController
                 status_id = :status_id
                 WHERE id = :id
             ");
-            
+
             return $stmt->execute([
                 'id' => $id,
                 'city_id' => $cityId,
@@ -182,116 +201,113 @@ class EstateController
         }
     }
     public static function createEstateWithImages(
-    int $cityId,
-    int $neighborhoodId,
-    string $address,
-    int $estateTypeId,
-    string $exposureType,
-    int $rooms,
-    int $floor,
-    float $area,
-    string $description,
-    int $listingTypeId,
-    float $price,
-    int $ownerId,
-    int $statusId,
-    array $images
+        int $cityId,
+        int $neighborhoodId,
+        string $address,
+        int $estateTypeId,
+        string $exposureType,
+        int $rooms,
+        int $floor,
+        float $area,
+        string $description,
+        int $listingTypeId,
+        float $price,
+        int $ownerId,
+        int $statusId,
+        array $images
     ): bool {
-    $pdo = Database::getInstance();
+        $pdo = Database::getInstance();
 
-    $creationDate = date('Y-m-d');
-    $expirationDate = date('Y-m-d', strtotime('+30 days'));
+        $creationDate = date('Y-m-d');
+        $expirationDate = date('Y-m-d', strtotime('+30 days'));
 
-    try {
-        $pdo->beginTransaction();
+        try {
+            $pdo->beginTransaction();
 
-        $stmt = $pdo->prepare("
+            $stmt = $pdo->prepare("
             INSERT INTO estates
             (city_id, neighborhood_id, estate_address, estate_type_id, rooms, area, floor, exposure_type, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id)
             VALUES
             (:city_id, :neighborhood_id, :address, :estate_type_id, :rooms, :area, :floor, :exposure_type, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
         ");
 
-        $stmt->execute([
-            'city_id' => $cityId,
-            'neighborhood_id' => $neighborhoodId,
-            'address' => $address,
-            'estate_type_id' => $estateTypeId,
-            'rooms' => $rooms,
-            'area' => $area,
-            'floor' => $floor,
-            'exposure_type' => $exposureType,
-            'description' => $description,
-            'listing_type_id' => $listingTypeId,
-            'price' => $price,
-            'owner_id' => $ownerId,
-            'creation_date' => $creationDate,
-            'expiration_date' => $expirationDate,
-            'status_id' => $statusId
-        ]);
+            $stmt->execute([
+                'city_id' => $cityId,
+                'neighborhood_id' => $neighborhoodId,
+                'address' => $address,
+                'estate_type_id' => $estateTypeId,
+                'rooms' => $rooms,
+                'area' => $area,
+                'floor' => $floor,
+                'exposure_type' => $exposureType,
+                'description' => $description,
+                'listing_type_id' => $listingTypeId,
+                'price' => $price,
+                'owner_id' => $ownerId,
+                'creation_date' => $creationDate,
+                'expiration_date' => $expirationDate,
+                'status_id' => $statusId
+            ]);
 
-        $estateId = (int)$pdo->lastInsertId();
+            $estateId = (int)$pdo->lastInsertId();
 
-        $uploadDir = __DIR__ . '/../../public/uploads/estates/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+            $uploadDir = __DIR__ . '/../../public/uploads/estates/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
 
-        $insertImageStmt = $pdo->prepare("
+            $insertImageStmt = $pdo->prepare("
             INSERT INTO estate_images (estate_id, is_primary, image_path)
             VALUES (:estate_id, :is_primary, :image_path)
         ");
 
-        $hasUploadedAtLeastOne = false;
+            $hasUploadedAtLeastOne = false;
 
-        foreach ($images['name'] as $index => $originalName) {
-            if (empty($originalName)) {
-                continue;
+            foreach ($images['name'] as $index => $originalName) {
+                if (empty($originalName)) {
+                    continue;
+                }
+
+                $tmpName = $images['tmp_name'][$index];
+                $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                $safeFileName = uniqid('estate_', true) . '.' . $extension;
+                $targetPath = $uploadDir . $safeFileName;
+
+                if (move_uploaded_file($tmpName, $targetPath)) {
+                    $relativePath = 'uploads/estates/' . $safeFileName;
+
+                    $insertImageStmt->execute([
+                        'estate_id' => $estateId,
+                        'is_primary' => $hasUploadedAtLeastOne ? 0 : 1,
+                        'image_path' => $relativePath
+                    ]);
+
+                    $hasUploadedAtLeastOne = true;
+                }
             }
 
-            $tmpName = $images['tmp_name'][$index];
-            $extension = pathinfo($originalName, PATHINFO_EXTENSION);
-            $safeFileName = uniqid('estate_', true) . '.' . $extension;
-            $targetPath = $uploadDir . $safeFileName;
-
-            if (move_uploaded_file($tmpName, $targetPath)) {
-                $relativePath = 'uploads/estates/' . $safeFileName;
-
-                $insertImageStmt->execute([
-                    'estate_id' => $estateId,
-                    'is_primary' => $hasUploadedAtLeastOne ? 0 : 1,
-                    'image_path' => $relativePath
-                ]);
-
-                $hasUploadedAtLeastOne = true;
+            if (!$hasUploadedAtLeastOne) {
+                $pdo->rollBack();
+                return false;
             }
-        }
 
-        if (!$hasUploadedAtLeastOne) {
-            $pdo->rollBack();
+            $pdo->commit();
+            return true;
+        } catch (\PDOException $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            error_log('Error creating estate with images: ' . $e->getMessage());
             return false;
         }
-
-        $pdo->commit();
-        return true;
-
-    } catch (\PDOException $e) {
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
-        error_log('Error creating estate with images: ' . $e->getMessage());
-        return false;
-    }
     }
 
-    public static function getImagesByEstateId(int $id){
-        
-    }
+    public static function getImagesByEstateId(int $id) {}
 
     public static function getFilteredEstates(array $filters): array
     {
         $db = Database::getInstance();
-        
+
         // Базовата заявка (същата като в getAllEstates, но добавяме WHERE 1=1 за лесно закачане на условия)
         $query = "
             SELECT
@@ -317,6 +333,7 @@ class EstateController
                     LIMIT 1
                 ) AS primary_image
             FROM estates e
+            LEFT JOIN regions r ON e.region_id=r.id
             LEFT JOIN cities c ON e.city_id=c.id
             LEFT JOIN neighborhoods n ON e.neighborhood_id=n.id
             LEFT JOIN estate_types et ON e.estate_type_id=et.id
@@ -327,6 +344,11 @@ class EstateController
         ";
 
         $params = [];
+
+        if (!empty($filters['region']) && $filters['region'] !== 'any') {
+            $query .= " AND e.region_id = :region";
+            $params['region'] = $filters['region'];
+        }
 
         // Динамично добавяне на филтри
         if (!empty($filters['city']) && $filters['city'] !== 'any') {
@@ -347,7 +369,7 @@ class EstateController
         if (!empty($filters['category']) && $filters['category'] !== 'any') {
             // Предполагам, че имаш category_id в estates или estate_types.
             // Ако е в estate_types, заявката ще изглежда така:
-            $query .= " AND et.category_id = :category"; 
+            $query .= " AND et.category_id = :category";
             $params['category'] = $filters['category'];
         }
 
@@ -356,17 +378,74 @@ class EstateController
             $params['type'] = $filters['type'];
         }
 
-        // Логика за цена (ако идва във формат напр. "0-50000" или "100000+")
-        if (!empty($filters['price']) && $filters['price'] !== 'any') {
-            if (strpos($filters['price'], '-') !== false) {
-                list($min, $max) = explode('-', $filters['price']);
-                $query .= " AND e.price >= :min_price AND e.price <= :max_price";
-                $params['min_price'] = (float)$min;
-                $params['max_price'] = (float)$max;
-            } elseif (strpos($filters['price'], '+') !== false) {
-                $min = str_replace('+', '', $filters['price']);
-                $query .= " AND e.price >= :min_price";
-                $params['min_price'] = (float)$min;
+        if (!empty($filters['listing_type']) && $filters['listing_type'] !== 'any') {
+            if ($filters['listing_type'] == 1) {
+                // Логика за цена (ако идва във формат напр. "0-50000" или "100000+")
+                if (!empty($filters['price']) && $filters['price'] !== 'any') {
+                    switch ($filters['price']) {
+                        case 'low': // Пример: до 50 000
+                            $query .= " AND e.price <= 50000";
+                            break;
+                        case 'low_mid': // Пример: 50 000 - 100 000
+                            $query .= " AND e.price BETWEEN 50000 AND 100000";
+                            break;
+                        case 'mid': // Пример: 100 000 - 250 000
+                            $query .= " AND e.price BETWEEN 100000 AND 250000";
+                            break;
+                        case 'mid_high': // Твоят случай от var_dump
+                            $query .= " AND e.price BETWEEN 250000 AND 500000";
+                            break;
+                        case 'high': // Пример: 100 000 - 250 000
+                            $query .= " AND e.price BETWEEN 500000 AND 1000000";
+                            break;
+                        case 'very_high': // Пример: над 500 000
+                            $query .= " AND e.price >= 1000000";
+                            break;
+                        // Ако все пак решиш да пращаш формати като 100-200
+                        default:
+                            if (strpos($filters['price'], '-') !== false) {
+                                list($min, $max) = explode('-', $filters['price']);
+                                $query .= " AND e.price >= :min_p AND e.price <= :max_p";
+                                $params['min_p'] = (float)$min;
+                                $params['max_p'] = (float)$max;
+                            }
+                            break;
+                    }
+                }
+            }
+            else{
+                 // Логика за цена (ако идва във формат напр. "0-50000" или "100000+")
+                if (!empty($filters['price']) && $filters['price'] !== 'any') {
+                    switch ($filters['price']) {
+                        case 'low': // Пример: до 50 000
+                            $query .= " AND e.price <= 100";
+                            break;
+                        case 'low_mid': // Пример: 50 000 - 100 000
+                            $query .= " AND e.price BETWEEN 100 AND 200";
+                            break;
+                        case 'mid': // Пример: 100 000 - 250 000
+                            $query .= " AND e.price BETWEEN 200 AND 500";
+                            break;
+                        case 'mid_high': // Твоят случай от var_dump
+                            $query .= " AND e.price BETWEEN 500 AND 1000";
+                            break;
+                        case 'high': // Пример: 100 000 - 250 000
+                            $query .= " AND e.price BETWEEN 1000 AND 2000";
+                            break;
+                        case 'very_high': // Пример: над 500 000
+                            $query .= " AND e.price >= 2000";
+                            break;
+                        // Ако все пак решиш да пращаш формати като 100-200
+                        default:
+                            if (strpos($filters['price'], '-') !== false) {
+                                list($min, $max) = explode('-', $filters['price']);
+                                $query .= " AND e.price >= :min_p AND e.price <= :max_p";
+                                $params['min_p'] = (float)$min;
+                                $params['max_p'] = (float)$max;
+                            }
+                            break;
+                    }
+                }
             }
         }
 
@@ -375,8 +454,7 @@ class EstateController
 
         $stmt = $db->prepare($query);
         $stmt->execute($params);
-        
+
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
-
 }
