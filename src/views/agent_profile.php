@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
 </head>
+
 <body>
     <div class="main_wrapper">
         <header>
@@ -20,27 +22,13 @@
                 </a>
             </div>
 
-             <div class="nav_wrapper">
+            <div class="nav_wrapper">
                 <div class="nav_container">
-                    <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
-                        <a class="nav_link" href="index.php?action=sell">Продай</a>
-                        <a class="nav_link" href="index.php?action=agents">Агенти</a>
-                    </nav>
-
                     <div class="sing_in_btns">
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
                             🌙
                         </button>
-                        <?php
-                        if (isset($_SESSION['user_id'])) {
-                            echo '<a href="index.php?action=profile" class="btn_primary">Профил</a>';
-                            echo '<a href="index.php?action=logout" class="btn_secondary">Изход</a>';
-                        } else {
-                            echo '<a href="index.php?action=register" class="btn_primary">Регистрация</a>';
-                            echo '<a href="index.php?action=login" class="btn_secondary">Вход</a>';
-                        }
-                        ?>
+                        <a href="index.php?action=agents" class="btn_primary">Обратно към агентите</a>
                     </div>
                 </div>
             </div>
@@ -53,14 +41,25 @@
                         <img
                             src="<?= !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'uploads/default-agent.jpg'; ?>"
                             alt="<?= htmlspecialchars($agent->getUsername()); ?>"
-                            style="width:100%; height:400px; object-fit:cover; border-radius:12px;"
-                        >
+                            style="width:100%; height:400px; object-fit:cover; border-radius:12px;">
                     </div>
 
                     <div style="flex:1;">
                         <h2 class="section_title"><?= htmlspecialchars($agent->getUsername()); ?></h2>
-                        <p><strong>Email:</strong> <?= htmlspecialchars($agent->getEmail()); ?></p>
-                        <p><strong>Phone:</strong> <?= htmlspecialchars($agent->getPhone() ?? 'Not provided'); ?></p>
+                        <p style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;"> 
+                            <picture>
+                                <img class="footer_icon theme_light_img" src="images/email.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_dark_img" src="images/email_dark.png" alt="TU Brokers Logo">
+                            </picture>
+                            <span><?= htmlspecialchars($agent->getEmail()); ?></span>
+                        </p>
+                        <p style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                            <picture>
+                                <img class="footer_icon theme_light_img" src="images/phone.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_dark_img" src="images/phone_dark.png" alt="TU Brokers Logo">
+                            </picture>
+                            <span><?= htmlspecialchars($agent->getPhone() ?? 'Not provided'); ?></span>
+                        </p>
                         <p><strong>About the agent:</strong></p>
                         <p><?= nl2br(htmlspecialchars($agent->getDescription() ?? 'No description available.')); ?></p>
                     </div>
@@ -69,4 +68,5 @@
         </section>
     </div>
 </body>
+
 </html>

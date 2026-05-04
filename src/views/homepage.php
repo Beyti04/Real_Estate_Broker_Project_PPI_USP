@@ -117,22 +117,22 @@
                     <ul class="contact_list">
                         <li class="contact_item align_start">
                             <picture>
-                                <source srcset="images/location_dark.png" media="(prefers-color-scheme: dark)">
-                                <img class="footer_icon" src="images/location.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_light_img" src="images/location.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_dark_img" src="images/location_dark.png" alt="TU Brokers Logo">
                             </picture>
                             <span>ТУ Варна<br>гр. Варна, 9000</span>
                         </li>
                         <li class="contact_item align_center">
                             <picture>
-                                <source srcset="images/phone_dark.png" media="(prefers-color-scheme: dark)">
-                                <img class="footer_icon" src="images/phone.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_light_img" src="images/phone.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_dark_img" src="images/phone_dark.png" alt="TU Brokers Logo">
                             </picture>
                             <span>+359 89 *** ****</span>
                         </li>
                         <li class="contact_item align_center">
                             <picture>
-                                <source srcset="images/email_dark.png" media="(prefers-color-scheme: dark)">
-                                <img class="footer_icon" src="images/email.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_light_img" src="images/email.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_dark_img" src="images/email_dark.png" alt="TU Brokers Logo">
                             </picture>
                             <span>TU.Estates@gmail.com</span>
                         </li>

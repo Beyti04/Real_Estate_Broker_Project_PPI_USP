@@ -194,6 +194,7 @@ switch ($action) {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = (int)($_POST['id'] ?? 0);
+            $regionId = (int)$_POST['region_id'];
             $cityId = (int)$_POST['city_id'];
             $neighborhoodId = (int)$_POST['neighborhood_id'];
             $address = $_POST['estate_address'] ?? '';
@@ -210,6 +211,7 @@ switch ($action) {
             if ($id > 0) {
                 \App\Controllers\EstateController::updateEstate(
                     $id,
+                    $regionId,
                     $cityId,
                     $neighborhoodId,
                     $address,
@@ -225,6 +227,7 @@ switch ($action) {
                 );
             } else {
                 \App\Controllers\EstateController::createEstate(
+                    $regionId,
                     $cityId,
                     $neighborhoodId,
                     $address,
@@ -371,6 +374,7 @@ switch ($action) {
      }
 
      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $regionId = (int)($_POST['region_id'] ?? 0);
         $cityId = (int)($_POST['city_id'] ?? 0);
         $neighborhoodId = (int)($_POST['neighborhood_id'] ?? 0);
         $address = trim($_POST['estate_address'] ?? '');
@@ -403,6 +407,7 @@ switch ($action) {
         }
 
         $created = \App\Controllers\EstateController::createEstateWithImages(
+            $regionId,
             $cityId,
             $neighborhoodId,
             $address,

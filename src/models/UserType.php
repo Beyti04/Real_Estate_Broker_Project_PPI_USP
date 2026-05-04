@@ -12,4 +12,14 @@ class UserType
         $this->id = $id;
         $this->typeName = $typeName;
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getTypeName(): string
+    {
+        return $this->typeName;
+    }
 }

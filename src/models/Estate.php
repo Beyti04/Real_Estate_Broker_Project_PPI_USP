@@ -7,6 +7,7 @@ use App\Models\ExposureType;
 class Estate
 {
     private int $id;
+    private int $region_id;
     private int $cityId;
     private int $neighborhoodId;
     private string $estateAddress;
@@ -24,10 +25,11 @@ class Estate
     private int $statusId;
 
     public function __construct(
-        int $id, int $cityId, int $neighborhoodId, string $estateAddress, int $estateTypeId,int $rooms, int $floor,float $area, ExposureType $exposureType,
+        int $id, int $region_id, int $cityId, int $neighborhoodId, string $estateAddress, int $estateTypeId,int $rooms, int $floor,float $area, ExposureType $exposureType,
          string $description, int $listingTypeId, float $price, int $ownerId, string $creationDate, string $expirationDate, int $statusId
     ) {
         $this->id = $id;
+        $this->region_id = $region_id;
         $this->cityId = $cityId;
         $this->neighborhoodId = $neighborhoodId;
         $this->estateAddress = $estateAddress;
@@ -48,6 +50,11 @@ class Estate
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getRegionId(): int
+    {
+        return $this->region_id;
     }
 
     public function getCityId(): int

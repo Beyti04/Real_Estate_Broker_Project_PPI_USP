@@ -60,6 +60,7 @@ class EstateController
             if ($row) {
                 return new Estate(
                     $row['id'],
+                    $row['region_id'],
                     $row['city_id'],
                     $row['neighborhood_id'],
                     $row['estate_address'],
@@ -86,6 +87,7 @@ class EstateController
 
     public static function createEstate(
         int $cityId,
+        int $regionId,
         int $neighborhoodId,
         string $address,
         int $estateTypeId,
@@ -106,12 +108,13 @@ class EstateController
         try {
             $stmt = $pdo->prepare("
                 INSERT INTO estates 
-                (city_id, neighborhood_id, estate_address, estate_type_id, exposure_type, rooms, floor, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id) 
+                (region_id, city_id, neighborhood_id, estate_address, estate_type_id, exposure_type, rooms, floor, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id) 
                 VALUES 
-                (:city_id, :neighborhood_id, :address, :estate_type_id, :exposure_type, :rooms, :floor, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
+                (:region_id, :city_id, :neighborhood_id, :address, :estate_type_id, :exposure_type, :rooms, :floor, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
             ");
 
             return $stmt->execute([
+                'region_id' => $regionId,
                 'city_id' => $cityId,
                 'neighborhood_id' => $neighborhoodId,
                 'address' => $address,
@@ -147,6 +150,7 @@ class EstateController
 
     public static function updateEstate(
         int $id,
+        int $regionId,
         int $cityId,
         int $neighborhoodId,
         string $address,
@@ -165,6 +169,7 @@ class EstateController
         try {
             $stmt = $pdo->prepare("
                 UPDATE estates SET 
+                region_id = :region_id,
                 city_id = :city_id,
                 neighborhood_id = :neighborhood_id,
                 estate_address = :address,
@@ -182,6 +187,7 @@ class EstateController
 
             return $stmt->execute([
                 'id' => $id,
+                'region_id' => $regionId,
                 'city_id' => $cityId,
                 'neighborhood_id' => $neighborhoodId,
                 'address' => $address,
@@ -201,6 +207,7 @@ class EstateController
         }
     }
     public static function createEstateWithImages(
+        int $regionId,
         int $cityId,
         int $neighborhoodId,
         string $address,
@@ -226,12 +233,13 @@ class EstateController
 
             $stmt = $pdo->prepare("
             INSERT INTO estates
-            (city_id, neighborhood_id, estate_address, estate_type_id, rooms, area, floor, exposure_type, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id)
+            (region_id, city_id, neighborhood_id, estate_address, estate_type_id, rooms, area, floor, exposure_type, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id)
             VALUES
-            (:city_id, :neighborhood_id, :address, :estate_type_id, :rooms, :area, :floor, :exposure_type, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
+            (:region_id, :city_id, :neighborhood_id, :address, :estate_type_id, :rooms, :area, :floor, :exposure_type, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
         ");
 
             $stmt->execute([
+                'region_id' => $regionId,
                 'city_id' => $cityId,
                 'neighborhood_id' => $neighborhoodId,
                 'address' => $address,
@@ -312,6 +320,7 @@ class EstateController
         $query = "
             SELECT
                 e.id,
+                r.region_name_bg AS region_name,
                 c.city_name_bg AS city_name,
                 n.neighborhood_name_bg AS neighborhood_name,
                 e.estate_address,

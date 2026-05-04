@@ -116,6 +116,17 @@ document.addEventListener('DOMContentLoaded', function () {
                             ?>
                         </select>
 
+                        <label>Region</label>
+                        <select name="region_id" class="input_field" required>
+                            <option value="">Choose</option>
+                            <?php
+                            $regions = \App\Controllers\RegionController::getAllRegions();
+                            foreach ($regions as $region) {
+                                echo '<option value="'.$region->getId().'">'.htmlspecialchars($region->getRegionNameBG()).'</option>';
+                            }
+                            ?>
+                        </select>
+
                         <label>City</label>
                         <select name="city_id" class="input_field" required>
                             <option value="">Choose</option>

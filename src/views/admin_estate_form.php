@@ -34,6 +34,20 @@
                     </select>
                 </div>
 
+                <div>
+                    <label class="auth_label">Регион</label>
+                    <select class="input_field auth_input" name="region_id" required>
+                        <option value="">-- Избери --</option>
+                        <?php 
+                        $regions = \App\Controllers\RegionController::getAllRegions();
+                        foreach($regions as $region) {
+                            $selected = ($estateToEdit && $estateToEdit->getRegionId() == $region->getId()) ? 'selected' : '';
+                            echo '<option value="'.$region->getId().'" '.$selected.'>'.htmlspecialchars($region->getRegionNameBG()).'</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+
                 <div class="input_group">
                     <label class="auth_label">Град</label>
                     <select class="input_field auth_input" name="city_id" id="citySelect" required>

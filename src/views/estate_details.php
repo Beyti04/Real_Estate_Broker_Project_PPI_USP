@@ -35,7 +35,12 @@
             
             <div class="details_header">
                 <div class="title_box">
-                    <h1 class="estate_title"><?php echo htmlspecialchars($estateDetails->getEstateAddress()); ?></h1>
+                    <h1 class="estate_title"><?php
+
+use App\Controllers\UserController;
+use App\Controllers\UserTypeController;
+$estateDetails = \App\Controllers\EstateController::getEstateById($id);
+ echo htmlspecialchars($estateDetails->getEstateAddress()); ?></h1>
                     <p class="estate_subtitle">Обява #<?php echo htmlspecialchars($estateDetails->getId()); ?></p>
                 </div>
                 <div class="price_box">
@@ -100,9 +105,20 @@
 
                     <div class="details_card action_card">
                         <h3 class="card_heading">Заинтересовани сте?</h3>
-                        <p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се с отговорния брокер за тази обява.</p>
-                        <button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с брокер</button>
-                        <button class="btn_secondary" style="width: 100%;">Запази в любими</button>
+                        <?php 
+
+                            $estateOwnerId = $estateDetails->getOwnerId();
+                            $userOwner = UserController::getUserById($estateOwnerId);
+                            $userType = UserTypeController::getUserTypeById($userOwner->getUserType());
+                            if($userType->getTypeName() == 'Брокер') {
+                                echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се с отговорния брокер за тази обява.</p>';  
+                                echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с брокер</button>';
+                                return;
+                            }else {
+                               echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се директно с продавача на имота.</p>';
+                               echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с продавач</button>';
+                            }
+                        ?>
                     </div>
                 </div>
 

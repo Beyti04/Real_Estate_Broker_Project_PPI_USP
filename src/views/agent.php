@@ -55,7 +55,7 @@
                 </div>
                 <div class="agents_grid">
                     <?php foreach ($agents as $agent): ?>
-                        <a class="agent_card" href="index.php?action=agent_profile&id=<?= $agent->getId(); ?>" style="text-decoration:none; color:inherit;">
+                        <a class="agent_card theme_dark" href="index.php?action=agent_profile&id=<?= $agent->getId(); ?>" style="text-decoration:none; color:inherit;">
                             <img class="agent_image"
                                 src="<?= !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
                                 alt="<?= htmlspecialchars($agent->getUsername()); ?>">
@@ -70,45 +70,104 @@
                         </a>
                     <?php endforeach; ?>
                 </div>
-                <?php
-                $is_mobile = is_numeric(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), "mobile"));
-
-                // 2. Вземи всички имоти първо
-                $all_estates = App\Controllers\EstateController::getAllEstates();
-                $total_items = count($all_estates);
-
-                if ($is_mobile) {
-                    // На мобилен показваме всичко наведнъж
-                    $items_per_page = $total_items > 0 ? $total_items : 1;
-                    $current_page = 1;
-                } else {
-                    // На десктоп използваме странициране
-                    $items_per_page = 3;
-                    $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                }
-
-                $offset = ($current_page - 1) * $items_per_page;
-                $total_pages = ceil($total_items / $items_per_page);
-
-                // 3. Отрежи имотите спрямо страницата
-                $estates = array_slice($all_estates, $offset, $items_per_page);
-                ?>
-
-                <div class="page_numbers">
-                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                        <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $i; ?>"
-                            class="page_link <?php echo ($i == $current_page) ? 'active' : ''; ?>">
-                            <?php echo $i; ?>
-                        </a>
-                    <?php endfor; ?>
-                </div>
-
-                <?php if ($current_page < $total_pages): ?>
-                    <div class="page_numbers">
-                        <a href="index.php?action=<?php echo $current_action; ?>&page=<?php echo $current_page + 1; ?>" class="page_link">></a>
-                    </div>
-                <?php endif; ?>
             </div>
         </section>
+
+                    <!-- 
+        <script>
+            //Pagination logic
+            document.addEventListener('DOMContentLoaded', function() {
+                const grid = document.querySelector('.agents_grid');
+                const cards = Array.from(grid.querySelectorAll('.agent_card'));
+
+                // Търсим контейнера за пагинация или го създаваме динамично под грида
+                let paginationContainer = document.getElementById('pagination');
+                if (!paginationContainer) {
+                    paginationContainer = document.createElement('div');
+                    paginationContainer.id = 'pagination';
+                    paginationContainer.className = 'pagination_container';
+                    paginationContainer.style.marginTop = '2rem';
+                    grid.parentNode.insertBefore(paginationContainer, grid.nextSibling);
+                }
+
+                const cardsPerPage = 2; // Брой агенти на една страница (кратно на 3 е идеално за твоя грид)
+                let currentPage = 1;
+                const totalPages = Math.ceil(cards.length / cardsPerPage);
+
+                function renderPagination() {
+                    paginationContainer.innerHTML = ''; // Изчистване на старите бутони
+
+                    if (totalPages <= 1) return; // Ако има малко агенти, скриваме пагинацията
+
+                    // 1. Бутон за ПРЕДИШНА страница (<)
+                    if (currentPage > 1) {
+                        const prevDiv = document.createElement('div');
+                        prevDiv.className = 'page_numbers';
+                        prevDiv.innerHTML = `<a href="#" class="page_link"><</a>`;
+                        prevDiv.onclick = (e) => {
+                            e.preventDefault();
+                            goToPage(currentPage - 1);
+                        };
+                        paginationContainer.appendChild(prevDiv);
+                    }
+
+                    // 2. Номерата на страниците (1, 2, 3...)
+                    const numbersDiv = document.createElement('div');
+                    numbersDiv.className = 'page_numbers';
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageLink = document.createElement('a');
+                        pageLink.href = "#";
+                        pageLink.className = `page_link ${i === currentPage ? 'active' : ''}`;
+                        pageLink.textContent = i;
+                        pageLink.onclick = (e) => {
+                            e.preventDefault();
+                            goToPage(i);
+                        };
+                        numbersDiv.appendChild(pageLink);
+                    }
+                    paginationContainer.appendChild(numbersDiv);
+
+                    // 3. Бутон за СЛЕДВАЩА страница (>)
+                    if (currentPage < totalPages) {
+                        const nextDiv = document.createElement('div');
+                        nextDiv.className = 'page_numbers';
+                        nextDiv.innerHTML = `<a href="#" class="page_link">></a>`;
+                        nextDiv.onclick = (e) => {
+                            e.preventDefault();
+                            goToPage(currentPage + 1);
+                        };
+                        paginationContainer.appendChild(nextDiv);
+                    }
+                }
+
+                function goToPage(page) {
+                    currentPage = page;
+                    const start = (page - 1) * cardsPerPage;
+                    const end = start + cardsPerPage;
+
+                    // Показваме/скриваме картите в зависимост от страницата
+                    cards.forEach((card, index) => {
+                        // Използваме 'flex', защото обикновено картите са flexbox контейнери в твоя CSS
+                        card.style.display = (index >= start && index < end) ? 'flex' : 'none';
+                    });
+
+                    renderPagination();
+
+                    // Плавно скролване обратно до заглавието "Агенти"
+                    const headerOffset = document.querySelector('.agent_header').offsetTop;
+                    window.scrollTo({
+                        top: headerOffset - 20,
+                        behavior: 'smooth'
+                    });
+                }
+
+                // Инициализация - стартираме винаги от страница 1
+                if (cards.length > 0) {
+                    goToPage(1);
+                }
+            });
+        </script>
+                    -->
     </div>
 </body>

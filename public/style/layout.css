@@ -642,3 +642,15 @@ body.dark-mode .service_icon_container {
 body.dark-mode .listings_side {
    background-color: var(--bg-dark);
 }
+
+body.dark-mode .agent_card {
+  background-color: var(--bg-dark);
+  border-color: var(--tu_blue_primary);
+}
+
+body.dark-mode .agent_label {
+  color: var(--text-muted);
+}
+body.dark-mode .agent_data {
+  color: var(--text-main);
+}
