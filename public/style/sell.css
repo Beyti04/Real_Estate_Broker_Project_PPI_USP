@@ -1,15 +1,16 @@
 .create-estate-page {
-    width: 100%;
+    width: 60%;
     max-width: 1500px;
     margin: 0 auto;
-    padding: 30px;
+    padding: 10px;
+    justify-content: center;
 }
 
 .create-estate-form {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 30px;
-    margin-top: 30px;
+    margin-top: 10px;
     align-items: start;
 }
 
@@ -33,10 +34,6 @@
     color: #b9c7df;
     font-size: 14px;
     font-weight: 600;
-}
-
-.estate-column .input_field {
-    width: 100%;
 }
 
 .estate-textarea {

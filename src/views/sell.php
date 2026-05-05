@@ -85,9 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         </header>
 
-        <section class="content_section">
+        <section class="content_section_sell">
             <div class="create-estate-page">
-                <h2 class="section_title" style="margin-top:-100px;">Create Property Listing</h2>
+                <h2 class="section_title_sell" >Create Property Listing</h2>
 
                 <form action="index.php?action=create_estate_process" method="POST" enctype="multipart/form-data" class="create-estate-form">
 
@@ -95,10 +95,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h3 style = "margin-top:-30px;">Property Details</h3>
 
                         <label>Address</label>
-                        <input type="text" name="estate_address" class="input_field" required>
+                        <input type="text" name="estate_address" class="input_field_sell" required>
 
                         <label>Listing Type</label>
-                        <select name="listing_type_id" class="input_field" required>
+                        <select name="listing_type_id" class="input_field_sell" required>
                             <option value="">Choose</option>
                             <?php
                             $listingTypes = \App\Controllers\ListingTypeController::getAllListingTypes();
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </select>
 
                         <label>Estate Type</label>
-                        <select name="estate_type_id" class="input_field" required>
+                        <select name="estate_type_id" class="input_field_sell" required>
                             <option value="">Choose</option>
                             <?php
                             $estateTypes = \App\Controllers\EstateTypeController::getAllEstateTypes();
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </select>
 
                         <label>Region</label>
-                        <select name="region_id" class="input_field" required>
+                        <select name="region_id" class="input_field_sell" required>
                             <option value="">Choose</option>
                             <?php
                             $regions = \App\Controllers\RegionController::getAllRegions();
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </select>
 
                         <label>City</label>
-                        <select name="city_id" class="input_field" required>
+                        <select name="city_id" class="input_field_sell" required>
                             <option value="">Choose</option>
                             <?php
                             $cities = \App\Controllers\CityController::getAllCities();
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </select>
 
                         <label>Neighborhood</label>
-                        <select name="neighborhood_id" class="input_field" required>
+                        <select name="neighborhood_id" class="input_field_sell" required>
                             <option value="">Choose</option>
                             <?php
                             $neighborhoods = \App\Controllers\NeighborhoodController::getAllNeighborhoods();
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         </select>
 
                         <label>Exposure</label>
-                        <select name="exposure_type" class="input_field" required>
+                        <select name="exposure_type" class="input_field_sell" required>
                             <option value="">Choose</option>
                             <?php
                             foreach (\App\Models\ExposureType::getOptions() as $option) {
@@ -163,32 +163,31 @@ document.addEventListener('DOMContentLoaded', function () {
                         </select>
 
                         <label>Rooms</label>
-                        <input type="number" name="rooms" class="input_field" min="1" required>
+                        <input type="number" name="rooms" class="input_field_sell" min="1" required>
 
                         <label>Floor</label>
-                        <input type="number" name="floor" class="input_field" required>
+                        <input type="number" name="floor" class="input_field_sell" required>
 
                         <label>Area (m²)</label>
-                        <input type="number" step="0.01" name="area" class="input_field" required>
+                        <input type="number" step="0.01" name="area" class="input_field_sell" required>
 
                         <label>Price (€)</label>
-                        <input type="number" step="0.01" name="price" class="input_field" required>
-                    </div>
-
-                    <div class="estate-column">
-                        <h3>Description</h3>
-                        <label>Property Description</label>
-                        <textarea name="description" class="input_field estate-textarea" required placeholder="Write full property description here..."></textarea>
+                        <input type="number" step="0.01" name="price" class="input_field_sell" required>
                     </div>
 
                     <div class="estate-column">
                         <h3>Images</h3>
                         <label>Upload images</label>
-                        <input type="file" name="images[]" class="input_field" accept="image/*" multiple required>
+                        <input type="file" name="images[]" class="input_field_sell" accept="image/*" multiple required>
 
                         <div class="upload-note">
                             At least one image is required. The listing cannot be published without images.
                         </div>
+                        <h3>Description</h3>
+                        <label>Property Description</label>
+                        <textarea name="description" class="input_field_sell estate-textarea" required placeholder="Write full property description here..."></textarea>
+                    
+                        
 
                         <button type="submit" class="btn_primary upload-estate-btn">Upload Listing</button>
                     </div>

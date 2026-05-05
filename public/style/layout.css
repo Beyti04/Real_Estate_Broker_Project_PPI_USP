@@ -554,6 +554,40 @@
     border-color: var(--tu_blue_primary, #0056b3);
 }
 
+.input_field_sell {
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: var(--text-light);
+  background-color: var(--bg-light);
+  transition: border-color 0.3s ease;
+}
+
+.section_title_sell {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin:0;
+}
+
+.content_section_sell{
+  
+}
+
+body.dark-mode .section_title_sell {
+    color: var(--text-dark);
+}
+
+body.dark-mode .input_field_sell {
+    background-color: var(--search-dark);
+    border-color: var(--border-light);
+    color: var(--bg-light);
+  }
+  body.dark-mode .input_field_sell::placeholder {
+    color: var(--par-dark);
+  }
+
 @media (max-width: 768px) {
   .split_container {
     flex-direction: column;
@@ -669,3 +703,4 @@ body.dark-mode .agent_label {
 body.dark-mode .agent_data {
   color: var(--text-main);
 }
+
