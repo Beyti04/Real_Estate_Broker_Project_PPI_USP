@@ -37,9 +37,10 @@
                 </button>
                 <div class="nav_container">
                     <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_rent">Купи/Наеми</a>
+                        <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
                         <a class="nav_link" href="index.php?action=sell">Продай</a>
-                        <a class="nav_link" href="index.php?action=agent">Брокери</a>
+                        <a class="nav_link" href="index.php?action=agents">Агенти</a>
+                        <a class="nav_link" href="index.php?action=my_estates">Моите обяви</a>
                     </nav>
 
                     <div class="sing_in_btns">

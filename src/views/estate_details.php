@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
 </head>
+
 <body>
     <div class="main_wrapper">
         <header>
@@ -32,15 +34,16 @@
         </header>
 
         <main class="container_center details_page_wrapper">
-            
+
             <div class="details_header">
                 <div class="title_box">
                     <h1 class="estate_title"><?php
 
-use App\Controllers\UserController;
-use App\Controllers\UserTypeController;
-$estateDetails = \App\Controllers\EstateController::getEstateById($id);
- echo htmlspecialchars($estateDetails->getEstateAddress()); ?></h1>
+                                                use App\Controllers\UserController;
+                                                use App\Controllers\UserTypeController;
+
+                                                $estateDetails = \App\Controllers\EstateController::getEstateById($id);
+                                                echo htmlspecialchars($estateDetails->getEstateAddress()); ?></h1>
                     <p class="estate_subtitle">Обява #<?php echo htmlspecialchars($estateDetails->getId()); ?></p>
                 </div>
                 <div class="price_box">
@@ -51,8 +54,9 @@ $estateDetails = \App\Controllers\EstateController::getEstateById($id);
             <div class="details_gallery">
                 <div class="gallery_main">
                     <img src="uploads/estate_placeholder.jpg" alt="Main Photo" class="gallery_img">
-                    <div class="estate_status_tag">Обява</div> </div>
-                
+                    <div class="estate_status_tag">Обява</div>
+                </div>
+
                 <div class="gallery_thumbnails">
                     <div class="thumb_wrapper"><img src="uploads/estate_placeholder.jpg" alt="Thumb 1" class="gallery_img"></div>
                     <div class="thumb_wrapper"><img src="uploads/estate_placeholder.jpg" alt="Thumb 2" class="gallery_img"></div>
@@ -65,7 +69,7 @@ $estateDetails = \App\Controllers\EstateController::getEstateById($id);
             </div>
 
             <div class="details_content_split">
-                
+
                 <div class="details_left">
                     <div class="details_card">
                         <h3 class="card_heading">Описание на имота</h3>
@@ -94,9 +98,9 @@ $estateDetails = \App\Controllers\EstateController::getEstateById($id);
                             <li>
                                 <span class="feature_label">Изложение:</span>
                                 <span class="feature_val">
-                                    <?php 
-                                        $exposure = $estateDetails->getExposureType();
-                                        echo htmlspecialchars(is_object($exposure) ? $exposure->value : $exposure); 
+                                    <?php
+                                    $exposure = $estateDetails->getExposureType();
+                                    echo htmlspecialchars(is_object($exposure) ? $exposure->value : $exposure);
                                     ?>
                                 </span>
                             </li>
@@ -105,19 +109,25 @@ $estateDetails = \App\Controllers\EstateController::getEstateById($id);
 
                     <div class="details_card action_card">
                         <h3 class="card_heading">Заинтересовани сте?</h3>
-                        <?php 
+                        <?php
 
-                            $estateOwnerId = $estateDetails->getOwnerId();
-                            $userOwner = UserController::getUserById($estateOwnerId);
-                            $userType = UserTypeController::getUserTypeById($userOwner->getUserType());
-                            if($userType->getTypeName() == 'Брокер') {
-                                echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се с отговорния брокер за тази обява.</p>';  
+                        $estateOwnerId = $estateDetails->getOwnerId();
+                        $userOwner = UserController::getUserById($estateOwnerId);
+                        $userType = UserTypeController::getUserTypeById($userOwner->getUserType());
+                        if ($userOwner->getId() == $_SESSION['user_id']) {
+                            echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Това е вашата обява. Можете да я редактирате от профила си.</p>';
+                            echo '<a style="text-decoration: none;" href="index.php?action=edit_estate&id=' . $estateDetails->getId() . '"><button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Редактирай обявата</button></a>';
+                            return;
+                        } else {
+                            if ($userType->getTypeName() == 'Брокер') {
+                                echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се с отговорния брокер за тази обява.</p>';
                                 echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с брокер</button>';
                                 return;
-                            }else {
-                               echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се директно с продавача на имота.</p>';
-                               echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с продавач</button>';
+                            } else {
+                                echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се директно с продавача на имота.</p>';
+                                echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с продавач</button>';
                             }
+                        }
                         ?>
                     </div>
                 </div>
@@ -126,4 +136,5 @@ $estateDetails = \App\Controllers\EstateController::getEstateById($id);
         </main>
     </div>
 </body>
+
 </html>

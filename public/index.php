@@ -61,7 +61,7 @@ switch ($action) {
             exit;
         }
         break;
-    
+
     case 'profile':
         if (!isset($_SESSION['user_id'])) {
             header('Location: index.php?action=login');
@@ -82,7 +82,7 @@ switch ($action) {
             $phone = $_POST['phone'] ?? '';
             $newPassword = $_POST['password'] ?? '';
 
-            if(empty($newPassword)) {
+            if (empty($newPassword)) {
                 $success = \App\Controllers\UserController::updateUserProfile($userId, $username, $email, $phone);
             } else {
                 $success = \App\Controllers\UserController::updateUserProfilePassword($userId, $username, $email, $phone, $newPassword);
@@ -95,8 +95,15 @@ switch ($action) {
             }
         }
         break;
-        
-    //Admin Panel
+
+    case 'my_estates':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+        require VIEW_DIR . 'my_estates.php';
+        break;
+        //Admin Panel
     case 'admin':
         if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {
             header('Location: index.php?action=homepage');
@@ -358,81 +365,82 @@ switch ($action) {
 
         require VIEW_DIR . 'agent_profile.php';
         break;
-        case 'sell':
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: index.php?action=login');
-        exit;
-    }
 
-    require VIEW_DIR . 'sell.php';
-    break;
+    case 'sell':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+
+        require VIEW_DIR . 'sell.php';
+        break;
 
     case 'create_estate_process':
-     if (!isset($_SESSION['user_id'])) {
-        header('Location: index.php?action=login');
-        exit;
-     }
-
-     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $regionId = (int)($_POST['region_id'] ?? 0);
-        $cityId = (int)($_POST['city_id'] ?? 0);
-        $neighborhoodId = (int)($_POST['neighborhood_id'] ?? 0);
-        $address = trim($_POST['estate_address'] ?? '');
-        $estateTypeId = (int)($_POST['estate_type_id'] ?? 0);
-        $exposureType = trim($_POST['exposure_type'] ?? '');
-        $rooms = (int)($_POST['rooms'] ?? 0);
-        $floor = (int)($_POST['floor'] ?? 0);
-        $area = (float)($_POST['area'] ?? 0);
-        $description = trim($_POST['description'] ?? '');
-        $listingTypeId = (int)($_POST['listing_type_id'] ?? 0);
-        $price = (float)($_POST['price'] ?? 0);
-        $ownerId = (int)$_SESSION['user_id'];
-        $statusId = 1;
-
-        if (
-            empty($_FILES['images']['name'][0]) ||
-            $cityId <= 0 ||
-            $neighborhoodId <= 0 ||
-            $estateTypeId <= 0 ||
-            $listingTypeId <= 0 ||
-            empty($address) ||
-            empty($description) ||
-            empty($exposureType) ||
-            $rooms <= 0 ||
-            $area <= 0 ||
-            $price <= 0
-        ) {
-            header('Location: index.php?action=sell&error=missing_fields');
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
             exit;
         }
 
-        $created = \App\Controllers\EstateController::createEstateWithImages(
-            $regionId,
-            $cityId,
-            $neighborhoodId,
-            $address,
-            $estateTypeId,
-            $exposureType,
-            $rooms,
-            $floor,
-            $area,
-            $description,
-            $listingTypeId,
-            $price,
-            $ownerId,
-            $statusId,
-            $_FILES['images']
-        );
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $regionId = (int)($_POST['region_id'] ?? 0);
+            $cityId = (int)($_POST['city_id'] ?? 0);
+            $neighborhoodId = (int)($_POST['neighborhood_id'] ?? 0);
+            $address = trim($_POST['estate_address'] ?? '');
+            $estateTypeId = (int)($_POST['estate_type_id'] ?? 0);
+            $exposureType = trim($_POST['exposure_type'] ?? '');
+            $rooms = (int)($_POST['rooms'] ?? 0);
+            $floor = (int)($_POST['floor'] ?? 0);
+            $area = (float)($_POST['area'] ?? 0);
+            $description = trim($_POST['description'] ?? '');
+            $listingTypeId = (int)($_POST['listing_type_id'] ?? 0);
+            $price = (float)($_POST['price'] ?? 0);
+            $ownerId = (int)$_SESSION['user_id'];
+            $statusId = 1;
 
-        if ($created) {
-            header('Location: index.php?action=buy_rent&success=estate_created');
+            if (
+                empty($_FILES['images']['name'][0]) ||
+                $cityId <= 0 ||
+                $neighborhoodId <= 0 ||
+                $estateTypeId <= 0 ||
+                $listingTypeId <= 0 ||
+                empty($address) ||
+                empty($description) ||
+                empty($exposureType) ||
+                $rooms <= 0 ||
+                $area <= 0 ||
+                $price <= 0
+            ) {
+                header('Location: index.php?action=sell&error=missing_fields');
+                exit;
+            }
+
+            $created = \App\Controllers\EstateController::createEstateWithImages(
+                $regionId,
+                $cityId,
+                $neighborhoodId,
+                $address,
+                $estateTypeId,
+                $exposureType,
+                $rooms,
+                $floor,
+                $area,
+                $description,
+                $listingTypeId,
+                $price,
+                $ownerId,
+                $statusId,
+                $_FILES['images']
+            );
+
+            if ($created) {
+                header('Location: index.php?action=buy_rent&success=estate_created');
+                exit;
+            }
+
+            header('Location: index.php?action=sell&error=create_failed');
             exit;
         }
-
-        header('Location: index.php?action=sell&error=create_failed');
-        exit;
-        }
-    break;
+        break;
     case 'logout':
         App\Controllers\AuthController::logout();
         header('Location: index.php?action=homepage');

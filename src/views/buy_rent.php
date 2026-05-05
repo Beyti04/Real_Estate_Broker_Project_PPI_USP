@@ -33,53 +33,68 @@ foreach ($filterKeys as $key) {
             // Превръщаме техническата стойност в красив текст според типа на филтъра
             switch ($key) {
                 case 'price':
-    // Взимаме избрания тип обява от GET (ако сега се праща) или от сесията
-    $currentLT = $_GET['listing_type'] ?? ($_SESSION['filters']['listing_type']['key'] ?? 'any');
-    
-    foreach (App\Controllers\PriceRangeController::getAllPriceRanges() as $r) {
-        // Проверяваме дали името съвпада И дали принадлежи на избрания тип обява
-        // Приемаме, че имате метод getListingTypeId() в обекта на цената
-        if ($r->getRangeName() === $val) {
-            if ($currentLT === 'any' || $r->getListingType() == $currentLT) {
-                $_SESSION['filters'][$key]['value'] = $r->getRangeValue();
-                break; 
-            }
-        }
-    }
-    break;
+                    // Взимаме избрания тип обява от GET (ако сега се праща) или от сесията
+                    $currentLT = $_GET['listing_type'] ?? ($_SESSION['filters']['listing_type']['key'] ?? 'any');
+
+                    foreach (App\Controllers\PriceRangeController::getAllPriceRanges() as $r) {
+                        // Проверяваме дали името съвпада И дали принадлежи на избрания тип обява
+                        // Приемаме, че имате метод getListingTypeId() в обекта на цената
+                        if ($r->getRangeName() === $val) {
+                            if ($currentLT === 'any' || $r->getListingType() == $currentLT) {
+                                $_SESSION['filters'][$key]['value'] = $r->getRangeValue();
+                                break;
+                            }
+                        }
+                    }
+                    break;
 
                 case 'category':
                     foreach (App\Controllers\EstateCategoryController::getAllEstateCategories() as $c) {
-                        if ($c->getId() == $val) { $_SESSION['filters'][$key]['value'] = $c->getCategoryName(); break; }
+                        if ($c->getId() == $val) {
+                            $_SESSION['filters'][$key]['value'] = $c->getCategoryName();
+                            break;
+                        }
                     }
                     break;
 
                 case 'listing_type':
                     foreach (App\Controllers\ListingTypeController::getAllListingTypes() as $lt) {
-                        if ($lt->getId() == $val) { $_SESSION['filters'][$key]['value'] = $lt->getTypeName(); break; }
+                        if ($lt->getId() == $val) {
+                            $_SESSION['filters'][$key]['value'] = $lt->getTypeName();
+                            break;
+                        }
                     }
                     break;
 
                 case 'region':
                     foreach (App\Controllers\RegionController::getAllRegions() as $reg) {
-                        if ($reg->getId() == $val) { $_SESSION['filters'][$key]['value'] = $reg->getRegionNameBG(); break; }
+                        if ($reg->getId() == $val) {
+                            $_SESSION['filters'][$key]['value'] = $reg->getRegionNameBG();
+                            break;
+                        }
                     }
                     break;
 
                 case 'city':
                     foreach (App\Controllers\CityController::getAllCities() as $city) {
-                        if ($city->getId() == $val) { $_SESSION['filters'][$key]['value'] = $city->getCityNameBG(); break; }
+                        if ($city->getId() == $val) {
+                            $_SESSION['filters'][$key]['value'] = $city->getCityNameBG();
+                            break;
+                        }
                     }
                     break;
 
                 case 'neighborhood':
                     foreach (App\Controllers\NeighborhoodController::getAllNeighborhoods() as $n) {
-                        if ($n->getId() == $val) { $_SESSION['filters'][$key]['value'] = $n->getNeighborhoodNameBG(); break; }
+                        if ($n->getId() == $val) {
+                            $_SESSION['filters'][$key]['value'] = $n->getNeighborhoodNameBG();
+                            break;
+                        }
                     }
                     break;
-                
+
                 case 'type':
-                    $_SESSION['filters'][$key]['value'] = $val; 
+                    $_SESSION['filters'][$key]['value'] = $val;
                     break;
 
                 default:
@@ -155,6 +170,7 @@ function activeStyle($currentVal)
                         <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
                         <a class="nav_link" href="index.php?action=sell">Продай</a>
                         <a class="nav_link" href="index.php?action=agents">Агенти</a>
+                        <a class="nav_link" href="index.php?action=my_estates">Моите обяви</a>
                     </nav>
                     <div class="sing_in_btns">
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
@@ -323,28 +339,23 @@ function activeStyle($currentVal)
 
                         // Взимаме стойностите от data-атрибутите на бутоните за всяко меню
                         const filters = {
-                            price:
-                             {  
+                            price: {
                                 key: document.querySelector('#priceDropdown .dropdown_toggle').getAttribute('data-selected-name'),
                                 value: document.querySelector('#priceDropdown .dropdown_toggle').getAttribute('data-selected-value')
-                             },
-                            category:
-                            {
+                            },
+                            category: {
                                 key: document.querySelector('#categoryDropdown .dropdown_toggle').getAttribute('data-selected-id'),
                                 value: document.querySelector('#categoryDropdown .dropdown_toggle').getAttribute('data-selected-value')
-                            } ,
-                            listing_type: 
-                            {
-                                    key: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-id'),
-                                    value: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-value')
                             },
-                            type:
-                            {
+                            listing_type: {
+                                key: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-id'),
+                                value: document.querySelector('#listingTypeDropdown .dropdown_toggle').getAttribute('data-selected-value')
+                            },
+                            type: {
                                 key: document.querySelector('#typeDropdown .dropdown_toggle').getAttribute('data-selected-id'),
                                 value: document.querySelector('#typeDropdown .dropdown_toggle').getAttribute('data-selected-value')
                             },
-                            region:
-                            {
+                            region: {
                                 key: document.querySelector('#regionDropdown .dropdown_toggle').getAttribute('data-selected-id'),
                                 value: document.querySelector('#regionDropdown .dropdown_toggle').getAttribute('data-selected-value')
                             },
@@ -361,8 +372,8 @@ function activeStyle($currentVal)
                         // Базовият URL
                         let url = 'index.php?action=buy_rent';
 
-                        for(const [key, value] of Object.entries(filters)) {
-                            if(value.key && value.key !== 'any') {
+                        for (const [key, value] of Object.entries(filters)) {
+                            if (value.key && value.key !== 'any') {
                                 url += `&${key}=${encodeURIComponent(value.key)}`;
                             }
                         }
@@ -383,7 +394,7 @@ function activeStyle($currentVal)
 
             $filter_data = [];
             foreach ($current_filters as $key => $data) {
-                    $filter_data[$key] = $data['key'] ?? 'any';
+                $filter_data[$key] = $data['key'] ?? 'any';
             }
 
             // Извикваме новата функция, която връща само филтрираните резултати
@@ -409,48 +420,48 @@ function activeStyle($currentVal)
                     <div class="properties_grid">
                         <?php
                         if (empty($estates)) {
-                            echo '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">No properties found matching your criteria.</p>';
+                            echo '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary);">Няма налични имоти, отговарящи на вашите критерии.</p>';
                         }
-                        
-                         foreach ($estates as $estate): ?>
+
+                        foreach ($estates as $estate): ?>
                             <article class="estate_card">
-    <!-- Добавяме основен линк, който обгръща цялото съдържание -->
-    <a href="index.php?action=estate_details&id=<?= $estate->id ?>" class="estate_card_link">
-        
-        <div class="estate_image_wrapper">
-            <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment" class="estate_image">
-            <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
-        </div>
+                                <!-- Добавяме основен линк, който обгръща цялото съдържание -->
+                                <a href="index.php?action=estate_details&id=<?= $estate->id ?>" class="estate_card_link">
 
-        <div class="estate_content">
-            <div class="estate_header">
-                <h3 class="estate_price">€<?= number_format($estate->price, 2) ?></h3>
-                <p class="estate_address"><?= htmlspecialchars($estate->city_name) ?>, <?= htmlspecialchars($estate->neighborhood_name) ?></p>
-            </div>
-            
-            <div class="estate_features">
-                <div class="feature_item">
-                    <img class="theme_light_img" src="images/area_icon.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
-                    <img class="theme_dark_img" src="images/area_icon_dark.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
-                    <span><?= htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
-                </div>
-                <div class="feature_item">
-                    <img class="theme_light_img" src="images/room.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;">
-                    <img class="theme_dark_img" src="images/room_dark.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;">
-                    <span><?= htmlspecialchars($estate->rooms) ?></span>
-                </div>
-                <div class="feature_item">
-                    <img class="theme_light_img" src="images/floor.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;">
-                    <img class="theme_dark_img" src="images/floor_dark.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;">
-                    <span> <?= htmlspecialchars($estate->floor) ?></span>
-                </div>
-            </div>
+                                    <div class="estate_image_wrapper">
+                                        <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment" class="estate_image">
+                                        <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
+                                    </div>
 
-            <!-- Бутонът остава за визуален ориентир, но вече е част от общия линк -->
-            <div class="btn_view">Преглед</div>
-        </div>
-    </a>
-</article>
+                                    <div class="estate_content">
+                                        <div class="estate_header">
+                                            <h3 class="estate_price">€<?= number_format($estate->price, 2) ?></h3>
+                                            <p class="estate_address"><?= htmlspecialchars($estate->city_name) ?>, <?= htmlspecialchars($estate->neighborhood_name) ?></p>
+                                        </div>
+
+                                        <div class="estate_features">
+                                            <div class="feature_item">
+                                                <img class="theme_light_img" src="images/area_icon.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
+                                                <img class="theme_dark_img" src="images/area_icon_dark.png" alt="Area Icon" style="width:20px; height:20px; margin-right:5px;">
+                                                <span><?= htmlspecialchars(number_format($estate->area, 2)) ?> m²</span>
+                                            </div>
+                                            <div class="feature_item">
+                                                <img class="theme_light_img" src="images/room.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;">
+                                                <img class="theme_dark_img" src="images/room_dark.png" alt="Bedroom Icon" style="width:20px; height:20px; margin-right:5px;">
+                                                <span><?= htmlspecialchars($estate->rooms) ?></span>
+                                            </div>
+                                            <div class="feature_item">
+                                                <img class="theme_light_img" src="images/floor.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;">
+                                                <img class="theme_dark_img" src="images/floor_dark.png" alt="Floor Icon" style="width:20px; height:20px; margin-right:5px;">
+                                                <span> <?= htmlspecialchars($estate->floor) ?></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Бутонът остава за визуален ориентир, но вече е част от общия линк -->
+                                        <div class="btn_view">Преглед</div>
+                                    </div>
+                                </a>
+                            </article>
                         <?php endforeach; ?>
                     </div>
                     <?php

@@ -83,6 +83,21 @@
   height: 90%;
 }
 
+.my_estates_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 колони според дизайна */
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 1200px) {
+    .my_estates_grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .my_estates_grid { grid-template-columns: 1fr; }
+}
+
 .estate_card {
   height: 40vh;
   background: white;
@@ -96,7 +111,7 @@
   flex-direction: column;
   height: 95%;
   min-width: 300px;
-  min-height: 400px;
+  min-height: 500px;
   height: auto;
 }
 

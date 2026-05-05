@@ -59,9 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 </button>
                 <div class="nav_container">
                     <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_rent">Buy/Rent</a>
-                        <a class="nav_link" href="index.php?action=sell">Sell</a>
-                        <a class="nav_link" href="index.php?action=agent">Agents</a>
+                         <nav class="nav_links">
+                        <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
+                        <a class="nav_link" href="index.php?action=sell">Продай</a>
+                        <a class="nav_link" href="index.php?action=agents">Агенти</a>
+                        <a class="nav_link" href="index.php?action=my_estates">Моите обяви</a>
+                    </nav>
                     </nav>
 
                     <div class="sing_in_btns">
@@ -70,11 +73,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         </button>
                         <?php
                         if (isset($_SESSION['user_id'])) {
-                            echo '<a href="index.php?action=profile" class="btn_primary">Profile</a>';
-                            echo '<a href="index.php?action=logout" class="btn_secondary">Log Out</a>';
+                            echo '<a href="index.php?action=profile" class="btn_primary">Профил</a>';
+                            echo '<a href="index.php?action=logout" class="btn_secondary">Изход</a>';
                         } else {
-                            echo '<a href="index.php?action=register" class="btn_primary">Sign Up</a>';
-                            echo '<a href="index.php?action=login" class="btn_secondary">Log In</a>';
+                            echo '<a href="index.php?action=register" class="btn_primary">Регистрация</a>';
+                            echo '<a href="index.php?action=login" class="btn_secondary">Вход</a>';
                         }
                         ?>
                     </div>

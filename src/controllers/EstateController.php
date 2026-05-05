@@ -466,4 +466,48 @@ class EstateController
 
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public static function getEstatesByOwnerId(int $ownerId): array
+    {
+        $db = Database::getInstance();
+
+        $query = "
+            SELECT
+                e.id,
+                r.region_name_bg AS region_name,
+                c.city_name_bg AS city_name,
+                n.neighborhood_name_bg AS neighborhood_name,
+                e.estate_address,
+                et.type_name AS estate_type,
+                e.rooms, e.area, e.floor,
+                e.exposure_type,
+                e.description,
+                lt.type_name AS listing_type,
+                e.price,
+                u.username AS owner_name,
+                e.creation_date,
+                e.expiration_date,
+                s.status_name,(
+            SELECT ei.image_path
+            FROM estate_images ei
+            WHERE ei.estate_id = e.id
+            AND ei.is_primary = 1
+            LIMIT 1
+        ) AS primary_image
+            FROM estates e
+            LEFT JOIN regions r ON e.region_id=r.id
+            LEFT JOIN cities c ON e.city_id=c.id
+            LEFT JOIN neighborhoods n ON e.neighborhood_id=n.id
+            LEFT JOIN estate_types et ON e.estate_type_id=et.id
+            LEFT JOIN listing_types lt ON e.listing_type_id=lt.id
+            LEFT JOIN users u ON e.owner_id=u.id
+            LEFT JOIN estate_status s ON e.status_id=s.id
+            WHERE e.owner_id = :ownerId
+        ";
+
+        $stmt = $db->prepare($query);
+        $stmt->execute(['ownerId' => $ownerId]);
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }
