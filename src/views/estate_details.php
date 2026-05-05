@@ -116,7 +116,8 @@
                         $userType = UserTypeController::getUserTypeById($userOwner->getUserType());
                         if ($userOwner->getId() == $_SESSION['user_id']) {
                             echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Това е вашата обява. Можете да я редактирате от профила си.</p>';
-                            echo '<a style="text-decoration: none;" href="index.php?action=edit_estate&id=' . $estateDetails->getId() . '"><button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Редактирай обявата</button></a>';
+                            echo '<a style="text-decoration: none;" href="index.php?action=estate_edit&id=' . $estateDetails->getId() . '"><button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Редактирай обявата</button></a>';
+                            echo '<a style="text-decoration: none;" href="index.php?action=estate_delete&id=' . $estateDetails->getId() . '"><button class="btn_secondary" style="width: 100%; margin-bottom: 0.5rem;">Изтрий обявата</button></a>';
                             return;
                         } else {
                             if ($userType->getTypeName() == 'Брокер') {

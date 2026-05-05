@@ -103,6 +103,39 @@ switch ($action) {
         }
         require VIEW_DIR . 'my_estates.php';
         break;
+
+    case 'estate_delete':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+            $estateId = (int)$_GET['id'];
+            $estate = \App\Controllers\EstateController::getEstateById($estateId);
+            if ($estate && $estate->getOwnerId() === $_SESSION['user_id']) {
+                \App\Controllers\EstateController::deleteEstate($estateId);
+                header('Location: index.php?action=my_estates');
+            }
+        exit;
+        break;  
+
+    case 'estate_edit':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+        if (isset($_GET['id'])) {
+            $estateId = (int)$_GET['id'];
+            $estate = \App\Controllers\EstateController::getEstateById($estateId);
+            if ($estate && $estate->getOwnerId() === $_SESSION['user_id']) {
+                require VIEW_DIR . 'estate_edit.php';
+            } else {
+                header('Location: index.php?action=my_estates');
+                exit;
+            }
+        } else {
+            header('Location: index.php?action=my_estates');
+            exit;
+        }
         //Admin Panel
     case 'admin':
         if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {

@@ -140,9 +140,19 @@ class EstateController
     {
         $pdo = Database::getInstance();
         try {
-            $stmt = $pdo->prepare("DELETE FROM estates WHERE id = :id");
-            return $stmt->execute(['id' => $id]);
+            $pdo->beginTransaction();
+
+            $stmtImages = $pdo->prepare("DELETE FROM estate_images WHERE estate_id = :id");
+            $stmtImages->execute(['id' => $id]);
+
+            $stmtEstate = $pdo->prepare("DELETE FROM estates WHERE id = :id");
+            $stmtEstate->execute(['id' => $id]);
+
+            return $pdo->commit();
         } catch (PDOException $e) {
+            if($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             error_log('Error deleting estate: ' . $e->getMessage());
             return false;
         }
