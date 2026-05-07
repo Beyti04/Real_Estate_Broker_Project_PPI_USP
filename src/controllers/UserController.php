@@ -48,9 +48,9 @@ class UserController
                     $row['email'],
                     $row['password'],
                     $row['user_type_id'],
-                    $row['phone'] ?? null,
-                    $row['image'] ?? null,
-                    $row['description'] ?? null
+                    $row['phone'] ?? '-',
+                    $row['image'] ?? '-',
+                    $row['description'] ?? '-'
                 );
             }
         } catch (PDOException $e) {
@@ -206,9 +206,9 @@ class UserController
                     $row['email'],
                     $row['password'],
                     $row['user_type_id'],
-                    $row['phone'] ?? null,
-                    $row['image'] ?? null,
-                    $row['description'] ?? null
+                    $row['phone'] ?? '-',
+                    $row['image'] ?? '-',
+                    $row['description'] ?? '-'
                 );
             }
         } catch (PDOException $e) {
@@ -237,9 +237,9 @@ class UserController
                 $row['email'],
                 $row['password'],
                 $row['user_type_id'],
-                $row['phone'] ?? null,
-                $row['image'] ?? null,
-                $row['description'] ?? null
+                $row['phone'] ?? '-',
+                $row['image'] ?? '-',
+                $row['description'] ?? '-'
             );
         }
 

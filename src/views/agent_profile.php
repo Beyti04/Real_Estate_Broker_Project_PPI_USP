@@ -39,7 +39,7 @@
                 <div class="property_card" style="display:flex; gap:2rem; align-items:flex-start; padding:2rem;">
                     <div style="flex:0 0 320px;">
                         <img
-                            src="<?= !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'uploads/default-agent.jpg'; ?>"
+                           src="<?= $agent->getImage() !== "-" && !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
                             alt="<?= htmlspecialchars($agent->getUsername()); ?>"
                             style="width:100%; height:400px; object-fit:cover; border-radius:12px;">
                     </div>

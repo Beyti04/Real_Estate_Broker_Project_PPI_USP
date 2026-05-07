@@ -55,9 +55,10 @@
                 </div>
                 <div class="agents_grid">
                     <?php foreach ($agents as $agent): ?>
-                        <a class="agent_card theme_dark" href="index.php?action=agent_profile&id=<?= $agent->getId(); ?>" style="text-decoration:none; color:inherit;">
-                            <img class="agent_image"
-                                src="<?= !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
+                        <a class="agent_card theme_dark" href="index.php?action=agent_profile&id=<?= $agent->getId(); ?>" style="text-decoration:none; color:inherit;"> 
+                        
+                        <img class="agent_image"
+                                src="<?= $agent->getImage() !== "-" && !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
                                 alt="<?= htmlspecialchars($agent->getUsername()); ?>">
                             <div class="agent-info-row">
                                 <div class="agent_label">Име:</div>
@@ -73,7 +74,7 @@
             </div>
         </section>
 
-                    <!-- 
+
         <script>
             //Pagination logic
             document.addEventListener('DOMContentLoaded', function() {
@@ -90,7 +91,7 @@
                     grid.parentNode.insertBefore(paginationContainer, grid.nextSibling);
                 }
 
-                const cardsPerPage = 2; // Брой агенти на една страница (кратно на 3 е идеално за твоя грид)
+                const cardsPerPage = 3; // Брой агенти на една страница (кратно на 3 е идеално за твоя грид)
                 let currentPage = 1;
                 const totalPages = Math.ceil(cards.length / cardsPerPage);
 
@@ -168,6 +169,5 @@
                 }
             });
         </script>
-                    -->
     </div>
 </body>

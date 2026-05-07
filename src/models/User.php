@@ -19,9 +19,9 @@ class User
         string $email,
         string $password,
         int $userType,
-        ?string $phone = null,
-        ?string $image = null,
-        ?string $description = null)
+        ?string $phone = '-',
+        ?string $image = '-',
+        ?string $description =  '-')
     {
         $this->id = $id;
         $this->username = $username;
