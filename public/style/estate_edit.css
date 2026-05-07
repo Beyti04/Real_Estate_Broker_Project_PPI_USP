@@ -1,0 +1,57 @@
+/* Специфични стилове за формата за редакция */
+.edit_estate_form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    align-items: start;
+    margin-top: 2rem;
+}
+
+.estate_column {
+    background-color: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.estate_column h3 {
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--bg-light);
+    color: var(--tu_blue_primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Адаптивност */
+@media (max-width: 1024px) {
+    .edit_estate_form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .edit_estate_form {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Тъмна тема за специфичните елементи */
+body.dark-mode .estate_column {
+    background-color: var(--search-dark);
+    border-color: var(--border-light);
+}
+
+body.dark-mode .estate_column h3 {
+    border-bottom-color: var(--border-dark);
+    color: var(--text-dark);
+}
+
+body.dark-mode select.input_field option {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}

@@ -148,6 +148,12 @@
                 </div>
 
                 <div class="input_group">
+                    <label class="auth_label">Площ (m²)</label>
+                    <input type="number" step="0.01" class="input_field auth_input" name="area" required 
+                           value="<?= $estateToEdit ? $estateToEdit->getArea() : '' ?>">
+                </div>
+
+                <div class="input_group">
                     <label class="auth_label">Цена (€)</label>
                     <input type="number" step="0.01" class="input_field auth_input" name="price" required 
                            value="<?= $estateToEdit ? $estateToEdit->getPrice() : '' ?>">

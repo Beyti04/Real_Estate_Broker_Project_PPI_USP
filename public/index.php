@@ -136,6 +136,51 @@ switch ($action) {
             header('Location: index.php?action=my_estates');
             exit;
         }
+        break;
+    case 'estate_update':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $estateId = (int)($_POST['id'] ?? 0);
+            $estate = \App\Controllers\EstateController::getEstateById($estateId);
+            if ($estate && $estate->getOwnerId() === $_SESSION['user_id']) {
+                $regionId = (int)$_POST['region_id'];
+                $cityId = (int)$_POST['city_id'];
+                $neighborhoodId = (int)$_POST['neighborhood_id'];
+                $address = $_POST['estate_address'] ?? '';
+                $estateTypeId = (int)$_POST['estate_type_id'];
+                $exposureType = $_POST['exposure_type'] ?? '';
+                $rooms = (int)$_POST['rooms'];
+                $floor = (int)$_POST['floor'];
+                $area = (float)$_POST['area'];
+                $description = $_POST['description'] ?? '';
+                $listingTypeId = (int)$_POST['listing_type_id'];
+                $price = (float)$_POST['price'];
+                $statusId = (int)$_POST['status_id'];
+
+                \App\Controllers\EstateController::updateEstate(
+                    $estateId,
+                    $regionId,
+                    $cityId,
+                    $neighborhoodId,
+                    $address,
+                    $estateTypeId,
+                    $exposureType,
+                    $rooms,
+                    $floor,
+                    $area,
+                    $description,
+                    $listingTypeId,
+                    $price,
+                    $_SESSION['user_id'],
+                    $statusId
+                );
+            }
+            header('Location: index.php?action=my_estates');
+            exit;
+        }
         //Admin Panel
     case 'admin':
         if (!isset($_SESSION['user_id']) || $_SESSION['user_type_id'] !== 1) {
@@ -242,6 +287,7 @@ switch ($action) {
             $exposureType = $_POST['exposure_type'] ?? '';
             $rooms = (int)$_POST['rooms'];
             $floor = (int)$_POST['floor'];
+            $area = (float)$_POST['area'];
             $description = $_POST['description'] ?? '';
             $listingTypeId = (int)$_POST['listing_type_id'];
             $price = (float)$_POST['price'];
@@ -259,6 +305,7 @@ switch ($action) {
                     $exposureType,
                     $rooms,
                     $floor,
+                    $area,
                     $description,
                     $listingTypeId,
                     $price,
@@ -275,6 +322,7 @@ switch ($action) {
                     $exposureType,
                     $rooms,
                     $floor,
+                    $area,
                     $description,
                     $listingTypeId,
                     $price,

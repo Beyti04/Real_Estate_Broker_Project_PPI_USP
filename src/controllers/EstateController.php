@@ -94,6 +94,7 @@ class EstateController
         string $exposureType,
         int $rooms,
         int $floor,
+        float $area,
         string $description,
         int $listingTypeId,
         float $price,
@@ -108,9 +109,9 @@ class EstateController
         try {
             $stmt = $pdo->prepare("
                 INSERT INTO estates 
-                (region_id, city_id, neighborhood_id, estate_address, estate_type_id, exposure_type, rooms, floor, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id) 
+                (region_id, city_id, neighborhood_id, estate_address, estate_type_id, exposure_type, rooms, floor, area, description, listing_type_id, price, owner_id, creation_date, expiration_date, status_id) 
                 VALUES 
-                (:region_id, :city_id, :neighborhood_id, :address, :estate_type_id, :exposure_type, :rooms, :floor, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
+                (:region_id, :city_id, :neighborhood_id, :address, :estate_type_id, :exposure_type, :rooms, :floor, :area, :description, :listing_type_id, :price, :owner_id, :creation_date, :expiration_date, :status_id)
             ");
 
             return $stmt->execute([
@@ -122,6 +123,7 @@ class EstateController
                 'exposure_type' => $exposureType,
                 'rooms' => $rooms,
                 'floor' => $floor,
+                'area' => $area,
                 'description' => $description,
                 'listing_type_id' => $listingTypeId,
                 'price' => $price,
@@ -168,6 +170,7 @@ class EstateController
         string $exposureType,
         int $rooms,
         int $floor,
+        float $area,
         string $description,
         int $listingTypeId,
         float $price,
@@ -187,6 +190,7 @@ class EstateController
                 exposure_type = :exposure_type,
                 rooms = :rooms,
                 floor = :floor,
+                area = :area,
                 description = :description,
                 listing_type_id = :listing_type_id,
                 price = :price,
@@ -205,6 +209,7 @@ class EstateController
                 'exposure_type' => $exposureType,
                 'rooms' => $rooms,
                 'floor' => $floor,
+                'area' => $area,
                 'description' => $description,
                 'listing_type_id' => $listingTypeId,
                 'price' => $price,
