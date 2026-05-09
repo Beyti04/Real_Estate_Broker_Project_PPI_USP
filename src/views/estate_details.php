@@ -22,7 +22,12 @@
                 </a>
             </div>
             <div class="nav_wrapper">
-                <div class="nav_container" style="display: flex;">
+                <button class="menu_toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav_container" >
                     <div class="sing_in_btns">
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
                             🌙
@@ -114,21 +119,22 @@
                         $estateOwnerId = $estateDetails->getOwnerId();
                         $userOwner = UserController::getUserById($estateOwnerId);
                         $userType = UserTypeController::getUserTypeById($userOwner->getUserType());
-                        if ($userOwner->getId() == $_SESSION['user_id']) {
-                            echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Това е вашата обява. Можете да я редактирате от профила си.</p>';
-                            echo '<a style="text-decoration: none;" href="index.php?action=estate_edit&id=' . $estateDetails->getId() . '"><button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Редактирай обявата</button></a>';
-                            echo '<a style="text-decoration: none;" href="index.php?action=estate_delete&id=' . $estateDetails->getId() . '"><button class="btn_secondary" style="width: 100%; margin-bottom: 0.5rem;">Изтрий обявата</button></a>';
-                            return;
-                        } else {
-                            if ($userType->getTypeName() == 'Брокер') {
-                                echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се с отговорния брокер за тази обява.</p>';
-                                echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с брокер</button>';
+                            if (isset($_SESSION['user_id']) && $userOwner->getId() == $_SESSION['user_id']) {
+                                echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Това е вашата обява. Можете да я редактирате от профила си.</p>';
+                                echo '<a style="text-decoration: none;" href="index.php?action=estate_edit&id=' . $estateDetails->getId() . '"><button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Редактирай обявата</button></a>';
+                                echo '<a style="text-decoration: none;" href="index.php?action=estate_delete&id=' . $estateDetails->getId() . '"><button class="btn_secondary" style="width: 100%; margin-bottom: 0.5rem;">Изтрий обявата</button></a>';
                                 return;
                             } else {
-                                echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се директно с продавача на имота.</p>';
-                                echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с продавач</button>';
+                                if ($userType->getTypeName() == 'Брокер') {
+                                    echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се с отговорния брокер за тази обява.</p>';
+                                    echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с брокер</button>';
+                                    return;
+                                } else {
+                                    echo '<p style="color: var(--par-light); font-size: 0.9rem; margin-bottom: 1.5rem;">Свържете се директно с продавача на имота.</p>';
+                                    echo '<button class="btn_primary" style="width: 100%; margin-bottom: 0.5rem;">Свържи се с продавач</button>';
+                                }
                             }
-                        }
+
                         ?>
                     </div>
                 </div>

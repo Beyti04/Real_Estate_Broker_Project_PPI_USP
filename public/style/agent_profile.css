@@ -173,4 +173,13 @@
     .agent-profile-actions a {
         width: 100%;
     }
+    .agent-profile-image img {
+        min-height: 300px; /* Намаляваме височината за малки екрани */
+        height: auto;
+    }
+
+    .agent-profile-actions {
+        flex-direction: column; /* Бутоните един под друг */
+    }
+    
 }

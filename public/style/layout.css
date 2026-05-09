@@ -556,12 +556,13 @@
 
 .input_field_sell {
   border: 1px solid var(--border-light);
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
   font-size: 1rem;
   color: var(--text-light);
   background-color: var(--bg-light);
   transition: border-color 0.3s ease;
+  margin-bottom: 8px;
 }
 
 .section_title_sell {
@@ -572,7 +573,7 @@
 }
 
 .content_section_sell{
-  
+  width: 100vw;
 }
 
 body.dark-mode .section_title_sell {
@@ -589,9 +590,58 @@ body.dark-mode .input_field_sell {
   }
 
 @media (max-width: 768px) {
+    .agents_grid {
+        grid-template-columns: 1fr; /* Една колона вместо три */
+        gap: 1.5rem;
+        height: auto; /* Позволява на грида да се разпъва според съдържанието */
+    }
+
+    .agent_card {
+        min-height: auto; /* Махаме ограничението за височина */
+        width: 100%;
+    }
+
+    .agent_image {
+        min-height: 250px;
+        height: 250px; /* Фиксирана височина за снимката на телефон */
+    }
+
+    .agent_header {
+        text-align: center; /* Центрираме заглавието "Агенти" */
+    }
+
+    /* ВАЖНО: Правим пагинацията видима на телефон */
+    .pagination_container {
+        visibility: visible !important; 
+        flex-wrap: wrap; /* Позволява на бутоните да минат на нов ред, ако са много */
+        padding: 0 10px;
+    }
+
+    .agent_content_section {
+        height: auto; /* Махаме overflow:hidden, за да може да се скролва */
+        overflow: visible;
+    }
+}
+
+/* Таблети */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .agents_grid {
+        grid-template-columns: repeat(2, 1fr); /* Две колони за таблет */
+    }
+}
+
+@media (max-width: 768px) {
   .split_container {
     flex-direction: column;
     height: auto;
+  }
+
+  .input_field_sell {
+    width: 80vw;
+  }
+
+  .content_section_sell{
+  width: 90vw;
   }
   #map-container,
   .listings_side {

@@ -23,6 +23,11 @@
                 </a>
             </div>
             <div class="nav_wrapper">
+                <button class="menu_toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
                 <div class="nav_container">
                     <nav class="nav_links">
                         <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>

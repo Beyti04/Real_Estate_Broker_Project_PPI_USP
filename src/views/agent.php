@@ -23,11 +23,17 @@
             </div>
 
             <div class="nav_wrapper">
+                <button class="menu_toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
                 <div class="nav_container">
                     <nav class="nav_links">
                         <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
                         <a class="nav_link" href="index.php?action=sell">Продай</a>
                         <a class="nav_link" href="index.php?action=agents">Агенти</a>
+                        <a class="nav_link" href="index.php?action=my_estates">Моите обяви</a>
                     </nav>
 
                     <div class="sing_in_btns">

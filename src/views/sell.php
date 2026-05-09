@@ -87,19 +87,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <section class="content_section_sell">
             <div class="create-estate-page">
-                <h2 class="section_title_sell" >Create Property Listing</h2>
+                <h2 class="section_title_sell">Създай обява</h2>
 
                 <form action="index.php?action=create_estate_process" method="POST" enctype="multipart/form-data" class="create-estate-form">
 
                     <div class="estate-column">
-                        <h3 style = "margin-top:-30px;">Property Details</h3>
+                        <h3>Детайли за имота</h3>
 
-                        <label>Address</label>
+                        <label>Адрес</label>
                         <input type="text" name="estate_address" class="input_field_sell" required>
 
-                        <label>Listing Type</label>
+                        <label>Тип на обява</label>
                         <select name="listing_type_id" class="input_field_sell" required>
-                            <option value="">Choose</option>
+                            <option value="">Избор</option>
                             <?php
                             $listingTypes = \App\Controllers\ListingTypeController::getAllListingTypes();
                             foreach ($listingTypes as $lt) {
@@ -108,9 +108,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             ?>
                         </select>
 
-                        <label>Estate Type</label>
+                        <label>Тип на имота</label>
                         <select name="estate_type_id" class="input_field_sell" required>
-                            <option value="">Choose</option>
+                            <option value="">Избор</option>
                             <?php
                             $estateTypes = \App\Controllers\EstateTypeController::getAllEstateTypes();
                             foreach ($estateTypes as $et) {
@@ -119,20 +119,23 @@ document.addEventListener('DOMContentLoaded', function () {
                             ?>
                         </select>
 
-                        <label>Region</label>
+                        <!--
+                        <label>Област</label>
                         <select name="region_id" class="input_field_sell" required>
-                            <option value="">Choose</option>
+                            <option value="">Избор</option>
                             <?php
+                            /*
                             $regions = \App\Controllers\RegionController::getAllRegions();
                             foreach ($regions as $region) {
                                 echo '<option value="'.$region->getId().'">'.htmlspecialchars($region->getRegionNameBG()).'</option>';
                             }
+                                */
                             ?>
                         </select>
-
-                        <label>City</label>
+                            -->
+                        <label>Град</label>
                         <select name="city_id" class="input_field_sell" required>
-                            <option value="">Choose</option>
+                            <option value="">Избор</option>
                             <?php
                             $cities = \App\Controllers\CityController::getAllCities();
                             foreach ($cities as $city) {
@@ -141,9 +144,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             ?>
                         </select>
 
-                        <label>Neighborhood</label>
+                        <label>Квартал</label>
                         <select name="neighborhood_id" class="input_field_sell" required>
-                            <option value="">Choose</option>
+                            <option value="">Избор</option>
                             <?php
                             $neighborhoods = \App\Controllers\NeighborhoodController::getAllNeighborhoods();
                             foreach ($neighborhoods as $neighborhood) {
@@ -152,9 +155,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             ?>
                         </select>
 
-                        <label>Exposure</label>
+                        <label>Изложение</label>
                         <select name="exposure_type" class="input_field_sell" required>
-                            <option value="">Choose</option>
+                            <option value="">Избор</option>
                             <?php
                             foreach (\App\Models\ExposureType::getOptions() as $option) {
                                 echo '<option value="'.$option.'">'.htmlspecialchars($option).'</option>';
@@ -162,34 +165,33 @@ document.addEventListener('DOMContentLoaded', function () {
                             ?>
                         </select>
 
-                        <label>Rooms</label>
+                        <label>Стаи</label>
                         <input type="number" name="rooms" class="input_field_sell" min="1" required>
 
-                        <label>Floor</label>
+                        <label>Етаж</label>
                         <input type="number" name="floor" class="input_field_sell" required>
 
-                        <label>Area (m²)</label>
+                        <label>Площ (m²)</label>
                         <input type="number" step="0.01" name="area" class="input_field_sell" required>
 
-                        <label>Price (€)</label>
+                        <label>Цена (€)</label>
                         <input type="number" step="0.01" name="price" class="input_field_sell" required>
                     </div>
 
                     <div class="estate-column">
-                        <h3>Images</h3>
-                        <label>Upload images</label>
+                        <h3>Снимки</h3>
+                        <label>Качване на снимки</label>
                         <input type="file" name="images[]" class="input_field_sell" accept="image/*" multiple required>
 
                         <div class="upload-note">
-                            At least one image is required. The listing cannot be published without images.
+                            Поне една снимка е задължителна. Обявата не може да бъде публикувана без снимки.
+                            <h3>Описание на имота</h3>
                         </div>
-                        <h3>Description</h3>
-                        <label>Property Description</label>
-                        <textarea name="description" class="input_field_sell estate-textarea" required placeholder="Write full property description here..."></textarea>
+                        <textarea name="description" class="input_field_sell estate-textarea" required placeholder="Напишете подрбно описание за имота тук..."></textarea>
                     
                         
 
-                        <button type="submit" class="btn_primary upload-estate-btn">Upload Listing</button>
+                        <button type="submit" class="btn_primary upload-estate-btn">Създай обява</button>
                     </div>
 
                 </form>

@@ -18,10 +18,9 @@
     background: #ffffff;
     border: 1px solid var(--border-light);
     border-radius: 20px;
-    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap:4px
 }
 
 .estate-column h3 {
@@ -56,6 +55,48 @@
 @media (max-width: 1100px) {
     .create-estate-form {
         grid-template-columns: 1fr;
+        width: 90%;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Регулираме основния контейнер */
+    .create-estate-page {
+        width: 100vw;
+        margin: 0 auto;
+        padding-top: 10px;
+    }
+
+    /* Премахваме застъпването на заглавията */
+    .section_title_sell, 
+    .estate-column h3 {
+        margin: 10px 0; /* Даваме малко пространство */
+        text-align: left;
+        width: 100%;
+        align-self: flex-start;
+    }
+
+    /* Конфигурираме колоната да подравнява текста вляво */
+    .estate-column {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Всичко отива вляво по подразбиране */
+        width: 100%;
+    }
+
+    /* Настройваме лейбълите да са точно над кутиите вляво */
+    .estate-column label {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    /* Правим полетата за избор да запълват ширината */
+    .input_field_sell {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box; /* Важно: пречи на полето да "излиза" от екрана */
     }
 }
 

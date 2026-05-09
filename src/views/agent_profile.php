@@ -23,6 +23,11 @@
             </div>
 
             <div class="nav_wrapper">
+                <button class="menu_toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
                 <div class="nav_container">
                     <div class="sing_in_btns">
                         <button id="theme-toggle" class="btn_secondary" style="padding: 0; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-light); cursor: pointer; background: transparent;">
@@ -35,18 +40,19 @@
         </header>
 
         <section class="content_section">
+            <div class="agent-profile-page">
             <div class="container_center">
-                <div class="property_card" style="display:flex; gap:2rem; align-items:flex-start; padding:2rem;">
+                <div style="display:flex; gap:2rem; align-items:flex-start; padding:2rem;">
                     <div style="flex:0 0 320px;">
                         <img
-                           src="<?= $agent->getImage() !== "-" && !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
+                            src="<?= $agent->getImage() !== "-" && !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
                             alt="<?= htmlspecialchars($agent->getUsername()); ?>"
                             style="width:100%; height:400px; object-fit:cover; border-radius:12px;">
                     </div>
 
-                    <div style="flex:1;">
+                    <div>
                         <h2 class="section_title"><?= htmlspecialchars($agent->getUsername()); ?></h2>
-                        <p style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;"> 
+                        <p style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
                             <picture>
                                 <img class="footer_icon theme_light_img" src="images/email.png" alt="TU Brokers Logo">
                                 <img class="footer_icon theme_dark_img" src="images/email_dark.png" alt="TU Brokers Logo">
@@ -58,12 +64,13 @@
                                 <img class="footer_icon theme_light_img" src="images/phone.png" alt="TU Brokers Logo">
                                 <img class="footer_icon theme_dark_img" src="images/phone_dark.png" alt="TU Brokers Logo">
                             </picture>
-                            <span><?= htmlspecialchars($agent->getPhone() ?? 'Not provided'); ?></span>
+                            <span><?= htmlspecialchars($agent->getPhone() ?? 'Не е наличен'); ?></span>
                         </p>
-                        <p><strong>About the agent:</strong></p>
+                        <p><strong>За агента:</strong></p>
                         <p><?= nl2br(htmlspecialchars($agent->getDescription() ?? 'No description available.')); ?></p>
                     </div>
                 </div>
+            </div>
             </div>
         </section>
     </div>
