@@ -20,7 +20,8 @@
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    gap:4px
+    gap:4px;
+    padding: 10px;
 }
 
 .estate-column h3 {
@@ -82,6 +83,10 @@
         flex-direction: column;
         align-items: flex-start; /* Всичко отива вляво по подразбиране */
         width: 100%;
+    }
+
+    .upload-estate-btn {
+        align-self: center;
     }
 
     /* Настройваме лейбълите да са точно над кутиите вляво */

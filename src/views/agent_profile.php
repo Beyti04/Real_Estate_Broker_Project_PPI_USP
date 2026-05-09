@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($agent->getUsername()); ?></title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style/agent_profile.css">
     <script src="script.js"></script>
 </head>
 
@@ -41,36 +42,45 @@
 
         <section class="content_section">
             <div class="agent-profile-page">
-            <div class="container_center">
-                <div style="display:flex; gap:2rem; align-items:flex-start; padding:2rem;">
-                    <div style="flex:0 0 320px;">
+                <div class="agent-profile-card">
+
+                    <div class="agent-profile-image">
                         <img
                             src="<?= $agent->getImage() !== "-" && !empty($agent->getImage()) ? htmlspecialchars($agent->getImage()) : 'images/base_broker.png'; ?>"
-                            alt="<?= htmlspecialchars($agent->getUsername()); ?>"
-                            style="width:100%; height:400px; object-fit:cover; border-radius:12px;">
+                            alt="<?= htmlspecialchars($agent->getUsername()); ?>">
                     </div>
 
-                    <div>
-                        <h2 class="section_title"><?= htmlspecialchars($agent->getUsername()); ?></h2>
-                        <p style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                    <div class="agent-profile-content">
+
+                        <h2><?= htmlspecialchars($agent->getUsername()); ?></h2>
+
+                        <p style="display:flex; gap:10px; align-items:center;">
                             <picture>
-                                <img class="footer_icon theme_light_img" src="images/email.png" alt="TU Brokers Logo">
-                                <img class="footer_icon theme_dark_img" src="images/email_dark.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_light_img" src="images/email.png">
+                                <img class="footer_icon theme_dark_img" src="images/email_dark.png">
                             </picture>
-                            <span><?= htmlspecialchars($agent->getEmail()); ?></span>
+
+                            <?= htmlspecialchars($agent->getEmail()); ?>
                         </p>
-                        <p style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+
+                        <p style="display:flex; gap:10px; align-items:center;">
                             <picture>
-                                <img class="footer_icon theme_light_img" src="images/phone.png" alt="TU Brokers Logo">
-                                <img class="footer_icon theme_dark_img" src="images/phone_dark.png" alt="TU Brokers Logo">
+                                <img class="footer_icon theme_light_img" src="images/phone.png">
+                                <img class="footer_icon theme_dark_img" src="images/phone_dark.png">
                             </picture>
-                            <span><?= htmlspecialchars($agent->getPhone() ?? 'Не е наличен'); ?></span>
+
+                            <?= htmlspecialchars($agent->getPhone() ?? 'Не е наличен'); ?>
                         </p>
+
                         <p><strong>За агента:</strong></p>
-                        <p><?= nl2br(htmlspecialchars($agent->getDescription() ?? 'No description available.')); ?></p>
+
+                        <p>
+                            <?= nl2br(htmlspecialchars($agent->getDescription() ?? 'Няма описание.')); ?>
+                        </p>
+
                     </div>
+
                 </div>
-            </div>
             </div>
         </section>
     </div>

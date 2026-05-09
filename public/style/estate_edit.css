@@ -27,17 +27,155 @@
     font-weight: 700;
 }
 
-/* Адаптивност */
+/* GLOBAL FIX */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* FORM */
+.edit_estate_form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+/* CARD */
+.estate_column {
+    background-color: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    min-width: 0;
+}
+
+.estate_column h3 {
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--bg-light);
+    color: var(--tu_blue_primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* INPUTS */
+.input_group {
+    width: 100%;
+    min-width: 0;
+}
+
+.input_field,
+.auth_input,
+textarea,
+select,
+input {
+    width: 100%;
+    min-width: 0;
+}
+
+/* DOUBLE FIELDS */
+.double_fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* ACTIONS */
+.form_actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid var(--border-light);
+    padding-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.form_actions .btn_primary,
+.form_actions .btn_secondary {
+    min-width: 180px;
+}
+
+/* =========================
+   TABLET
+========================= */
 @media (max-width: 1024px) {
+
     .edit_estate_form {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px) {
+
+    .edit_estate_form {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .estate_column {
+        padding: 1rem;
+    }
+
+    .double_fields {
+        grid-template-columns: 1fr;
+    }
+
+    .form_actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form_actions .btn_primary,
+    .form_actions .btn_secondary {
+        width: 100%;
+        min-width: unset;
+    }
+
+    textarea {
+        min-height: 140px;
     }
 }
 
-@media (max-width: 768px) {
-    .edit_estate_form {
-        grid-template-columns: 1fr;
+/* =========================
+   SMALL MOBILE
+========================= */
+@media (max-width: 480px) {
+
+    .content_section {
+        padding: 1rem 0 !important;
     }
+
+    .container_center {
+        padding-inline: 0.75rem;
+    }
+
+    .estate_column {
+        border-radius: 10px;
+        padding: 0.9rem;
+    }
+
+    .estate_column h3 {
+        font-size: 1rem;
+    }
+
+    .section_title {
+        font-size: 1.4rem;
+    }
+
 }
 
 /* Тъмна тема за специфичните елементи */

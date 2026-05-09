@@ -74,6 +74,15 @@
     margin-top: 2rem;
 }
 
+
+
+@media (max-width: 1023px) {
+    .profile_actions .btn_primary, .profile_actions .btn_secondary {
+        width: 100%;
+        max-width: none;
+    }
+}
+
 /* =========================================
    DARK MODE (Тъмна тема) - интеграция
    ========================================= */

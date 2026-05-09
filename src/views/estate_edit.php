@@ -144,7 +144,7 @@ if (!$estateToEdit) {
                             </select>
                         </div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="double_fields">
                             <div class="input_group">
                                 <label class="auth_label">Стаи</label>
                                 <input type="number" class="input_field auth_input" name="rooms" required min="1" 
@@ -167,7 +167,7 @@ if (!$estateToEdit) {
                     <div class="estate_column">
                         <h3>Детайли и Статус</h3>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="double_fields">
                             <div class="input_group">
                                 <label class="auth_label">Тип обява</label>
                                 <select class="input_field auth_input" name="listing_type_id" required>
@@ -204,9 +204,9 @@ if (!$estateToEdit) {
                         </div>
                     </div>
 
-                    <div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 1.5rem;">
-                        <a href="index.php?action=estate_details&id=<?= $estateToEdit->getId() ?>" class="btn_secondary" style="width: 150px; text-decoration: none;">Отказ</a>
-                        <button type="submit" class="btn_primary" style="width: 200px;">Запази промените</button>
+                    <div class="form_actions">
+                        <a href="index.php?action=estate_details&id=<?= $estateToEdit->getId() ?>" class="btn_secondary" style="text-decoration: none;">Отказ</a>
+                        <button type="submit" class="btn_primary">Запази промените</button>
                     </div>
 
                 </form>
