@@ -463,8 +463,8 @@ switch ($action) {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $regionId = (int)($_POST['region_id'] ?? 0);
             $cityId = (int)($_POST['city_id'] ?? 0);
+            $regionId = \App\Controllers\EstateController::GetRegionIdByCityId($cityId);
             $neighborhoodId = (int)($_POST['neighborhood_id'] ?? 0);
             $address = trim($_POST['estate_address'] ?? '');
             $estateTypeId = (int)($_POST['estate_type_id'] ?? 0);

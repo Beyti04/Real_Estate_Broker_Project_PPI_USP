@@ -118,11 +118,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                             ?>
                         </select>
-
                         <!--
                         <label>Област</label>
                         <select name="region_id" class="input_field_sell" required>
                             <option value="">Избор</option>
+                            
                             <?php
                             /*
                             $regions = \App\Controllers\RegionController::getAllRegions();
@@ -130,9 +130,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                 echo '<option value="'.$region->getId().'">'.htmlspecialchars($region->getRegionNameBG()).'</option>';
                             }
                                 */
+                                
                             ?>
+                            
                         </select>
-                            -->
+-->
                         <label>Град</label>
                         <select name="city_id" class="input_field_sell" required>
                             <option value="">Избор</option>

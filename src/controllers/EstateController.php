@@ -547,4 +547,19 @@ class EstateController
 
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public static function GetRegionIdByCityId(int $cityId): ?int
+    {
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("SELECT region_id FROM cities WHERE id = :cityId");
+            $stmt->execute(['cityId' => $cityId]);
+            $regionId = $stmt->fetchColumn();
+
+        } catch (PDOException $e) {
+            error_log('Error fetching region ID by city ID: ' . $e->getMessage());
+            return 0;
+        }
+        return $regionId !== false ? (int)$regionId : 0;
+    }
 }
