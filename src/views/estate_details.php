@@ -57,8 +57,11 @@
             </div>
 
             <div class="details_gallery">
+                <?php
+                $imagesPaths = App\Controllers\EstateController::getEstateImagesById($id);
+                ?>
                 <div class="gallery_main">
-                    <img src="uploads/estate_placeholder.jpg" alt="Main Photo" class="gallery_img">
+                    <img src="<?php echo !empty($imagesPaths) ? htmlspecialchars($imagesPaths[0]) : 'uploads/estate_placeholder.jpg'; ?>" alt="Main Photo" class="gallery_img">
                     <div class="estate_status_tag">Обява</div>
                 </div>
 

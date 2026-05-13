@@ -61,7 +61,12 @@
                             <a href="index.php?action=estate_details&id=<?= $estate->id ?>" class="estate_card_link">
 
                                 <div class="estate_image_wrapper">
-                                    <img src="uploads/estate_placeholder.jpg" alt="Modern Apartment" class="estate_image">
+                                    <img src="
+                                    <?php
+                                    $imagesPaths = App\Controllers\EstateController::getEstateImagesById($estate->id);
+                                    echo !empty($imagesPaths) ? htmlspecialchars($imagesPaths[0]) : 'uploads/estate_placeholder.jpg';
+                                    ?>
+                                    " alt="Modern Apartment" class="estate_image">
                                     <div class="estate_status_tag"><?php echo htmlspecialchars($estate->status_name) ?></div>
                                 </div>
 

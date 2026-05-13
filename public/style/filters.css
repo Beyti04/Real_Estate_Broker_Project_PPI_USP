@@ -19,7 +19,6 @@
 .filter_bar {
   position: sticky;
   z-index: 999;
-  top:84px;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;

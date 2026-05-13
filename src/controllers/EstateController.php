@@ -325,7 +325,29 @@ class EstateController
         }
     }
 
-    public static function getImagesByEstateId(int $id) {}
+    public static function getEstateImagesById(int $id): array {
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("SELECT image_path FROM estate_images WHERE estate_id = :id");
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        } catch (PDOException $e) {
+            error_log('Error fetching estate images: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    public static function getEstateStatusById(int $id): ?string {
+        $pdo = Database::getInstance();
+        try {
+            $stmt = $pdo->prepare("SELECT s.status_name FROM estates e LEFT JOIN estate_status s ON e.status_id=s.id WHERE e.id = :id");
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log('Error fetching estate status: ' . $e->getMessage());
+            return null;
+        }
+    }
 
     public static function getFilteredEstates(array $filters): array
     {

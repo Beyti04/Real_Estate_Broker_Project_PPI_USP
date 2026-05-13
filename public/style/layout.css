@@ -110,7 +110,7 @@
   display: flex;
   flex-direction: column;
   height: 95%;
-  min-width: 300px;
+  min-width: 200px;
   min-height: 500px;
   height: auto;
 }
@@ -642,6 +642,7 @@ body.dark-mode .input_field_sell {
 
   .content_section_sell{
   width: 90vw;
+  margin: 0 auto;
   }
   #map-container,
   .listings_side {
