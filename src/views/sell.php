@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,35 +10,70 @@
     <script src="script.js"></script>
 </head>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('estate-images-input');
-    const previewContainer = document.getElementById('image-preview-container');
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Съществуващ код за превю на снимки ---
+        const input = document.getElementById('estate-images-input');
+        const previewContainer = document.getElementById('image-preview-container');
 
-    if (!input || !previewContainer) return;
+        if (input && previewContainer) {
+            input.addEventListener('change', function() {
+                previewContainer.innerHTML = '';
+                const files = Array.from(this.files);
+                files.forEach(file => {
+                    if (!file.type.startsWith('image/')) return;
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.classList.add('preview-item');
+                        previewItem.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                        previewContainer.appendChild(previewItem);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
 
-    input.addEventListener('change', function () {
-        previewContainer.innerHTML = '';
+        // --- НОВ КОД: Логика за Градове и Квартали ---
+        const citySelect = document.getElementById('city-select');
+        const neighborhoodSelect = document.getElementById('neighborhood-select');
 
-        const files = Array.from(this.files);
+        if (citySelect && neighborhoodSelect) {
+            // Запазваме всички оригинални опции за кварталите в масив
+            const originalNeighborhoodOptions = Array.from(neighborhoodSelect.querySelectorAll('option'));
 
-        files.forEach(file => {
-            if (!file.type.startsWith('image/')) return;
+            citySelect.addEventListener('change', function() {
+                const selectedCityId = this.value;
 
-            const reader = new FileReader();
+                // Изчистваме текущите квартали в падащото меню
+                neighborhoodSelect.innerHTML = '';
 
-            reader.onload = function (e) {
-                const previewItem = document.createElement('div');
-                previewItem.classList.add('preview-item');
+                // Винаги връщаме първата опция "Избор"
+                neighborhoodSelect.appendChild(originalNeighborhoodOptions[0]);
+                neighborhoodSelect.value = ""; // Ресетваме стойността
 
-                previewItem.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                previewContainer.appendChild(previewItem);
-            };
+                if (selectedCityId) {
+                    // Разрешаваме избора на квартал
+                    neighborhoodSelect.disabled = false;
 
-            reader.readAsDataURL(file);
-        });
+                    // Филтрираме и добавяме само тези квартали, които отговарят на избрания град
+                    originalNeighborhoodOptions.forEach(option => {
+                        if (option.getAttribute('data-city-id') === selectedCityId) {
+                            neighborhoodSelect.appendChild(option);
+                        }
+                    });
+                } else {
+                    // Ако градът е върнат на "Избор", отново заключваме кварталите
+                    neighborhoodSelect.disabled = true;
+                }
+            });
+
+            // Стартираме евента веднъж при зареждане на страницата, 
+            // за да се изчистят кварталите първоначално
+            citySelect.dispatchEvent(new Event('change'));
+        }
     });
-});
 </script>
+
 <body>
     <div class="main_wrapper">
         <header>
@@ -59,12 +95,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 </button>
                 <div class="nav_container">
                     <nav class="nav_links">
-                         <nav class="nav_links">
-                        <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
-                        <a class="nav_link" href="index.php?action=sell">Продай</a>
-                        <a class="nav_link" href="index.php?action=agents">Агенти</a>
-                        <a class="nav_link" href="index.php?action=my_estates">Моите обяви</a>
-                    </nav>
+                        <nav class="nav_links">
+                            <a class="nav_link" href="index.php?action=buy_rent">Обяви</a>
+                            <a class="nav_link" href="index.php?action=sell">Продай</a>
+                            <a class="nav_link" href="index.php?action=agents">Агенти</a>
+                            <a class="nav_link" href="index.php?action=my_estates">Моите обяви</a>
+                        </nav>
                     </nav>
 
                     <div class="sing_in_btns">
@@ -103,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <?php
                             $listingTypes = \App\Controllers\ListingTypeController::getAllListingTypes();
                             foreach ($listingTypes as $lt) {
-                                echo '<option value="'.$lt->getId().'">'.htmlspecialchars($lt->getTypeName()).'</option>';
+                                echo '<option value="' . $lt->getId() . '">' . htmlspecialchars($lt->getTypeName()) . '</option>';
                             }
                             ?>
                         </select>
@@ -114,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <?php
                             $estateTypes = \App\Controllers\EstateTypeController::getAllEstateTypes();
                             foreach ($estateTypes as $et) {
-                                echo '<option value="'.$et->getId().'">'.htmlspecialchars($et->getTypeName()).'</option>';
+                                echo '<option value="' . $et->getId() . '">' . htmlspecialchars($et->getTypeName()) . '</option>';
                             }
                             ?>
                         </select>
@@ -130,29 +166,30 @@ document.addEventListener('DOMContentLoaded', function () {
                                 echo '<option value="'.$region->getId().'">'.htmlspecialchars($region->getRegionNameBG()).'</option>';
                             }
                                 */
-                                
+
                             ?>
                             
                         </select>
 -->
                         <label>Град</label>
-                        <select name="city_id" class="input_field_sell" required>
+                        <select name="city_id" id="city-select" class="input_field_sell" required>
                             <option value="">Избор</option>
                             <?php
                             $cities = \App\Controllers\CityController::getAllCities();
                             foreach ($cities as $city) {
-                                echo '<option value="'.$city->getId().'">'.htmlspecialchars($city->getCityNameBG()).'</option>';
+                                echo '<option value="' . $city->getId() . '">' . htmlspecialchars($city->getCityNameBG()) . '</option>';
                             }
                             ?>
                         </select>
 
                         <label>Квартал</label>
-                        <select name="neighborhood_id" class="input_field_sell" required>
+                        <select name="neighborhood_id" id="neighborhood-select" class="input_field_sell" required>
                             <option value="">Избор</option>
                             <?php
                             $neighborhoods = \App\Controllers\NeighborhoodController::getAllNeighborhoods();
                             foreach ($neighborhoods as $neighborhood) {
-                                echo '<option value="'.$neighborhood->getId().'">'.htmlspecialchars($neighborhood->getNeighborhoodNameBG()).'</option>';
+                                $cityId = $neighborhood->getCityId();
+                                echo '<option value="' . $neighborhood->getId() . '" data-city-id="' . $cityId . '">' . htmlspecialchars($neighborhood->getNeighborhoodNameBG()) . '</option>';
                             }
                             ?>
                         </select>
@@ -162,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <option value="">Избор</option>
                             <?php
                             foreach (\App\Models\ExposureType::getOptions() as $option) {
-                                echo '<option value="'.$option.'">'.htmlspecialchars($option).'</option>';
+                                echo '<option value="' . $option . '">' . htmlspecialchars($option) . '</option>';
                             }
                             ?>
                         </select>
@@ -190,8 +227,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             <h3>Описание на имота</h3>
                         </div>
                         <textarea name="description" class="input_field_sell estate-textarea" required placeholder="Напишете подрбно описание за имота тук..."></textarea>
-                    
-                        
+
+
 
                         <button type="submit" class="btn_primary upload-estate-btn">Създай обява</button>
                     </div>
@@ -201,4 +238,5 @@ document.addEventListener('DOMContentLoaded', function () {
         </section>
     </div>
 </body>
+
 </html>
